@@ -1,0 +1,36 @@
+name: Mobile Push
+
+on:
+  workflow_run:
+    workflows: ["CI-CD Flutter"]
+    types:
+      - completed
+
+jobs:
+  push-main:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup Git
+        run: |
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+
+      - name: Clone the central repository
+        run: |
+          git clone https://YannMorvan:${{ secrets.EIP_GITHUB_PAT }}@github.com/Eurydice-EIP/app.git _app
+
+      - name: Pull/Add Mobile as subtree
+        working-directory: _app
+        run: |
+          if [ -d "mobile" ]; then
+            git subtree pull --prefix=mobile https://YannMorvan:${{ secrets.EIP_GITHUB_PAT }}@github.com/Eurydice-EIP/mobile.git main --squash
+          else
+            git subtree add --prefix=mobile https://YannMorvan:${{ secrets.EIP_GITHUB_PAT }}@github.com/Eurydice-EIP/mobile.git main --squash
+          fi
+
+      - name: Push changes
+        working-directory: _app
+        run: |
+          git push origin main
