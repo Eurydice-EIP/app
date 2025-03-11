@@ -1,0 +1,35 @@
+name: Docusaurus
+
+on:
+  push:
+    branches: ["*"]
+  pull_request:
+    branches: ["*"]
+
+jobs:
+  push-main:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup Git
+        run: |
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+
+      - name: Clone the central repository
+        run: |
+          git clone https://YannMorvan:${{ secrets.EIP_GITHUB_PAT }}@github.com/Eurydice-EIP/app.git _app
+
+      - name: Pull/Add Docusaurus as subtree
+        working-directory: _app
+        run: |
+          if [ -d "docs" ]; then
+            git subtree pull --prefix=docs https://YannMorvan:${{ secrets.EIP_GITHUB_PAT }}@github.com/Eurydice-EIP/docs.git main --squash
+          else
+            git subtree add --prefix=docs https://YannMorvan:${{ secrets.EIP_GITHUB_PAT }}@github.com/Eurydice-EIP/docs.git main --squash
+          fi
+
+      - name: Push changes
+        working-directory: _app
+        run: |
+          git push origin main
