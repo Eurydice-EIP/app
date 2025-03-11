@@ -1,0 +1,36 @@
+name: Frontend Push
+
+on:
+  workflow_run:
+    workflows: ["CI-CD Next.js"]
+    types:
+      - completed
+
+jobs:
+  push-main:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup Git
+        run: |
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+
+      - name: Clone the central repository
+        run: |
+          git clone https://YannMorvan:${{ secrets.EIP_GITHUB_PAT }}@github.com/Eurydice-EIP/app.git _app
+
+      - name: Pull/Add Frontend as subtree
+        working-directory: _app
+        run: |
+          if [ -d "frontend" ]; then
+            git subtree pull --prefix=frontend https://YannMorvan:${{ secrets.EIP_GITHUB_PAT }}@github.com/Eurydice-EIP/frontend.git main --squash
+          else
+            git subtree add --prefix=frontend https://YannMorvan:${{ secrets.EIP_GITHUB_PAT }}@github.com/Eurydice-EIP/frontend.git main --squash
+          fi
+
+      - name: Push changes
+        working-directory: _app
+        run: |
+          git push origin main
