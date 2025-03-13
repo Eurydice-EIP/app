@@ -25,9 +25,17 @@ const Button: React.FC<ButtonProps> = ({
       className={`flex items-center justify-center ${className}`}
       {...props}
     >
-      {icon && iconPosition === "left" && <span className="icon">{icon}</span>}
+      {icon && iconPosition === "left" && (
+        <span className="icon" role="img" aria-label="icon">
+          {icon}
+        </span>
+      )}
       {children}
-      {icon && iconPosition === "right" && <span className="icon">{icon}</span>}
+      {icon && iconPosition === "right" && (
+        <span className="icon" role="img" aria-label="icon">
+          {icon}
+        </span>
+      )}
     </button>
   );
 };
