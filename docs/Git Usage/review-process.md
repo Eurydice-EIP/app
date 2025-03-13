@@ -4,7 +4,7 @@ sidebar_position: 3
 
 # PR Review Process
 
-## Overview
+## Introduction
 
 This document outlines the process for reviewing Pull Requests (PRs) in our repository. A PR review is an important part of our workflow to ensure quality and maintain consistency in the codebase. Here's how we do it:
 

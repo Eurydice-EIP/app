@@ -49,6 +49,10 @@ Here is a list of commonly used branch types:
 
   - Example: `chore/update-dependencies`
 
+- **docs**: For adding documentation
+
+  - Example: `docs/atomic-design`
+
 ---
 
 ## Best Practices
