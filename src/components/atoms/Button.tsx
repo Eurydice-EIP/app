@@ -22,7 +22,7 @@ const Button: React.FC<ButtonProps> = ({
     <button
       type={type}
       onClick={onClick}
-      className={`flex items-center justify-center ${className}`}
+      className={`flex items-center justify-center cursor-pointer ${className}`}
       {...props}
     >
       {icon && iconPosition === "left" && (

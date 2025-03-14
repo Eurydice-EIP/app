@@ -17,12 +17,12 @@ const Sidebar = () => {
   return (
     <div
       className={`relative h-screen ${
-        isOpen ? "w-64" : "w-24"
+        isOpen ? "w-48" : "w-22"
       } transition-all duration-300`}
     >
       <div
         className={`fixed top-0 left-0 h-full ${
-          isOpen ? "w-64" : "w-24"
+          isOpen ? "w-48" : "w-22"
         } bg-[#E7F3F3] border-r-2 border-[#A3D8C1] rounded-r-3xl transition-all duration-300`}
       >
         <div className="p-4 flex flex-col items-center">
