@@ -1,0 +1,8 @@
+{
+  "label": "Code Maintenance",
+  "position": 3,
+  "link": {
+    "type": "generated-index",
+    "description": "How to maintain code"
+  }
+}
