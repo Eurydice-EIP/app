@@ -49,6 +49,12 @@ const Sidebar = () => {
                 >
                   Profile
                 </Button>
+                <Button
+                  className="rounded-lg px-4 py-2 text-black font-black w-full"
+                  onClick={() => handleRedirect("projects")}
+                >
+                  Projects
+                </Button>
               </nav>
             </>
           ) : (

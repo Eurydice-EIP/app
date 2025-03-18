@@ -41,9 +41,9 @@ const RightBar: React.FC<RightBarProps> = ({ className = "" }) => {
         <hr className="mt-2 border-1 rounded-xl border-[#B0E0E6]"></hr>
         <DailyQuest
           className="my-4"
-          quest="Earn 10 XP"
-          max={10}
-          current={2}
+          quest="Drink 5 times"
+          max={5}
+          current={3}
           button={
             <Button
               className="flex-none ml-6 rounded-xl max-h-14 text-l font-bold text-[#A3D8C1] bg-[#F4F7F8] border-[#A3D8C1] border-2 border-b-4 hover:bg-[#A3D8C1] hover:text-[#F4F7F8]"
