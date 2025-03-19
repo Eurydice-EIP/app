@@ -45,6 +45,12 @@ const Sidebar = () => {
                 </Button>
                 <Button
                   className="rounded-lg px-4 py-2 text-black font-black w-full"
+                  onClick={() => handleRedirect("guild")}
+                >
+                  Guild
+                </Button>
+                <Button
+                  className="rounded-lg px-4 py-2 text-black font-black w-full"
                   onClick={() => handleRedirect("profile")}
                 >
                   Profile
