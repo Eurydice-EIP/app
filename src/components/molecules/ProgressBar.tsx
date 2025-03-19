@@ -23,7 +23,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
         <div className="absolute inset-0 flex items-center justify-center text-sm font-bold text-[#515351]">
           {display &&
             (percentage ? (
-              <p>{completion}%</p>
+              <p>{completion.toFixed(0)}%</p>
             ) : (
               <p>
                 {completion} / {max_value}

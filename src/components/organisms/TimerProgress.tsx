@@ -32,8 +32,7 @@ const TimerProgress: React.FC<TimerProgressProps> = ({
         </div>
         <hr className="my-2 border-1 rounded-xl border-[#B0E0E6]"></hr>
         <p className="flex text-2xl font-bold text-[#515351] justify-center">
-          {/* eslint-disable-next-line react/no-unescaped-entities */}
-          Today's Progress
+          {`Today's Progress`}
         </p>
         <ProgressBar
           className="my-2"
