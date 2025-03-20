@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import CheckBox from "../atoms/CheckBox";
+import ProgressBar from "../molecules/ProgressBar";
 
 const quests = [
   {
@@ -62,18 +63,13 @@ const GuildQuest: React.FC<GuildQuestProps> = ({ id }) => {
           {quest.finishedBy.length}/{quest.allPeople.length}
         </span>
       </div>
-      <div
-        className="flex w-full h-4 bg-white rounded-full overflow-hidden border-2 border-gray-200"
-        role="progressbar"
-        aria-valuenow={80}
-        aria-valuemin={0}
-        aria-valuemax={100}
-      >
-        <div
-          className="flex flex-col justify-center rounded-full overflow-hidden bg-[#A3D8C1] text-xs text-white text-center whitespace-nowrap transition duration-500"
-          style={{ width: `${80}%` }}
-        ></div>
-      </div>
+      <ProgressBar
+        className="w-full"
+        barClassName="flex w-full h-5 rounded-full overflow-hidden bg-white rounded-full overflow-hidden border-2 border-gray-200"
+        completion={(quest.finishedBy.length / quest.allPeople.length) * 100}
+        max_value={100}
+        display={false}
+      ></ProgressBar>
     </div>
   );
 };
