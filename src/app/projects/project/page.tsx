@@ -15,7 +15,7 @@ export default function Home() {
   return (
     <div className="grid grid-cols-4 gap-10">
       <div className="col-span-3">
-        <p className="justify-center flex text-3xl font-bold text-[#A3D8C1]">
+        <p className="justify-center flex text-3xl font-bold text-[#515351]">
           EIP Epitech
         </p>
         <div className="p-4">
