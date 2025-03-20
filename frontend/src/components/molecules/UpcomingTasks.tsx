@@ -1,66 +1,40 @@
 "use client";
-import { useState } from "react";
 
-import ProjectOverview from "@/components/organisms/ProjectOverview";
-import ProjectTasks from "@/components/organisms/ProjectTasks";
-import ProjectCalendar from "@/components/organisms/ProjectCalendar";
-import ProjectStats from "@/components/organisms/ProjectStats";
-import RightBar from "@/components/organisms/RightBar";
+import InlineTask from "./InlineTask";
 
-type UpcomingTaskProps = {
+type UpcomingTasksProps = {
   className?: string;
 };
 
-const UpcomingTask: React.FC<UpcomingTaskProps> = ({ className = "" }) => {
-  const [activeTab, setActiveTab] = useState<
-    "overview" | "tasks" | "calendar" | "stats"
-  >("overview");
-
-  const tabs: Array<"overview" | "tasks" | "calendar" | "stats"> = [
-    "overview",
-    "tasks",
-    "calendar",
-    "stats",
-  ];
-
+const UpcomingTasks: React.FC<UpcomingTasksProps> = ({ className = "" }) => {
   return (
     <div className={`${className}`}>
-      <div className="grid grid-cols-4 gap-10">
-        <div className="col-span-3">
-          <p className="justify-center flex text-3xl font-bold text-[#515351]">
-            EIP Epitech
-          </p>
-          <div className="p-4">
-            <div className="grid grid-cols-4 gap-10 flex space-x-6 border-b-2 border-[#B0E0E6]">
-              {tabs.map((tab) => (
-                <button
-                  key={tab}
-                  className={`pb-2 text-3xl font-semibold ${
-                    activeTab === tab
-                      ? "text-[#515351] border-b-2 border-[#515351]"
-                      : "text-[#B0E0E6]"
-                  }`}
-                  onClick={() => setActiveTab(tab)}
-                >
-                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                </button>
-              ))}
-            </div>
-
-            <div className="mt-4">
-              {activeTab === "overview" && <ProjectOverview />}
-              {activeTab === "tasks" && <ProjectTasks />}
-              {activeTab === "calendar" && <ProjectCalendar />}
-              {activeTab === "stats" && <ProjectStats />}
-            </div>
-          </div>
-        </div>
-        <div>
-          <RightBar />
-        </div>
-      </div>
+      <p className="my-2 text-2xl font-bold text-[#515351]">Upcoming tasks</p>
+      <p className="text-xl font-bold text-[#949494]">Today</p>
+      <hr className="my-1 border-1 rounded-xl border-[#B0E0E6]"></hr>
+      <InlineTask
+        task="Make the project page"
+        buttonClassName="flex-none rounded-xl px-4 py-1 max-h-14 text-2xl text-[#A3D8C1] bg-[#F4F7F8] border-[#A3D8C1] border-2 border-b-4 hover:bg-[#A3D8C1] hover:text-[#F4F7F8]"
+      ></InlineTask>
+      <p className="text-xl font-bold text-[#949494]">Tomorrow</p>
+      <hr className="my-1 border-1 rounded-xl border-[#B0E0E6]"></hr>
+      <InlineTask
+        className="my-2"
+        task="Make the project page"
+        buttonClassName="flex-none rounded-xl px-4 py-1 max-h-14 text-2xl text-[#A3D8C1] bg-[#F4F7F8] border-[#A3D8C1] border-2 border-b-4 hover:bg-[#A3D8C1] hover:text-[#F4F7F8]"
+      ></InlineTask>
+      <InlineTask
+        className="my-2"
+        task="Make the project page"
+        buttonClassName="flex-none rounded-xl px-4 py-1 max-h-14 text-2xl text-[#A3D8C1] bg-[#F4F7F8] border-[#A3D8C1] border-2 border-b-4 hover:bg-[#A3D8C1] hover:text-[#F4F7F8]"
+      ></InlineTask>
+      <InlineTask
+        className="my-2"
+        task="Make the project page"
+        buttonClassName="flex-none rounded-xl px-4 py-1 max-h-14 text-2xl text-[#A3D8C1] bg-[#F4F7F8] border-[#A3D8C1] border-2 border-b-4 hover:bg-[#A3D8C1] hover:text-[#F4F7F8]"
+      ></InlineTask>
     </div>
   );
 };
 
-export default UpcomingTask;
+export default UpcomingTasks;
