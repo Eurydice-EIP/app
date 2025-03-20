@@ -28,11 +28,6 @@ const UpcomingTasks: React.FC<UpcomingTasksProps> = ({ className = "" }) => {
         task="Make the project page"
         buttonClassName="flex-none rounded-xl px-4 py-1 max-h-14 text-2xl text-[#A3D8C1] bg-[#F4F7F8] border-[#A3D8C1] border-2 border-b-4 hover:bg-[#A3D8C1] hover:text-[#F4F7F8]"
       ></InlineTask>
-      <InlineTask
-        className="my-2"
-        task="Make the project page"
-        buttonClassName="flex-none rounded-xl px-4 py-1 max-h-14 text-2xl text-[#A3D8C1] bg-[#F4F7F8] border-[#A3D8C1] border-2 border-b-4 hover:bg-[#A3D8C1] hover:text-[#F4F7F8]"
-      ></InlineTask>
     </div>
   );
 };
