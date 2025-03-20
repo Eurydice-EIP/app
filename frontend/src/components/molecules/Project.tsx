@@ -19,18 +19,22 @@ const Project: React.FC<ProjectProps> = ({
   money = 0,
   completion = 0,
 }) => {
+  const handleRedirect = (text: string) => {
+    if (window) {
+      window.location.href = `/${text}`;
+    }
+  };
+
   return (
     <div className={`${className}`}>
       <div className="grid grid-cols-3 gap-4">
-        <div className="col-span-2 flex flex-col justify-start">
+        <div className="col-span-2 justify-start">
           <p className="text-2xl font-bold text-[#515351]">{project}</p>
         </div>
         <div className="flex justify-end">
           <Button
             className="flex-none ml-4 rounded-xl py-1 text-2xl font-bold text-[#B0E0E6] hover:text-[#A3D8C1]"
-            onClick={() => {
-              alert("Button clicked!");
-            }}
+            onClick={() => handleRedirect("projects/project")}
           >
             View
           </Button>
