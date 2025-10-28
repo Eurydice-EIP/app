@@ -1,0 +1,41 @@
+name: eurydice-backend
+services:
+
+  db:
+    container_name: eurydice-database
+    image: postgres:18.0
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - ${DB_PORT}:5432
+
+  db_monitoring:
+    container_name: eurydice-db-monitoring
+    image: adminer:5.4.1
+    ports:
+      - 8080:8080
+
+  app:
+    container_name: eurydice-backend-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: ${NODE_ENV}
+      args:
+        NODE_ENV: ${NODE_ENV}
+    ports:
+      - 3000:3000
+    environment:
+      NODE_ENV: ${NODE_ENV}
+    volumes:
+      - .:/app
+      - /app/node_modules
+    
+
+volumes:
+  db_data:
+    name: eurydice-db-data
