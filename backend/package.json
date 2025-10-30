@@ -12,8 +12,6 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
-    "env:dev": "npm run build && ENV_FILE=.env.dev node dist/scripts/generate-env",
-    "env:prod": "npm run build && ENV_FILE=.env.prod node dist/scripts/generate-env",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "crud:generate": "nest g resource",
