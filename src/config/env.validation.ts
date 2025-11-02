@@ -1,5 +1,5 @@
-import { plainToInstance } from "class-transformer";
-import { IsNotEmpty, IsString, validateSync } from "class-validator";
+import { plainToInstance } from 'class-transformer';
+import { IsNotEmpty, IsString, validateSync } from 'class-validator';
 
 class EnvConfig {
     @IsString()

@@ -12,3 +12,16 @@ datasource db {
   provider = "postgresql"
   url      = env("DB_URL")
 }
+
+model Task {
+  id            Int         @id @default(autoincrement())
+  title         String      @db.VarChar(255)
+  dueAt         DateTime    @db.Timestamptz(3)                    @map("due_at")
+  userId        Int?                                              @map("user_id")
+  projectId     Int?                                              @map("project_id")
+  importance    Int?        @default(0)
+  estimatedMin  Int?        @default(0)                           @map("estimated_min")
+  createdAt     DateTime    @db.Timestamptz(3) @default(now())    @map("created_at")
+
+  @@map("task")
+}
