@@ -1,10 +1,10 @@
 import Sidebar from "@/components/molecules/SideBar";
 import "./globals.css";
 
-import { Nunito } from "next/font/google";
+import { Inter } from "next/font/google";
 
-const nunito = Nunito({
-  variable: "--font-nunito",
+const inter = Inter({
+  variable: "--font-inter",
   weight: "400",
   subsets: ["latin"],
 });
@@ -15,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={nunito.className}>
+    <html lang="en" className={inter.className}>
       <body className="antialiased bg-white text-gray-800">
         <div className="flex min-h-screen bg-[#F4F7F8]">
           <Sidebar />
