@@ -1,7 +1,6 @@
 import React from "react";
 
 type TickProps = {
-  children?: React.ReactNode;
   onClick?: () => void;
   type?: "button";
   className?: string;
@@ -9,7 +8,6 @@ type TickProps = {
 };
 
 const Tick: React.FC<TickProps> = ({
-  // children,
   onClick,
   type = "button",
   className = "",
