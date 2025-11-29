@@ -1,6 +1,7 @@
 "use client";
 import Label from "@/components/atoms/Label";
 import Bookmark from "@/components/atoms/Bookmark";
+import TaskWidget from "@/components/molecules/TaskWidget"
 
 export default function Home() {
   return (
@@ -48,6 +49,9 @@ export default function Home() {
         }
       >3 days</Label>
       <Bookmark className="w-65 h-65"></Bookmark>
+      <TaskWidget
+        className="border-[#B5B9BC] border-1 rounded-[40px] color-[#F5F3EE] px-8 py-4 w-[584px] h-[521px]"
+      ></TaskWidget>
     </div>
   );
 }
