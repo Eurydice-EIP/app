@@ -17,7 +17,7 @@ const TaskInline: React.FC<TaskInlineProps> = ({
     <div className={`${className}`}>
       <div className="flex">
           <span className="my-3 text-[20px] font-normal text-[#393E41]">{taskNumber}</span>
-          <span className="flex-auto my-3 ml-6 text-[20px] font-normal text-[#393E41]">{task}</span>
+          <span className="flex-auto my-3 mx-6 text-[20px] font-normal text-[#393E41]">{task}</span>
           <Tick
             onClick={() => {
               alert("Completed a task!");
