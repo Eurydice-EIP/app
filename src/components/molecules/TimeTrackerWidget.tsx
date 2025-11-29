@@ -22,13 +22,13 @@ const TimeTrackerWidget: React.FC<TimeTrackerWidgetProps> = ({
             onClick={() => {
               alert("Started timing");
             }}
-            className="group rounded-[100%] w-[70px] h-[70px] bg-[#0FA3B1] pl-1"
+            className="group rounded-[100%] w-[70px] h-[70px] bg-[#0FA3B1]"
             icon={
                 <svg
                     width="43"
                     height="44"
                     viewBox="0 0 43 44"
-                    className="fill-[#F5F3EE] stroke-[#F5F3EE] group-hover:fill-[#0FA3B1] transition-colors"
+                    className="fill-[#F5F3EE] stroke-[#F5F3EE] group-hover:fill-[#0FA3B1] transition-colors ml-3"
                     xmlns="http://www.w3.org/2000/svg"
                 >
                     <path

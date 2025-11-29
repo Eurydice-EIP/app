@@ -30,7 +30,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           )}
         </div>
 
-        <hr className="border-[#EDDEA4] my-2 border-t-2" />
+        <hr className="border-[#EDDEA4] my-2 border-t-1" />
 
         <div className="flex flex-row text-[#8A8F93] justify-between items-center">
           {/* Remaining Tasks */}
@@ -66,7 +66,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           </p>
         </div>
 
-        <hr className="border-[#EDDEA4] my-2 border-t-2" />
+        <hr className="border-[#EDDEA4] my-2 border-t-1" />
         <div className="flex flex-row justify-between items-center">
           <Label
             className="rounded-full px-4 py-2 bg-[#E9F2DD] text-[#7DBA8E]"
@@ -89,7 +89,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           >
             {project.remainingTime} days
           </Label>
-          <Button className="bg-[#EDDEA4] text-[#393E41] font-bold px-4 py-2 rounded-2xl hover:bg-[#E4D890] flex items-center">
+          <Button className="bg-[#EDDEA4] text-[#393E41] font-bold px-4 py-2 rounded-full hover:bg-[#E4D890] flex items-center">
             <span className="text-sm md:text-base">See</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
