@@ -17,6 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.className}>
       <body className="antialiased bg-white text-gray-800">
+        {/* Set the Bg color of the whole app here */}
         <div className="flex min-h-screen bg-[#F4F7F8]">
           <Sidebar />
 

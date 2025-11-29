@@ -1,6 +1,6 @@
 "use client";
 
-import InlineTask from "./InlineTask";
+import InlineTask from "../molecules/InlineTask";
 
 type TasksWidgetProps = {
   className?: string;
