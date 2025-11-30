@@ -1,9 +1,11 @@
-// ...existing code...
 "use client";
 import { Project } from "@/types/Project";
 import Label from "../atoms/Label";
 import Button from "../atoms/Button";
 import Bookmark from "../atoms/Bookmark";
+import IconClipboard from "@/public/icons/clipboard.svg";
+import IconAward from "@/public/icons/award.svg";
+import IconZap from "@/public/icons/zap.svg";
 
 interface ProjectCardProps {
   project: Project;
@@ -35,33 +37,22 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         <div className="flex flex-row text-[#8A8F93] justify-between items-center">
           {/* Remaining Tasks */}
           <div className="flex flex-row items-center">
-            <p className="text-sm">
-              <img
-                src="/icons/clipboard.svg"
-                alt="My Icon"
-                className="inline w-6 h-6 mr-1"
-              />
+            <p className="text-sm flex items-center">
+              <IconClipboard className="w-6 h-6" />
               {project.totalTasks - project.doneTasks} to do
             </p>
           </div>
 
           {/* Reward */}
-          <p className="text-sm">
-            <img
-              src="/icons/award.svg"
-              alt="My Icon"
-              className="inline w-6 h-6 mr-1"
-            />
+          <p className="text-sm flex items-center">
+            <IconAward className="w-6 h-6" />
+
             {project.reward}
           </p>
 
           {/* XP */}
-          <p className="text-sm">
-            <img
-              src="/icons/zap.svg"
-              alt="My Icon"
-              className="inline w-6 h-6 mr-1"
-            />
+          <p className="text-sm flex items-center">
+            <IconZap className="w-6 h-6" />
             {project.xp} XP
           </p>
         </div>
