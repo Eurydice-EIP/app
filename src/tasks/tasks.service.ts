@@ -39,7 +39,9 @@ export class TasksService {
         return this.prisma.task.update({
             where: { id },
             data: {
-                ...(updateTaskDto.title !== undefined && { title: updateTaskDto.title }),
+                ...(updateTaskDto.title !== undefined && {
+                    title: updateTaskDto.title,
+                }),
                 ...(updateTaskDto.dueAt !== undefined && {
                     due_at: new Date(updateTaskDto.dueAt),
                 }),
