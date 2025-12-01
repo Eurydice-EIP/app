@@ -1,27 +1,29 @@
-import { IsOptional, IsString, IsInt, IsDateString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsOptional, IsString, IsInt, IsDateString, IsDate } from 'class-validator';
 
 export class UpdateTaskDto {
-    @IsOptional()
     @IsString()
+    @IsOptional()
     title?: string;
 
+    @Type(() => Date)
+    @IsDate()
     @IsOptional()
-    @IsDateString()
-    dueAt?: string;
+    dueAt?: Date;
 
-    @IsOptional()
     @IsInt()
+    @IsOptional()
     userId?: number;
 
-    @IsOptional()
     @IsInt()
+    @IsOptional()
     projectId?: number;
 
-    @IsOptional()
     @IsInt()
+    @IsOptional()
     importance?: number;
 
-    @IsOptional()
     @IsInt()
+    @IsOptional()
     estimatedMin?: number;
 }
