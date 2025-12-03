@@ -9,7 +9,7 @@ import { exit } from 'process';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule);
+    const app = await NestFactory.create(AppModule, { cors: true });
     const configService = app.get(ConfigService);
     const port = configService.get<number>('api.port');
     const swaggerConfig = new DocumentBuilder()
