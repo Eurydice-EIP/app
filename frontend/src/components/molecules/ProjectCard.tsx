@@ -38,7 +38,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           {/* Remaining Tasks */}
           <div className="flex flex-row items-center">
             <p className="text-sm flex items-center">
-              <IconClipboard className="w-6 h-6" />
+              <IconClipboard className="w-6 h-6 stroke-[#000000]" />
               {project.totalTasks - project.doneTasks} to do
             </p>
           </div>

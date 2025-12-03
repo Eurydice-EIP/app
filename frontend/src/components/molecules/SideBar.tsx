@@ -1,72 +1,65 @@
 "use client";
 
-import React, { useState } from "react";
-import Button from "../atoms/Button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import Image from "next/image";
+import React from "react";
+import { usePathname, useRouter } from "next/navigation";
+import Logo from "@/public/icons/logo.svg";
+import IconHome from "../icons/IconHome";
+import IconBook from "../icons/IconBook";
+import IconCalendar from "../icons/IconCalendar";
+import IconChart from "../icons/IconChart";
+import IconMap from "../icons/IconMap";
+import IconStar from "../icons/IconStar";
+import IconUser from "../icons/IconUser";
+import IconNight from "../icons/IconNight";
 
 const Sidebar = () => {
-  const [isOpen, setIsOpen] = useState(true);
-
-  const handleRedirect = (text: string) => {
-    if (window) {
-      window.location.href = `/${text}`;
-    }
-  };
+  const pathname = usePathname();
+  const router = useRouter();
 
   return (
-    <div
-      className={`relative h-screen ${
-        isOpen ? "w-48" : "w-22"
-      } transition-all duration-300`}
-    >
-      <div
-        className={`fixed top-0 left-0 h-full ${
-          isOpen ? "w-48" : "w-22"
-        } bg-[#E7F3F3] border-r-2 border-[#A3D8C1] rounded-r-3xl transition-all duration-300`}
-      >
-        <div className="p-4 flex flex-col items-center">
-          <Button
-            className="absolute top-4 right-[-20px] bg-[#A3D8C1] p-2 rounded-full shadow-lg"
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            {isOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
-          </Button>
-
-          {isOpen ? (
-            <>
-              <h2 className="text-2xl font-bold text-[#A3D8C1]">Eurydice</h2>
-              <nav className="flex flex-col items-center mt-8 w-full">
-                <Button
-                  className="rounded-lg px-4 py-2 text-black font-black w-full"
-                  onClick={() => handleRedirect("")}
-                >
-                  Home
-                </Button>
-                <Button
-                  className="rounded-lg px-4 py-2 text-black font-black w-full"
-                  onClick={() => handleRedirect("guild")}
-                >
-                  Guild
-                </Button>
-                <Button
-                  className="rounded-lg px-4 py-2 text-black font-black w-full"
-                  onClick={() => handleRedirect("projects")}
-                >
-                  Projects
-                </Button>
-              </nav>
-            </>
-          ) : (
-            <Image
-              src="/logo-black.png"
-              alt="Eurydice"
-              width={50}
-              height={50}
-              className="rounded-full"
-            />
-          )}
-        </div>
+    <div className="fixed left-0 top-0 h-screen w-[72px] p-2 flex flex-col justify-between items-center border-r-2 border-[#B5B9BC] bg-[#F5F3EE] overflow-auto">
+      <div className="flex flex-col items-center gap-4">
+        {/* keep your Logo / other icons as before */}
+        <Logo
+          onClick={() => router.push("/")}
+          className="hover:cursor-pointer"
+        />
+        <IconHome
+          onClick={() => router.push("/")}
+          isSelected={pathname === "/"}
+        />
+        <IconBook
+          onClick={() => router.push("/projects")}
+          isSelected={pathname === "/projects"}
+        />
+        <IconChart
+          onClick={() => router.push("/analytics")}
+          isSelected={pathname === "/analytics"}
+        />
+        <IconCalendar
+          onClick={() => router.push("/calendar")}
+          isSelected={pathname === "/calendar"}
+        />
+        <IconMap
+          onClick={() => router.push("/map")}
+          isSelected={pathname === "/map"}
+        />
+        <IconStar
+          onClick={() => router.push("/favorites")}
+          isSelected={pathname === "/favorites"}
+        />
+      </div>
+      <div className="flex flex-col items-center gap-4">
+        <IconUser
+          onClick={() => router.push("/profile")}
+          isSelected={pathname === "/profile"}
+        />
+        <IconNight
+          onClick={() => {
+            /* Implement theme toggle logic here */
+          }}
+          isSelected={false}
+        />
       </div>
     </div>
   );
