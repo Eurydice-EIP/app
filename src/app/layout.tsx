@@ -17,12 +17,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.className}>
       <body className="antialiased bg-[#F9F7F3] text-gray-800">
-        {/* Set the Bg color of the whole app here */}
         <div className="flex min-h-screen bg-[#F9F7F3]">
           <Sidebar />
-
-          <div className="flex-1 flex flex-col p-4 lg:ml-4 lg:mr-4">
-            <div className="flex-1">{children}</div>
+          <div className="flex-1 flex flex-col p-4">
+            <div className="flex-1 ml-[72px]">{children}</div>
           </div>
         </div>
       </body>
