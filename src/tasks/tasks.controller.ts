@@ -11,11 +11,11 @@ import {
     HttpStatus,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
-import { Task as TaskModel } from '@prisma/client';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { TaskResponseDto } from './dto/task-response.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { Task } from './entities/task.entity';
+import { plainToInstance } from 'class-transformer';
 
 @Controller({
     path: 'tasks',
@@ -29,12 +29,15 @@ export class TasksController {
     @ApiResponse({
         status: HttpStatus.CREATED,
         description: 'The task has been successfully created.',
-        type: Task,
+        type: TaskResponseDto,
     })
     @Version('1')
     @Post()
-    async create(@Body() createTaskDto: CreateTaskDto): Promise<TaskModel> {
-        return this.tasksService.create(createTaskDto);
+    async create(
+        @Body() createTaskDto: CreateTaskDto
+    ): Promise<TaskResponseDto> {
+        const task = await this.tasksService.create(createTaskDto);
+        return plainToInstance(TaskResponseDto, task);
     }
 
     // ---------------- FIND ONE ----------------
@@ -42,7 +45,7 @@ export class TasksController {
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'The task has been successfully retrieved.',
-        type: Task,
+        type: TaskResponseDto,
     })
     @ApiResponse({
         status: HttpStatus.NOT_FOUND,
@@ -52,8 +55,9 @@ export class TasksController {
     @Get(':id')
     async findOne(
         @Param('id', ParseIntPipe) id: number
-    ): Promise<TaskModel | null> {
-        return this.tasksService.findOne(id);
+    ): Promise<TaskResponseDto | null> {
+        const task = await this.tasksService.findOne(id);
+        return plainToInstance(TaskResponseDto, task);
     }
 
     // ---------------- FIND ALL ----------------
@@ -61,12 +65,13 @@ export class TasksController {
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'The tasks have been successfully retrieved.',
-        type: [Task],
+        type: [TaskResponseDto],
     })
     @Version('1')
     @Get()
-    async findAll(): Promise<TaskModel[]> {
-        return this.tasksService.findAll();
+    async findAll(): Promise<TaskResponseDto[]> {
+        const tasks = await this.tasksService.findAll();
+        return plainToInstance(TaskResponseDto, tasks);
     }
 
     // ---------------- UPDATE ----------------
@@ -74,7 +79,7 @@ export class TasksController {
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'The task has been successfully updated.',
-        type: Task,
+        type: TaskResponseDto,
     })
     @ApiResponse({
         status: HttpStatus.NOT_FOUND,
@@ -85,8 +90,9 @@ export class TasksController {
     async update(
         @Param('id', ParseIntPipe) id: number,
         @Body() updateTaskDto: UpdateTaskDto
-    ): Promise<TaskModel> {
-        return this.tasksService.update(id, updateTaskDto);
+    ): Promise<TaskResponseDto> {
+        const task = await this.tasksService.update(id, updateTaskDto);
+        return plainToInstance(TaskResponseDto, task);
     }
 
     // ---------------- DELETE ----------------
@@ -94,7 +100,7 @@ export class TasksController {
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'The task has been successfully deleted.',
-        type: Task,
+        type: TaskResponseDto,
     })
     @ApiResponse({
         status: HttpStatus.NOT_FOUND,
@@ -102,7 +108,10 @@ export class TasksController {
     })
     @Version('1')
     @Delete(':id')
-    async delete(@Param('id', ParseIntPipe) id: number): Promise<TaskModel> {
-        return this.tasksService.delete(id);
+    async delete(
+        @Param('id', ParseIntPipe) id: number
+    ): Promise<TaskResponseDto> {
+        const task = await this.tasksService.delete(id);
+        return plainToInstance(TaskResponseDto, task);
     }
 }

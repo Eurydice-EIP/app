@@ -5,6 +5,8 @@ import {
     IsNotEmpty,
     IsOptional,
     IsString,
+    Max,
+    Min,
 } from 'class-validator';
 
 export class CreateTaskDto {
@@ -26,10 +28,13 @@ export class CreateTaskDto {
     projectId?: number;
 
     @IsInt()
+    @Min(1)
+    @Max(5)
     @IsOptional()
     importance?: number;
 
     @IsInt()
+    @Min(0)
     @IsOptional()
     estimatedMin?: number;
 }
