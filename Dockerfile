@@ -20,6 +20,8 @@ FROM node:25.0-alpine3.21 AS build
 WORKDIR /app
 COPY package*.json ./
 COPY tsconfig*.json ./
+COPY nest-cli.json ./
+COPY prisma ./prisma
 
 RUN npm ci
 
@@ -34,6 +36,7 @@ WORKDIR /app
 COPY --from=base /app/package*.json ./
 COPY --from=base /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
+COPY --from=build /app/prisma ./prisma
 
 CMD ["npm", "run", "start:prod"]
 
