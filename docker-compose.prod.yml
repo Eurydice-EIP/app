@@ -1,0 +1,39 @@
+name: eurydice-backend-prod
+services:
+
+  db:
+    container_name: eurydice-database
+    restart: unless-stopped
+    image: postgres:17.6
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+
+  app:
+    container_name: eurydice-api
+    restart: unless-stopped
+    image: ghcr.io/Eurydice-EIP/eurydice-backend:latest
+    ports:
+      - ${API_PORT}:${API_PORT}
+    env_file:
+      - .env
+    environment:
+      DB_URL: postgresql://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/${DB_NAME}?schema=public
+    depends_on:
+      - db
+
+  db_monitoring:
+    container_name: eurydice-db-monitoring
+    restart: unless-stopped
+    image: adminer:5.4.1
+    ports:
+      - 127.0.0.1:8080:8080
+    depends_on:
+      - db
+
+volumes:
+  db_data:
+    name: eurydice-db-data
