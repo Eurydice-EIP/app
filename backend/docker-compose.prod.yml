@@ -15,7 +15,7 @@ services:
   app:
     container_name: eurydice-api
     restart: unless-stopped
-    image: ghcr.io/Eurydice-EIP/eurydice-backend:latest
+    image: ghcr.io/eurydice-eip/eurydice-backend:latest
     ports:
       - ${API_PORT}:${API_PORT}
     env_file:
