@@ -35,6 +35,8 @@ COPY --from=base /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/prisma ./prisma
 
+RUN npm run prisma:generate
+
 CMD ["npm", "run", "start:prod"]
 
 
