@@ -15,13 +15,15 @@ RUN if [ "$NODE_ENV" = "production" ]; then \
 
 
 # Production build stage
-FROM base AS build
+FROM node:25.0-alpine3.21 AS build
 
-COPY . .
+WORKDIR /app
+COPY package*.json ./
+COPY tsconfig*.json ./
 
-RUN if [ "$NODE_ENV" = "production" ]; then \
-        npm run build; \
-    fi
+RUN npm ci
+
+RUN npm run build
 
 
 # Production runtime stage
