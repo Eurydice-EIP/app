@@ -18,10 +18,7 @@ RUN if [ "$NODE_ENV" = "production" ]; then \
 FROM node:25.0-alpine3.21 AS build
 
 WORKDIR /app
-COPY package*.json ./
-COPY tsconfig*.json ./
-COPY nest-cli.json ./
-COPY prisma ./prisma
+COPY . .
 
 RUN npm ci
 
