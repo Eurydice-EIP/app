@@ -14,16 +14,41 @@ datasource db {
   url      = env("DB_URL")
 }
 
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  BLOCKED
+}
+
 model Task {
   id            Int         @id @default(autoincrement())
   title         String      @db.VarChar(255)
   dueAt         DateTime    @db.Timestamptz(3)                                @map("due_at")
+  status        TaskStatus  @default(PENDING)
   userId        Int?                                                          @map("user_id")
   projectId     Int?                                                          @map("project_id")
-  importance    Int?        @default(0)
-  estimatedMin  Int?        @default(0)                                       @map("estimated_min")
+  importance    Int         @default(1)
+  estimatedTime Int         @default(1)                                       @map("estimated_time")
+  blocks        TaskBlock[] @relation("Blocks")
+  blockedBy     TaskBlock[] @relation("BlockedBy")
   createdAt     DateTime    @db.Timestamptz(3) @default(now())                @map("created_at")
   lastUpdate    DateTime    @db.Timestamptz(3) @default(now()) @updatedAt     @map("last_update")
 
   @@map("task")
+}
+
+model TaskBlock {
+  blockerId Int   @map("blocker_id")
+  blockedId Int   @map("blocked_id")
+
+  blocker   Task  @relation("Blocks", fields: [blockerId], references: [id])
+  blocked   Task  @relation("BlockedBy", fields: [blockedId], references: [id])
+
+  @@id([blockerId, blockedId])
+
+  @@index([blockedId])
+  @@index([blockerId])
+
+  @@map("task_block")
 }

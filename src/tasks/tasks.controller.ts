@@ -33,10 +33,8 @@ export class TasksController {
     })
     @Version('1')
     @Post()
-    async create(
-        @Body() createTaskDto: CreateTaskDto
-    ): Promise<TaskResponseDto> {
-        const task = await this.tasksService.create(createTaskDto);
+    async create(@Body() dto: CreateTaskDto): Promise<TaskResponseDto> {
+        const task = await this.tasksService.create(dto);
         return plainToInstance(TaskResponseDto, task);
     }
 
@@ -89,9 +87,9 @@ export class TasksController {
     @Patch(':id')
     async update(
         @Param('id', ParseIntPipe) id: number,
-        @Body() updateTaskDto: UpdateTaskDto
+        @Body() dto: UpdateTaskDto
     ): Promise<TaskResponseDto> {
-        const task = await this.tasksService.update(id, updateTaskDto);
+        const task = await this.tasksService.update(id, dto);
         return plainToInstance(TaskResponseDto, task);
     }
 
