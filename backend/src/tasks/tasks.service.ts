@@ -132,6 +132,9 @@ export class TasksService {
                         ...(dto.dueAt !== undefined && {
                             dueAt: new Date(dto.dueAt),
                         }),
+                        ...(dto.status !== undefined && {
+                            status: dto.status,
+                        }),
                         ...(dto.userId !== undefined && {
                             userId: dto.userId,
                         }),
