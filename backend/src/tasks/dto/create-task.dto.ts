@@ -1,5 +1,6 @@
 import { Type } from 'class-transformer';
 import {
+    ArrayUnique,
     IsDate,
     IsInt,
     IsNotEmpty,
@@ -20,21 +21,27 @@ export class CreateTaskDto {
     dueAt: Date;
 
     @IsInt()
+    @Min(1)
     @IsOptional()
     userId?: number;
 
     @IsInt()
+    @Min(1)
     @IsOptional()
     projectId?: number;
 
     @IsInt()
     @Min(1)
     @Max(5)
-    @IsOptional()
-    importance?: number;
+    importance: number;
 
     @IsInt()
-    @Min(0)
+    @Min(1)
+    @Max(5)
+    estimatedTime: number;
+
+    @ArrayUnique()
+    @IsInt({ each: true })
     @IsOptional()
-    estimatedMin?: number;
+    blocks?: number[];
 }
