@@ -6,12 +6,16 @@ import Bookmark from "../atoms/Bookmark";
 import IconClipboard from "@/public/icons/clipboard.svg";
 import IconAward from "@/public/icons/award.svg";
 import IconZap from "@/public/icons/zap.svg";
+import { useTranslations } from "next-intl";
 
 interface ProjectCardProps {
   project: Project;
 }
 
 export default function ProjectCard({ project }: ProjectCardProps) {
+  const t = useTranslations("projects");
+  const remainingTasks = project.totalTasks - project.doneTasks;
+
   return (
     <div className="flex w-full h-56 bg-[#F9F7F3] rounded-4xl overflow-visible flex-none shadow-md relative">
       {/* LEFT CONTENT */}
@@ -39,7 +43,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           <div className="flex flex-row items-center">
             <p className="text-sm flex items-center">
               <IconClipboard className="w-6 h-6 stroke-[#000000]" />
-              {project.totalTasks - project.doneTasks} to do
+              {t("toDo", { count: remainingTasks })}
             </p>
           </div>
 
@@ -78,10 +82,10 @@ export default function ProjectCard({ project }: ProjectCardProps) {
               </svg>
             }
           >
-            {project.remainingTime} days
+            {t("days", { count: project.remainingTime })}
           </Label>
           <Button className="bg-[#EDDEA4] text-[#393E41] font-bold px-4 py-2 rounded-full hover:bg-[#E4D890] flex items-center">
-            <span className="text-sm md:text-base">See</span>
+            <span className="text-sm md:text-base">{t("see")}</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"

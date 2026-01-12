@@ -1,11 +1,11 @@
-// ...existing code...
 import type { NextConfig } from "next";
 import type { Configuration } from "webpack";
+import createNextIntlPlugin from "next-intl/plugin";
+
+const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 const nextConfig: NextConfig = {
-  /* config options here */
   webpack(config: Configuration) {
-    // ensure a concrete module object exists and use a local ref so TS won't complain
     const moduleRef =
       (config as any).module ?? ((config as any).module = { rules: [] });
     const moduleRules = (moduleRef as any).rules ?? [];
@@ -22,7 +22,7 @@ const nextConfig: NextConfig = {
       {
         ...fileLoaderRule,
         test: /\.svg$/i,
-        resourceQuery: /url/, // *.svg?url
+        resourceQuery: /url/,
       },
       {
         test: /\.svg$/i,
@@ -38,6 +38,7 @@ const nextConfig: NextConfig = {
 
     return config;
   },
+
   experimental: {
     turbo: {
       rules: {
@@ -50,5 +51,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
-// ...existing code...
+export default withNextIntl(nextConfig);
