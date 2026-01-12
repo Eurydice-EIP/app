@@ -1,15 +1,18 @@
 "use client";
 
 import InlineTask from "../molecules/InlineTask";
+import { useTranslations } from "next-intl";
 
 type TasksWidgetProps = {
   className?: string;
 };
 
 const TasksWidget: React.FC<TasksWidgetProps> = ({ className = "" }) => {
+  const t = useTranslations("home");
+
   return (
     <div className={`${className}`}>
-      <p className="font-medium text-[#343534] text-[36px]">Tasks</p>
+      <p className="font-medium text-[#343534] text-[36px]">{t("tasks")}</p>
       <InlineTask taskNumber="01" task="Faire une tartiflette"></InlineTask>
       <hr className="border-[#C9CACC]" />
       <InlineTask

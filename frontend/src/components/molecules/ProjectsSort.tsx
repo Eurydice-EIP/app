@@ -1,6 +1,9 @@
 import Button from "../atoms/Button";
+import { useTranslations } from "next-intl";
 
 export default function ProjectsSort() {
+  const t = useTranslations("projects");
+
   return (
     <div className="w-full z-25">
       <div className="flex flex-row items-center justify-between w-full">
@@ -8,7 +11,7 @@ export default function ProjectsSort() {
           className="text-[#393E41] flex-shrink-0 font-medium text-sm
         "
         >
-          Sort By:
+          {t("sortBy")}
         </p>
         {/* Filters */}
         <div className="flex flex-row w-full gap-2 items-center justify-around mx-6">
@@ -16,19 +19,19 @@ export default function ProjectsSort() {
             className="text-[#393E41] px-2 py-1 rounded-2xl bg-[#B5B9BC] hover:bg-[#A0A4A6] text-sm"
             isDisabled={true}
           >
-            Deadline
+            {t("deadline")}
           </Button>
           <Button
             className="text-[#393E41] px-2 py-1 rounded-2xl bg-[#B5B9BC] hover:bg-[#A0A4A6] text-sm"
             isDisabled={true}
           >
-            Tasks left
+            {t("tasksLeft")}
           </Button>
           <Button
             className="text-[#393E41] px-2 py-1 rounded-2xl bg-[#B5B9BC] hover:bg-[#A0A4A6] text-sm"
             isDisabled={true}
           >
-            Rewards
+            {t("rewards")}
           </Button>
         </div>
       </div>

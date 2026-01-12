@@ -19,7 +19,6 @@ const Sidebar = () => {
   return (
     <div className="fixed left-0 top-0 h-screen w-[72px] p-2 flex flex-col justify-between items-center border-r-2 border-[#B5B9BC] bg-[#F5F3EE] overflow-auto">
       <div className="flex flex-col items-center gap-4">
-        {/* keep your Logo / other icons as before */}
         <Logo
           onClick={() => router.push("/")}
           className="hover:cursor-pointer"

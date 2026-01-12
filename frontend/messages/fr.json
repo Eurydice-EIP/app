@@ -1,0 +1,33 @@
+{
+  "home": {
+    "tasks": "Tâches",
+    "projects": "Projets",
+    "calendar": "Calendrier",
+    "stats": "Statistiques",
+    "wip": "En cours"
+  },
+  "projects": {
+    "title": "Projets",
+    "new": "Nouveau +",
+    "sortBy": "Trier par:",
+    "deadline": "Échéance",
+    "tasksLeft": "Tâches restantes",
+    "rewards": "Récompenses",
+    "see": "Voir",
+    "days": "{count} jours",
+    "toDo": "{count} à faire"
+  },
+  "timeTracker": {
+    "title": "Suivi du temps",
+    "startWorking": "Commencer à travailler sur {task}"
+  },
+  "sidebar": {
+    "home": "Accueil",
+    "projects": "Projets",
+    "analytics": "Analyses",
+    "calendar": "Calendrier",
+    "map": "Carte",
+    "favorites": "Favoris",
+    "profile": "Profil"
+  }
+}

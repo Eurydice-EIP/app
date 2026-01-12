@@ -1,0 +1,33 @@
+{
+  "home": {
+    "tasks": "Tasks",
+    "projects": "Projects",
+    "calendar": "Calendar",
+    "stats": "Stats",
+    "wip": "WIP"
+  },
+  "projects": {
+    "title": "Projects",
+    "new": "New +",
+    "sortBy": "Sort By:",
+    "deadline": "Deadline",
+    "tasksLeft": "Tasks left",
+    "rewards": "Rewards",
+    "see": "See",
+    "days": "{count} days",
+    "toDo": "{count} to do"
+  },
+  "timeTracker": {
+    "title": "Time Tracker",
+    "startWorking": "Start working on {task}"
+  },
+  "sidebar": {
+    "home": "Home",
+    "projects": "Projects",
+    "analytics": "Analytics",
+    "calendar": "Calendar",
+    "map": "Map",
+    "favorites": "Favorites",
+    "profile": "Profile"
+  }
+}
