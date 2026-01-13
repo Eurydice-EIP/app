@@ -44,7 +44,7 @@ describe('TasksController', () => {
                 userId: null,
                 projectId: null,
                 importance: 0,
-                estimatedMin: 0,
+                estimatedTime: 0,
                 createdAt: new Date('2025-11-02T16:51:06.721Z'),
             };
 
@@ -65,7 +65,7 @@ describe('TasksController', () => {
                     userId: 1,
                     projectId: 1,
                     importance: 1,
-                    estimatedMin: 30,
+                    estimatedTime: 30,
                     createdAt: new Date(),
                 },
                 {
@@ -75,7 +75,7 @@ describe('TasksController', () => {
                     userId: 1,
                     projectId: 2,
                     importance: 2,
-                    estimatedMin: 45,
+                    estimatedTime: 45,
                     createdAt: new Date(),
                 },
             ];
@@ -96,7 +96,7 @@ describe('TasksController', () => {
                 userId: 1,
                 projectId: 1,
                 importance: 3,
-                estimatedMin: 60,
+                estimatedTime: 60,
             };
 
             const result = {
@@ -107,7 +107,7 @@ describe('TasksController', () => {
                 userId: 1,
                 projectId: 1,
                 importance: 3,
-                estimatedMin: 60,
+                estimatedTime: 60,
             };
 
             jest.spyOn(tasksService, 'create').mockResolvedValue(result);
@@ -131,7 +131,7 @@ describe('TasksController', () => {
                 userId: 1,
                 projectId: 1,
                 importance: 2,
-                estimatedMin: 50,
+                estimatedTime: 50,
                 createdAt: new Date(),
             };
 
@@ -152,7 +152,7 @@ describe('TasksController', () => {
                 userId: 1,
                 projectId: 1,
                 importance: 2,
-                estimatedMin: 30,
+                estimatedTime: 30,
                 createdAt: new Date(),
             };
 
