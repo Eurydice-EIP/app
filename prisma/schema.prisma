@@ -14,6 +14,25 @@ datasource db {
   url      = env("DB_URL")
 }
 
+enum ProjectType {
+  MAIN
+  SIDE
+}
+
+model Project {
+  id            Int         @id @default(autoincrement())
+  title         String
+  dueAt         DateTime    @db.Timestamptz(3)                                @map("due_at")
+  userId        Int?                                                          @map("user_id")
+  type          ProjectType
+  importance    Int         @default(1)
+  estimatedTime Int         @default(0)                                       @map("estimated_min")
+  createdAt     DateTime    @db.Timestamptz(3) @default(now())                @map("created_at")
+  lastUpdate    DateTime    @db.Timestamptz(3) @default(now()) @updatedAt     @map("last_update")
+
+  tasks         Task[]
+}
+
 enum TaskStatus {
   PENDING
   IN_PROGRESS
@@ -35,15 +54,18 @@ model Task {
   createdAt     DateTime    @db.Timestamptz(3) @default(now())                @map("created_at")
   lastUpdate    DateTime    @db.Timestamptz(3) @default(now()) @updatedAt     @map("last_update")
 
+  project       Project?    @relation(fields: [projectId], references: [id])
+
   @@map("task")
 }
 
-model TaskBlock {
-  blockerId Int   @map("blocker_id")
-  blockedId Int   @map("blocked_id")
 
-  blocker   Task  @relation("Blocks", fields: [blockerId], references: [id])
-  blocked   Task  @relation("BlockedBy", fields: [blockedId], references: [id])
+model TaskBlock {
+  blockerId     Int         @map("blocker_id")
+  blockedId     Int         @map("blocked_id")
+
+  blocker       Task        @relation("Blocks", fields: [blockerId], references: [id])
+  blocked       Task        @relation("BlockedBy", fields: [blockedId], references: [id])
 
   @@id([blockerId, blockedId])
 

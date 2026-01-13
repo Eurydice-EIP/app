@@ -6,6 +6,7 @@ import { validate } from './config/env.validation';
 import databaseConfig from './config/database.config';
 import apiConfig from './config/api.config';
 import { TasksModule } from './tasks/tasks.module';
+import { ProjectsModule } from './projects/projects.module';
 
 @Module({
     imports: [
@@ -15,6 +16,7 @@ import { TasksModule } from './tasks/tasks.module';
             isGlobal: true,
             cache: true,
         }),
+        ProjectsModule,
         TasksModule,
     ],
     controllers: [AppController],
