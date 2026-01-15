@@ -31,30 +31,39 @@
 $ npm install
 ```
 
-## Compile and run the project
+## Start and stop containers
 
 ```bash
-# development
-$ npm run start
+# Start the containers
+docker compose up
+# or in detached mode
+docker compose up -d
+# if the container is in detached mode enter this command to read what append inside
+sudo docker compose logs -f app # without the "-f" to read just one time
 
-# watch mode
-$ npm run start:dev
+# Start the containers and rebuild the images
+docker compose up --build
+# or in detached mode
+docker compose up --build -d
 
-# production mode
-$ npm run start:prod
+# Stop the containers (when started in detached mode)
+docker compose down
 ```
 
 ## Run tests
 
 ```bash
-# unit tests
-$ npm run test
+# run the unit test inside the docker
+sudo docker compose exec app npm run test
+
+# run the unit tests outside the docker
+  $ npm run test
 
 # e2e tests
-$ npm run test:e2e
+  $ npm run test:e2e
 
 # test coverage
-$ npm run test:cov
+  $ npm run test:cov
 ```
 
 ## Deployment
