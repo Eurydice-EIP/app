@@ -26,7 +26,11 @@ const IconHome: React.FC<IconProps> = ({
     >
       <path
         d="M25.5 28.3327V14.166M17 28.3327V5.66602M8.5 28.3327V19.8327"
-        stroke={isSelected ? "#0FA3B1" : "#6B7280"}
+        stroke={
+          isSelected
+            ? "var(--color-icon-sidebar-selected)"
+            : "var(--color-icon-sidebar-unselected)"
+        }
         strokeWidth={isSelected ? "3" : "2"}
         strokeLinecap="round"
         strokeLinejoin="round"

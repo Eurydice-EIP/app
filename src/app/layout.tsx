@@ -21,9 +21,9 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} className={inter.className}>
-      <body className="antialiased bg-[#F9F7F3] text-gray-800">
+      <body className="antialiased bg-[var(--background)] text-[var(--foreground)]">
         <NextIntlClientProvider messages={messages}>
-          <div className="flex min-h-screen bg-[#F9F7F3]">
+          <div className="flex min-h-screen bg-[var(--background)] text-[var(--foreground)]">
             <Sidebar />
             <div className="flex-1 flex flex-col p-4">
               <div className="flex-1 ml-[72px]">{children}</div>

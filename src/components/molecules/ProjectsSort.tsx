@@ -8,7 +8,7 @@ export default function ProjectsSort() {
     <div className="w-full z-25">
       <div className="flex flex-row items-center justify-between w-full">
         <p
-          className="text-[#393E41] flex-shrink-0 font-medium text-sm
+          className="text-[var(--color-text)] flex-shrink-0 font-medium text-sm
         "
         >
           {t("sortBy")}

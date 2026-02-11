@@ -26,7 +26,11 @@ const IconBook: React.FC<IconProps> = ({
     >
       <path
         d="M17.0007 2.83398L21.3782 11.7023L31.1673 13.1332L24.084 20.0323L25.7557 29.779L17.0007 25.1748L8.24565 29.779L9.91732 20.0323L2.83398 13.1332L12.6232 11.7023L17.0007 2.83398Z"
-        stroke={isSelected ? "#0FA3B1" : "#6B7280"}
+        stroke={
+          isSelected
+            ? "var(--color-icon-sidebar-selected)"
+            : "var(--color-icon-sidebar-unselected)"
+        }
         strokeWidth={isSelected ? "3" : "2"}
         strokeLinecap="round"
         strokeLinejoin="round"
