@@ -40,9 +40,11 @@ export default function ProjectsBar() {
   const t = useTranslations("projects");
 
   return (
-    <div className="flex flex-col border border-[#B5B9BC] p-8 gap-4 rounded-[30px] items-center bg-[#F5F3EE] max-w-1/4 w-full">
+    <div className="flex flex-col border border-[var(--color-widget-border)] p-8 gap-4 rounded-[30px] items-center bg-[var(--color-widget-primary)] max-w-1/4 w-full">
       <div className="flex flex-row items-center justify-between w-full">
-        <h2 className="text-[#393E41] font-bold text-4xl">{t("title")}</h2>
+        <h2 className="text-[var(--color-text)] font-bold text-4xl">
+          {t("title")}
+        </h2>
         <Button className="bg-[#EDDEA4] text-[#393E41] font-bold px-4 py-2 my-2 rounded-full hover:bg-[#E4D890] text-sm">
           {t("new")}
         </Button>

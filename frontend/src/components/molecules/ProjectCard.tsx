@@ -17,7 +17,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
   const remainingTasks = project.totalTasks - project.doneTasks;
 
   return (
-    <div className="flex w-full h-56 bg-[#F9F7F3] rounded-4xl overflow-visible flex-none shadow-md relative">
+    <div className="flex w-full h-56 bg-[var(--color-background)] rounded-4xl overflow-visible flex-none shadow-md relative">
       {/* LEFT CONTENT */}
       <Bookmark
         className="w-64 h-64 absolute top-[-86px] right-20 z-20"
@@ -26,19 +26,19 @@ export default function ProjectCard({ project }: ProjectCardProps) {
       ></Bookmark>
       <div className="flex flex-col justify-between p-6 w-full h-full ">
         <div className="flex flex-col">
-          <h2 className="text-2xl font-bold text-[#393E41] leading-tight overflow-hidden line-clamp-1 mr-12">
+          <h2 className="text-2xl font-bold text-[var(--color-text)] leading-tight overflow-hidden line-clamp-1 mr-12">
             {project.title}
           </h2>
           {project.description && (
-            <p className="text-[#8A8F93] mt-2 text-sm md:text-base line-clamp-1 overflow-hidden mr-12">
+            <p className="text-[var(--color-text)] mt-2 text-sm md:text-base line-clamp-1 overflow-hidden mr-12">
               {project.description}
             </p>
           )}
         </div>
 
-        <hr className="border-[#EDDEA4] my-2 border-t-1" />
+        <hr className="border-[var(--color-secondary)] my-2 border-t-1" />
 
-        <div className="flex flex-row text-[#8A8F93] justify-between items-center">
+        <div className="flex flex-row text-[var(--color-text)] justify-between items-center">
           {/* Remaining Tasks */}
           <div className="flex flex-row items-center">
             <p className="text-sm flex items-center">
