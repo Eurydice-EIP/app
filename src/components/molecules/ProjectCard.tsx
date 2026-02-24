@@ -103,8 +103,13 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           </Button>
         </div>
       </div>
-      {/* RIGHT CONTENT - Image (Temporary color) */}
-      <div className="w-1/3 bg-[#B5B9BC] rounded-r-4xl"></div>
+      {project.image && (
+        <img
+          src={project.image}
+          alt={project.title}
+          className="w-1/3 bg-[#B5B9BC] rounded-r-4xl"
+        />
+      )}
     </div>
   );
 }

@@ -1,14 +1,16 @@
 {
   "home": {
+    "dashboard": "Tableau de bord"
+  },
+  "projects": {
     "tasks": "Tâches",
     "projects": "Projets",
     "calendar": "Calendrier",
     "stats": "Statistiques",
-    "wip": "En cours"
-  },
-  "projects": {
+    "wip": "En cours",
     "title": "Projets",
-    "new": "Nouveau +",
+    "newProject": "Nouveau +",
+    "newTask": "Nouvelle tâche +",
     "sortBy": "Trier par:",
     "deadline": "Échéance",
     "tasksLeft": "Tâches restantes",
