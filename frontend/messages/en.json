@@ -1,14 +1,16 @@
 {
   "home": {
+    "dashboard": "Dashboard"
+  },
+  "projects": {
     "tasks": "Tasks",
     "projects": "Projects",
     "calendar": "Calendar",
     "stats": "Stats",
-    "wip": "WIP"
-  },
-  "projects": {
+    "wip": "WIP",
     "title": "Projects",
-    "new": "New +",
+    "newProject": "New +",
+    "newTask": "New Task +",
     "sortBy": "Sort By:",
     "deadline": "Deadline",
     "tasksLeft": "Tasks left",

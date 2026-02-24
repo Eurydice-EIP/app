@@ -8,7 +8,7 @@ type TasksWidgetProps = {
 };
 
 const TasksWidget: React.FC<TasksWidgetProps> = ({ className = "" }) => {
-  const t = useTranslations("home");
+  const t = useTranslations("projects");
 
   return (
     <div className={`${className}`}>

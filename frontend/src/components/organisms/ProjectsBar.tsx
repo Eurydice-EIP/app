@@ -10,6 +10,8 @@ const sampleProjects: Project[] = [
   {
     title: "EIP",
     description: "EIP project description",
+    image:
+      "https://img.daisyui.com/images/stock/photo-1559703248-dcaaec9fab78.webp",
     doneTasks: 3,
     totalTasks: 5,
     xp: 100,
@@ -18,6 +20,8 @@ const sampleProjects: Project[] = [
   },
   {
     title: "Website Redesign",
+    image:
+      "https://img.daisyui.com/images/stock/photo-1572635148818-ef6fd45eb394.webp",
     description: "Website Redesign project description",
     doneTasks: 2,
     totalTasks: 8,
@@ -27,6 +31,8 @@ const sampleProjects: Project[] = [
   },
   {
     title: "Mobile App aaaa",
+    image:
+      "https://img.daisyui.com/images/stock/photo-1565098772267-60af42b81ef2.webp",
     description: "Mobile App project description",
     doneTasks: 5,
     totalTasks: 12,
@@ -46,7 +52,7 @@ export default function ProjectsBar() {
           {t("title")}
         </h2>
         <Button className="bg-[#EDDEA4] text-[#393E41] font-bold px-4 py-2 my-2 rounded-full hover:bg-[#E4D890] text-sm">
-          {t("new")}
+          {t("newProject")}
         </Button>
       </div>
       <ProjectsSort />

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "daisyui";
 
 :root,
 :root[data-theme="light"] {
@@ -14,6 +15,7 @@
   --color-secondary-contrast: #393e41;
   --color-icon-sidebar-selected: #0fa3b1;
   --color-icon-sidebar-unselected: #6b7280;
+  --color-bookmark-shade: #f5f3ee;
 }
 
 :root[data-theme="dark"],
