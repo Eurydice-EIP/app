@@ -1,16 +1,17 @@
 "use client";
 
-import { fetchTasks, createTask } from "@/api/Tasks";
+import { fetchTasks } from "@/api/Tasks";
 import React, { useEffect, useState } from "react";
-import { Tasks } from "@/types/Tasks";
+// import { Tasks } from "@/types/Tasks";
 import Button from "@/components/atoms/Button";
 import ProjectsBar from "@/components/organisms/ProjectsBar";
 import TaskWidget from "@/components/organisms/TaskWidget";
 import TimeTrackerWidget from "@/components/molecules/TimeTrackerWidget";
 import { useTranslations } from "next-intl";
+import TaskCreationModal from "@/components/organisms/TaskCreationModal";
 
 export default function Projects() {
-  const [tasks, setTasks] = useState<Tasks[] | null>(null);
+  // const [tasks, setTasks] = useState<Tasks[] | null>(null);
   const t = useTranslations("projects");
 
   useEffect(() => {
@@ -18,12 +19,12 @@ export default function Projects() {
     (async () => {
       try {
         const result = await fetchTasks();
+        console.log("Fetched tasks:", result);
         if (!mounted) return;
-        setTasks(result);
-        console.log("Fetched tasks:", tasks);
+        // setTasks(result);
       } catch (err) {
-        console.error("Failed to load greeting:", err);
-        if (mounted) setTasks(null);
+        console.error("Failed to load tasks:", err);
+        // if (mounted) setTasks(null);
       }
     })();
     return () => {
@@ -31,38 +32,10 @@ export default function Projects() {
     };
   }, []);
 
-  const handleCreateTask = async () => {
-    const newTask: Tasks = {
-      title: "New Task",
-      dueAt: new Date().toISOString(),
-      userId: 1,
-      projectId: 1,
-      importance: 3,
-      estimatedTime: 4,
-    };
-    try {
-      const createdTask = await createTask(newTask);
-      setTasks((prevTasks) =>
-        prevTasks ? [...prevTasks, createdTask] : [createdTask],
-      );
-    } catch (err) {
-      console.error("Failed to create task:", err);
-    }
-  };
+  const [isModalTaskOpen, setIsModalTaskOpen] = useState(false);
 
   return (
     <div className="flex flex-row h-full gap-10 px-8 py-4 text-black">
-      {/* Projects
-
-      {tasks ? (
-        <ul>
-          {tasks.map((task) => (
-            <li key={task.id}>{task.title}</li>
-          ))}
-        </ul>
-      ) : (
-        <p>Loading tasks...</p>
-      )} */}
       <ProjectsBar></ProjectsBar>
       <div className="flex w-full h-full flex-col gap-y-4">
         <div className="flex flex-row items-center justify-between">
@@ -71,7 +44,7 @@ export default function Projects() {
           </h2>
           <Button
             className="border-[#B5B9BC] border-1 rounded-full bg-[#F5F3EE] px-6 py-2 text-[#343534]"
-            onClick={handleCreateTask}
+            onClick={() => setIsModalTaskOpen(true)}
           >
             {t("newTask")}
           </Button>
@@ -84,7 +57,7 @@ export default function Projects() {
               {t("calendar")}
             </div>
             <TimeTrackerWidget
-              className="border-[#B5B9BC] border-1 rounded-[40px] color-[#F5F3EE] px-8 py-4"
+              className="border-[#B5B9BC] border-1 rounded-[40px] bg-[#F5F3EE] px-8 py-4"
               task="EIP"
             ></TimeTrackerWidget>
           </div>
@@ -98,6 +71,11 @@ export default function Projects() {
           </div>
         </div>
       </div>
+      {/* Modal */}
+      <TaskCreationModal
+        isModalTaskOpen={isModalTaskOpen}
+        setIsModalTaskOpen={setIsModalTaskOpen}
+      />
     </div>
   );
 }
