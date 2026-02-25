@@ -14,12 +14,12 @@ export class ProjectsService {
     constructor(private readonly prisma: PrismaService) {}
 
     // ---------------- CREATE ----------------
-    async create(dto: CreateProjectDto): Promise<Project> {
+    async create(userId: number, dto: CreateProjectDto): Promise<Project> {
         return this.prisma.project.create({
             data: {
                 title: dto.title,
                 dueAt: new Date(dto.dueAt),
-                userId: dto.userId ?? null,
+                userId: userId,
                 type: dto.type,
                 importance: dto.importance,
                 estimatedTime: dto.estimatedTime ?? 0,
@@ -28,8 +28,9 @@ export class ProjectsService {
     }
 
     // ---------------- FIND ALL ----------------
-    async findAll(): Promise<Project[]> {
+    async findAll(userId: number): Promise<Project[]> {
         return this.prisma.project.findMany({
+            where: { userId },
             include: {
                 tasks: true,
             },
@@ -37,9 +38,9 @@ export class ProjectsService {
     }
 
     // ---------------- FIND ONE ----------------
-    async findOne(id: number): Promise<Project> {
+    async findOne(userId: number, id: number): Promise<Project> {
         const project = await this.prisma.project.findUnique({
-            where: { id },
+            where: { id, userId },
             include: {
                 tasks: true,
             },
@@ -53,10 +54,14 @@ export class ProjectsService {
     }
 
     // ---------------- UPDATE ----------------
-    async update(id: number, dto: UpdateProjectDto): Promise<Project> {
+    async update(
+        userId: number,
+        id: number,
+        dto: UpdateProjectDto
+    ): Promise<Project> {
         try {
             return await this.prisma.project.update({
-                where: { id },
+                where: { id, userId },
                 data: {
                     ...(dto.title !== undefined && { title: dto.title }),
                     ...(dto.dueAt !== undefined && {
@@ -83,10 +88,10 @@ export class ProjectsService {
     }
 
     // ---------------- DELETE ----------------
-    async delete(id: number): Promise<Project> {
+    async delete(userId: number, id: number): Promise<Project> {
         return this.prisma.$transaction(async (prisma) => {
             const project = await prisma.project.findUnique({
-                where: { id },
+                where: { id, userId },
                 include: { tasks: true },
             });
 
@@ -99,7 +104,7 @@ export class ProjectsService {
             });
 
             await prisma.project.delete({
-                where: { id },
+                where: { id, userId },
             });
 
             // Retourner le projet avec les tâches supprimées
@@ -108,10 +113,10 @@ export class ProjectsService {
     }
 
     // ---------------- ADD TASK TO PROJECT ----------------
-    async addTask(projectId: number, taskId: number) {
+    async addTask(userId: number, projectId: number, taskId: number) {
         return this.prisma.$transaction(async (prisma) => {
             const project = await prisma.project.findUnique({
-                where: { id: projectId },
+                where: { id: projectId, userId },
             });
 
             if (!project) {
@@ -133,17 +138,17 @@ export class ProjectsService {
             }
 
             return prisma.task.update({
-                where: { id: taskId },
+                where: { id: taskId, userId: userId },
                 data: { projectId },
             });
         });
     }
 
     // ---------------- REMOVE TASK FROM PROJECT ----------------
-    async removeTask(projectId: number, taskId: number) {
+    async removeTask(userId: number, projectId: number, taskId: number) {
         return this.prisma.$transaction(async (prisma) => {
             const task = await prisma.task.findUnique({
-                where: { id: taskId },
+                where: { id: taskId, userId: userId },
             });
 
             if (!task || task.projectId !== projectId) {
@@ -153,7 +158,7 @@ export class ProjectsService {
             }
 
             return prisma.task.update({
-                where: { id: taskId },
+                where: { id: taskId, userId: userId },
                 data: { projectId: null },
             });
         });

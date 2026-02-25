@@ -3,10 +3,48 @@ import { ProjectsController } from './projects.controller';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
+import { Project, ProjectType, Task, TaskStatus } from '@prisma/client';
+import { ProjectResponseDto } from './dto/project-response.dto';
+import { plainToInstance } from 'class-transformer';
+import { CurrentUser } from 'src/common/decorators/user.decorator';
 
 describe('ProjectsController', () => {
     let controller: ProjectsController;
     let service: ProjectsService;
+    let user: CurrentUser;
+    const now = new Date('2026-02-25T12:00:00Z');
+
+    const buildProject = (overrides: Partial<Project> = {}): Project => ({
+        id: 1,
+        title: 'Project',
+        dueAt: now,
+        userId: 1,
+        type: ProjectType.MAIN,
+        importance: 1,
+        estimatedTime: 1,
+        createdAt: now,
+        lastUpdate: now,
+        ...overrides,
+    });
+
+    const buildTask = (overrides: Partial<Task> = {}): Task => ({
+        id: 1,
+        title: 'Task',
+        dueAt: now,
+        status: TaskStatus.PENDING,
+        userId: 1,
+        projectId: null,
+        importance: 1,
+        estimatedTime: 1,
+        createdAt: now,
+        lastUpdate: now,
+        ...overrides,
+    });
+
+    const toProjectResponse = (project: Project): ProjectResponseDto =>
+        plainToInstance(ProjectResponseDto, project, {
+            excludeExtraneousValues: true,
+        });
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -29,6 +67,7 @@ describe('ProjectsController', () => {
 
         controller = module.get<ProjectsController>(ProjectsController);
         service = module.get<ProjectsService>(ProjectsService);
+        user = { sub: 1, email: 'user@example.com' };
     });
 
     afterEach(() => {
@@ -46,19 +85,20 @@ describe('ProjectsController', () => {
                 estimatedTime: 4,
             };
 
-            const result = {
+            const result = buildProject({
                 id: 1,
-                ...dto,
-                userId: null,
-                estimatedMin: 0,
-                createdAt: new Date(),
-                lastUpdate: new Date(),
-                tasks: [],
-            };
+                title: dto.title,
+                dueAt: dto.dueAt,
+                type: ProjectType.MAIN,
+                importance: dto.importance,
+                estimatedTime: dto.estimatedTime ?? 0,
+            });
 
-            jest.spyOn(service, 'create').mockResolvedValue(result as any);
+            jest.spyOn(service, 'create').mockResolvedValue(result);
 
-            expect(await controller.create(dto)).toEqual(result);
+            expect(await controller.create(user, dto)).toEqual(
+                toProjectResponse(result)
+            );
         });
     });
 
@@ -66,28 +106,32 @@ describe('ProjectsController', () => {
     describe('findAll', () => {
         it('should return all projects', async () => {
             const result = [
-                { id: 1, title: 'Project 1' },
-                { id: 2, title: 'Project 2' },
+                buildProject({ id: 1, title: 'Project 1' }),
+                buildProject({
+                    id: 2,
+                    title: 'Project 2',
+                    type: ProjectType.SIDE,
+                }),
             ];
 
-            jest.spyOn(service, 'findAll').mockResolvedValue(result as any);
+            jest.spyOn(service, 'findAll').mockResolvedValue(result);
 
-            expect(await controller.findAll()).toEqual(result);
+            expect(await controller.findAll(user)).toEqual(
+                result.map(toProjectResponse)
+            );
         });
     });
 
     // ---------------- FIND ONE ----------------
     describe('findOne', () => {
         it('should return one project', async () => {
-            const result = {
-                id: 1,
-                title: 'Project',
-                tasks: [],
-            };
+            const result = buildProject({ id: 1, title: 'Project' });
 
-            jest.spyOn(service, 'findOne').mockResolvedValue(result as any);
+            jest.spyOn(service, 'findOne').mockResolvedValue(result);
 
-            expect(await controller.findOne(1)).toEqual(result);
+            expect(await controller.findOne(user, 1)).toEqual(
+                toProjectResponse(result)
+            );
         });
     });
 
@@ -98,61 +142,62 @@ describe('ProjectsController', () => {
                 title: 'Updated Project',
             };
 
-            const result = {
+            const result = buildProject({
                 id: 1,
                 title: 'Updated Project',
-            };
+            });
 
-            jest.spyOn(service, 'update').mockResolvedValue(result as any);
+            jest.spyOn(service, 'update').mockResolvedValue(result);
 
-            expect(await controller.update(1, dto)).toEqual(result);
+            expect(await controller.update(user, 1, dto)).toEqual(
+                toProjectResponse(result)
+            );
         });
     });
 
     // ---------------- DELETE ----------------
     describe('delete', () => {
         it('should delete a project and return it with its tasks', async () => {
-            const result = {
-                id: 1,
-                title: 'Deleted Project',
-                tasks: [
-                    { id: 10, title: 'Task 1' },
-                    { id: 11, title: 'Task 2' },
-                ],
-            };
+            const result = buildProject({ id: 1, title: 'Deleted Project' });
 
-            jest.spyOn(service, 'delete').mockResolvedValue(result as any);
+            jest.spyOn(service, 'delete').mockResolvedValue(result);
 
-            expect(await controller.delete(1)).toEqual(result);
+            expect(await controller.delete(user, 1)).toEqual(
+                toProjectResponse(result)
+            );
         });
     });
 
     // ---------------- ADD TASK ----------------
     describe('addTask', () => {
         it('should add a task to a project', async () => {
-            const result = {
-                id: 1,
-                tasks: [{ id: 5 }],
-            };
+            const result = buildTask({ id: 5, title: 'Task 1' });
 
-            jest.spyOn(service, 'addTask').mockResolvedValue(result as any);
+            jest.spyOn(service, 'addTask').mockResolvedValue(result);
 
-            expect(await controller.addTaskToProject(1, 5)).toEqual(result);
+            const expected = plainToInstance(ProjectResponseDto, result, {
+                excludeExtraneousValues: true,
+            });
+
+            expect(await controller.addTaskToProject(user, 1, 5)).toEqual(
+                expected
+            );
         });
     });
 
     // ---------------- REMOVE TASK ----------------
     describe('removeTask', () => {
         it('should remove a task from a project', async () => {
-            const result = {
-                id: 1,
-                tasks: [],
-            };
+            const result = buildTask({ id: 5, title: 'Task 1' });
 
-            jest.spyOn(service, 'removeTask').mockResolvedValue(result as any);
+            jest.spyOn(service, 'removeTask').mockResolvedValue(result);
 
-            expect(await controller.removeTaskFromProject(1, 5)).toEqual(
-                result
+            const expected = plainToInstance(ProjectResponseDto, result, {
+                excludeExtraneousValues: true,
+            });
+
+            expect(await controller.removeTaskFromProject(user, 1, 5)).toEqual(
+                expected
             );
         });
     });

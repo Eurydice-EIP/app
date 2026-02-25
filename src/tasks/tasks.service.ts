@@ -28,6 +28,7 @@ export class TasksService {
 
     // ---------------- CREATE ----------------
     async create(
+        userId: number,
         dto: CreateTaskDto
     ): Promise<PrismaTask & { blocks: number[]; blockedBy: number[] }> {
         // Start a transaction to ensure data integrity
@@ -37,7 +38,7 @@ export class TasksService {
                 data: {
                     title: dto.title,
                     dueAt: new Date(dto.dueAt),
-                    userId: dto.userId ?? null,
+                    userId: userId,
                     projectId: dto.projectId ?? null,
                     importance: dto.importance,
                     estimatedTime: dto.estimatedTime,
@@ -81,12 +82,16 @@ export class TasksService {
 
     // ---------------- FIND ONE ----------------
     async findOne(
+        userId: number,
         id: number
     ): Promise<
         (PrismaTask & { blocks: number[]; blockedBy: number[] }) | null
     > {
         const task = await this.prisma.task.findUnique({
-            where: { id },
+            where: {
+                id,
+                userId,
+            },
             include: {
                 blocks: { select: { blockedId: true } },
                 blockedBy: { select: { blockerId: true } },
@@ -94,17 +99,18 @@ export class TasksService {
         });
 
         if (!task) {
-            return null;
+            throw new NotFoundException('Task not found');
         }
 
         return this.mapTask(task);
     }
 
     // ---------------- FIND ALL ----------------
-    async findAll(): Promise<
-        (PrismaTask & { blocks: number[]; blockedBy: number[] })[]
-    > {
+    async findAll(
+        userId: number
+    ): Promise<(PrismaTask & { blocks: number[]; blockedBy: number[] })[]> {
         const tasks = await this.prisma.task.findMany({
+            where: { userId },
             include: {
                 blocks: { select: { blockedId: true } },
                 blockedBy: { select: { blockerId: true } },
@@ -116,6 +122,7 @@ export class TasksService {
 
     // ---------------- UPDATE ----------------
     async update(
+        userId: number,
         id: number,
         dto: UpdateTaskDto
     ): Promise<PrismaTask & { blocks: number[]; blockedBy: number[] }> {
@@ -124,7 +131,7 @@ export class TasksService {
             // Update the task
             try {
                 await prisma.task.update({
-                    where: { id },
+                    where: { id, userId },
                     data: {
                         ...(dto.title !== undefined && {
                             title: dto.title,
@@ -134,9 +141,6 @@ export class TasksService {
                         }),
                         ...(dto.status !== undefined && {
                             status: dto.status,
-                        }),
-                        ...(dto.userId !== undefined && {
-                            userId: dto.userId,
                         }),
                         ...(dto.projectId !== undefined && {
                             projectId: dto.projectId,
@@ -212,7 +216,7 @@ export class TasksService {
             }
 
             const fullTask = await prisma.task.findUnique({
-                where: { id },
+                where: { id, userId },
                 include: {
                     blocks: { select: { blockedId: true } },
                     blockedBy: { select: { blockerId: true } },
@@ -231,6 +235,7 @@ export class TasksService {
 
     // ---------------- DELETE ----------------
     async delete(
+        userId: number,
         id: number
     ): Promise<PrismaTask & { blocks: number[]; blockedBy: number[] }> {
         // Start a transaction to ensure data integrity
@@ -246,7 +251,7 @@ export class TasksService {
             let task: PrismaTask;
             try {
                 task = await prisma.task.delete({
-                    where: { id },
+                    where: { id, userId },
                 });
             } catch (err) {
                 if (

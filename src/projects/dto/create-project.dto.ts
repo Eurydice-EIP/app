@@ -21,11 +21,6 @@ export class CreateProjectDto {
     @IsNotEmpty()
     dueAt: Date;
 
-    @IsOptional()
-    @Min(1)
-    @IsInt()
-    userId?: number;
-
     @IsEnum(ProjectType)
     type: ProjectType;
 

@@ -6,7 +6,7 @@
 
 generator client {
   provider      = "prisma-client-js"
-  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x", "linux-musl-arm64-openssl-3.0.x"]
 }
 
 datasource db {
@@ -23,7 +23,7 @@ model Project {
   id            Int         @id @default(autoincrement())
   title         String
   dueAt         DateTime    @db.Timestamptz(3)                                @map("due_at")
-  userId        Int?                                                          @map("user_id")
+  userId        Int                                                           @map("user_id")
   type          ProjectType
   importance    Int         @default(1)
   estimatedTime Int         @default(0)                                       @map("estimated_min")
@@ -31,6 +31,10 @@ model Project {
   lastUpdate    DateTime    @db.Timestamptz(3) @default(now()) @updatedAt     @map("last_update")
 
   tasks         Task[]
+
+  user          User?       @relation(fields: [userId], references: [id])
+
+  @@map("project")
 }
 
 enum TaskStatus {
@@ -45,7 +49,7 @@ model Task {
   title         String      @db.VarChar(255)
   dueAt         DateTime    @db.Timestamptz(3)                                @map("due_at")
   status        TaskStatus  @default(PENDING)
-  userId        Int?                                                          @map("user_id")
+  userId        Int                                                           @map("user_id")
   projectId     Int?                                                          @map("project_id")
   importance    Int         @default(1)
   estimatedTime Int         @default(1)                                       @map("estimated_time")
@@ -55,6 +59,7 @@ model Task {
   lastUpdate    DateTime    @db.Timestamptz(3) @default(now()) @updatedAt     @map("last_update")
 
   project       Project?    @relation(fields: [projectId], references: [id])
+  user          User?       @relation(fields: [userId], references: [id])
 
   @@map("task")
 }
@@ -73,4 +78,18 @@ model TaskBlock {
   @@index([blockerId])
 
   @@map("task_block")
+}
+
+model User {
+  id            Int         @id @default(autoincrement())
+  username      String      @db.VarChar(255)
+  email         String      @unique
+  password      String      @db.VarChar(255)
+  createdAt     DateTime    @db.Timestamptz(3) @default(now())                @map("created_at")
+  lastUpdate    DateTime    @db.Timestamptz(3) @default(now()) @updatedAt     @map("last_update")
+
+  projects       Project[]
+  tasks          Task[]
+
+  @@map("user")
 }

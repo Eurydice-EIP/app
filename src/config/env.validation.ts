@@ -1,5 +1,6 @@
 import { plainToInstance } from 'class-transformer';
 import { IsNotEmpty, IsString, validateSync } from 'class-validator';
+import type { StringValue } from 'ms';
 
 class EnvConfig {
     @IsString()
@@ -25,6 +26,14 @@ class EnvConfig {
     @IsString()
     @IsNotEmpty()
     API_PORT: string;
+
+    @IsString()
+    @IsNotEmpty()
+    JWT_SECRET: string;
+
+    @IsString()
+    @IsNotEmpty()
+    JWT_EXPIRES_IN: StringValue;
 }
 
 export function validate(config: Record<string, unknown>): EnvConfig {

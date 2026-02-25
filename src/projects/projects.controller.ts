@@ -10,12 +10,13 @@ import {
     ParseIntPipe,
     HttpStatus,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { ProjectResponseDto } from './dto/project-response.dto';
 import { plainToInstance } from 'class-transformer';
+import { CurrentUser, User } from 'src/common/decorators/user.decorator';
 
 @Controller({
     path: 'projects',
@@ -25,6 +26,7 @@ export class ProjectsController {
     constructor(private readonly projectsService: ProjectsService) {}
 
     // ---------------- CREATE ----------------
+    @ApiBearerAuth('Authorization')
     @ApiOperation({ summary: 'Create a new project' })
     @ApiResponse({
         status: HttpStatus.CREATED,
@@ -33,12 +35,18 @@ export class ProjectsController {
     })
     @Version('1')
     @Post()
-    async create(@Body() dto: CreateProjectDto): Promise<ProjectResponseDto> {
-        const project = await this.projectsService.create(dto);
-        return plainToInstance(ProjectResponseDto, project);
+    async create(
+        @User() user: CurrentUser,
+        @Body() dto: CreateProjectDto
+    ): Promise<ProjectResponseDto> {
+        const project = await this.projectsService.create(user.sub, dto);
+        return plainToInstance(ProjectResponseDto, project, {
+            excludeExtraneousValues: true,
+        });
     }
 
     // ---------------- FIND ALL ----------------
+    @ApiBearerAuth('Authorization')
     @ApiOperation({ summary: 'Get all projects' })
     @ApiResponse({
         status: HttpStatus.OK,
@@ -47,12 +55,15 @@ export class ProjectsController {
     })
     @Version('1')
     @Get()
-    async findAll(): Promise<ProjectResponseDto[]> {
-        const projects = await this.projectsService.findAll();
-        return plainToInstance(ProjectResponseDto, projects);
+    async findAll(@User() user: CurrentUser): Promise<ProjectResponseDto[]> {
+        const projects = await this.projectsService.findAll(user.sub);
+        return plainToInstance(ProjectResponseDto, projects, {
+            excludeExtraneousValues: true,
+        });
     }
 
     // ---------------- FIND ONE ----------------
+    @ApiBearerAuth('Authorization')
     @ApiOperation({ summary: 'Get a project by ID' })
     @ApiResponse({
         status: HttpStatus.OK,
@@ -66,13 +77,17 @@ export class ProjectsController {
     @Version('1')
     @Get(':id')
     async findOne(
+        @User() user: CurrentUser,
         @Param('id', ParseIntPipe) id: number
     ): Promise<ProjectResponseDto> {
-        const project = await this.projectsService.findOne(id);
-        return plainToInstance(ProjectResponseDto, project);
+        const project = await this.projectsService.findOne(user.sub, id);
+        return plainToInstance(ProjectResponseDto, project, {
+            excludeExtraneousValues: true,
+        });
     }
 
     // ---------------- UPDATE ----------------
+    @ApiBearerAuth('Authorization')
     @ApiOperation({ summary: 'Update a project by ID' })
     @ApiResponse({
         status: HttpStatus.OK,
@@ -86,14 +101,18 @@ export class ProjectsController {
     @Version('1')
     @Patch(':id')
     async update(
+        @User() user: CurrentUser,
         @Param('id', ParseIntPipe) id: number,
         @Body() dto: UpdateProjectDto
     ): Promise<ProjectResponseDto> {
-        const project = await this.projectsService.update(id, dto);
-        return plainToInstance(ProjectResponseDto, project);
+        const project = await this.projectsService.update(user.sub, id, dto);
+        return plainToInstance(ProjectResponseDto, project, {
+            excludeExtraneousValues: true,
+        });
     }
 
     // ---------------- DELETE ----------------
+    @ApiBearerAuth('Authorization')
     @ApiOperation({ summary: 'Delete a project and all its tasks' })
     @ApiResponse({
         status: HttpStatus.OK,
@@ -107,13 +126,17 @@ export class ProjectsController {
     @Version('1')
     @Delete(':id')
     async delete(
+        @User() user: CurrentUser,
         @Param('id', ParseIntPipe) id: number
     ): Promise<ProjectResponseDto> {
-        const project = await this.projectsService.delete(id);
-        return plainToInstance(ProjectResponseDto, project);
+        const project = await this.projectsService.delete(user.sub, id);
+        return plainToInstance(ProjectResponseDto, project, {
+            excludeExtraneousValues: true,
+        });
     }
 
     // ---------------- ADD TASK TO PROJECT ----------------
+    @ApiBearerAuth('Authorization')
     @ApiOperation({ summary: 'Attach a task to a project' })
     @ApiResponse({
         status: HttpStatus.OK,
@@ -122,13 +145,22 @@ export class ProjectsController {
     @Version('1')
     @Post(':id/tasks/:taskId')
     async addTaskToProject(
+        @User() user: CurrentUser,
         @Param('id', ParseIntPipe) projectId: number,
         @Param('taskId', ParseIntPipe) taskId: number
     ) {
-        return this.projectsService.addTask(projectId, taskId);
+        const project = await this.projectsService.addTask(
+            user.sub,
+            projectId,
+            taskId
+        );
+        return plainToInstance(ProjectResponseDto, project, {
+            excludeExtraneousValues: true,
+        });
     }
 
     // ---------------- REMOVE TASK FROM PROJECT ----------------
+    @ApiBearerAuth('Authorization')
     @ApiOperation({ summary: 'Remove a task from a project' })
     @ApiResponse({
         status: HttpStatus.OK,
@@ -137,9 +169,17 @@ export class ProjectsController {
     @Version('1')
     @Delete(':id/tasks/:taskId')
     async removeTaskFromProject(
+        @User() user: CurrentUser,
         @Param('id', ParseIntPipe) projectId: number,
         @Param('taskId', ParseIntPipe) taskId: number
     ) {
-        return this.projectsService.removeTask(projectId, taskId);
+        const project = await this.projectsService.removeTask(
+            user.sub,
+            projectId,
+            taskId
+        );
+        return plainToInstance(ProjectResponseDto, project, {
+            excludeExtraneousValues: true,
+        });
     }
 }
