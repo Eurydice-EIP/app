@@ -23,11 +23,6 @@ export class CreateTaskDto {
     @IsInt()
     @Min(1)
     @IsOptional()
-    userId?: number;
-
-    @IsInt()
-    @Min(1)
-    @IsOptional()
     projectId?: number;
 
     @IsInt()

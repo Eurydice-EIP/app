@@ -17,6 +17,17 @@ async function bootstrap() {
         .setDescription('The Eurydice API description')
         .setVersion('1.0')
         .addServer('/v1')
+        .addBearerAuth(
+            {
+                type: 'http',
+                scheme: 'bearer',
+                bearerFormat: 'JWT',
+                in: 'header',
+                name: 'JWT',
+                description: 'Enter your Bearer token',
+            },
+            'Authorization'
+        )
         .build();
     const document = SwaggerModule.createDocument(app, swaggerConfig);
 
