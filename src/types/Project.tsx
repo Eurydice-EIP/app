@@ -1,6 +1,6 @@
 export type Project = {
   title: string;
-  image?: string;
+  image: string;
   description?: string;
   doneTasks: number;
   totalTasks: number;
