@@ -1,11 +1,14 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -16,7 +19,7 @@ export default function Login() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h1 className="text-3xl font-bold text-center text-black mb-8">
+        <h1 className="text-3xl font-bold text-center text-[var(--color-text)] mb-8">
           Login
         </h1>
 
@@ -30,7 +33,7 @@ export default function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="your@email.com"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder:text-gray-600"
+              className="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder:text-gray-600"
               required
             />
           </div>
@@ -45,7 +48,7 @@ export default function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full px-4 py-2 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder:text-gray-600"
+                className="w-full px-4 py-2 pr-12 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder:text-gray-600"
                 required
               />
               <button
@@ -91,9 +94,16 @@ export default function Login() {
 
           <button
             type="submit"
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-lg transition"
+            className="w-full bg-[var(--color-secondary-contrast)] hover:bg-[var(--color-icon-sidebar-selected)] text-white font-semibold py-2 rounded-full transition"
           >
-            Login
+            Log in
+          </button>
+          <button
+            type="button"
+            onClick={() => router.push("/accountcreation")}
+            className="w-full text-[var(--color-icon-sidebar-unselected)] hover:text-[var(--color-text)] font-semibold py-2 transition"
+          >
+            Create an account
           </button>
         </form>
       </div>
