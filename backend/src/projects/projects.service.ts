@@ -8,6 +8,7 @@ import { Project } from '@prisma/client';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { TaskResponseDto } from 'src/tasks/dto/task-response.dto';
 
 @Injectable()
 export class ProjectsService {
@@ -162,5 +163,30 @@ export class ProjectsService {
                 data: { projectId: null },
             });
         });
+    }
+
+    // ---------------- GET ALL TASKS IN PROJECT ----------------
+    async getTasksInProject(userId: number, projectId: number): Promise<TaskResponseDto[]> {
+        const project = await this.prisma.project.findUnique({
+            where: { id: projectId, userId },
+            include: {
+                tasks: {
+                    include: {
+                        blocks: { select: { blockedId: true } },
+                        blockedBy: { select: { blockerId: true } },
+                    },
+                },
+            },
+        });
+
+        if (!project) {
+            throw new NotFoundException('Project not found');
+        }
+
+        return project.tasks.map((task) => ({
+            ...task,
+            blocks: task.blocks.map((b) => b.blockedId),
+            blockedBy: task.blockedBy.map((b) => b.blockerId),
+        }));
     }
 }

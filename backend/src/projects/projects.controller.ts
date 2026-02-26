@@ -17,6 +17,7 @@ import { UpdateProjectDto } from './dto/update-project.dto';
 import { ProjectResponseDto } from './dto/project-response.dto';
 import { plainToInstance } from 'class-transformer';
 import { CurrentUser, User } from 'src/common/decorators/user.decorator';
+import { TaskResponseDto } from 'src/tasks/dto/task-response.dto';
 
 @Controller({
     path: 'projects',
@@ -179,6 +180,33 @@ export class ProjectsController {
             taskId
         );
         return plainToInstance(ProjectResponseDto, project, {
+            excludeExtraneousValues: true,
+        });
+    }
+
+    // ---------------- GET ALL TASKS IN PROJECT ----------------
+    @ApiBearerAuth('Authorization')
+    @ApiOperation({ summary: 'Get all tasks in a project' })
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: 'Tasks successfully retrieved',
+        type: [ProjectResponseDto],
+    })
+    @ApiResponse({
+        status: HttpStatus.NOT_FOUND,
+        description: 'Project not found',
+    })
+    @Version('1')
+    @Get(':id/tasks')
+    async getTasksInProject(
+        @User() user: CurrentUser,
+        @Param('id', ParseIntPipe) projectId: number
+    ): Promise<TaskResponseDto[]> {
+        const project = await this.projectsService.getTasksInProject(
+            user.sub,
+            projectId
+        );
+        return plainToInstance(TaskResponseDto, project, {
             excludeExtraneousValues: true,
         });
     }
