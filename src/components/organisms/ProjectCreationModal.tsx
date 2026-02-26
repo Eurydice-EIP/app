@@ -1,15 +1,18 @@
 "use client";
 
 import Button from "../atoms/Button";
+import { createProject } from "@/api/Projects";
 
 export default function ProjectCreationModal({
   isModalProjectOpen,
   setIsModalProjectOpen,
+  onProjectCreated,
 }: {
   isModalProjectOpen: boolean;
   setIsModalProjectOpen: (open: boolean) => void;
+  onProjectCreated?: () => void;
 }) {
-  const handleCreateProject = () => {
+  const handleCreateProject = async () => {
     const title = (
       document.querySelector('input[type="text"]') as HTMLInputElement
     )?.value;
@@ -29,16 +32,15 @@ export default function ProjectCreationModal({
       ) as HTMLInputElement
     )?.ariaLabel;
 
-    const projectData = `
-    Title: ${title || "N/A"}
-    Deadline: ${deadline || "N/A"}
-    Project Type: ${projectType || "N/A"}
-    Importance: ${importance || "N/A"}
-    Duration: ${duration || "N/A"}
-    `;
+    await createProject({
+      title: title || "Untitled Project",
+      dueAt: deadline || new Date().toISOString(),
+      type: projectType ? projectType.toLocaleUpperCase() : "MAIN",
+      importance: importance ? parseInt(importance) : 1,
+      estimatedTime: duration ? parseInt(duration) : 1,
+    });
 
-    alert(projectData);
-
+    onProjectCreated?.();
     setIsModalProjectOpen(false);
   };
 
@@ -97,13 +99,9 @@ export default function ProjectCreationModal({
           </fieldset>
           <fieldset className="fieldset">
             <legend className="fieldset-legend font-light text-lg">
-              Deadline
+              Project Type
             </legend>
-            <select
-              className="select w-full rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
-              defaultValue="Project Type"
-            >
-              <option disabled>Project Type</option>
+            <select className="select w-full rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900">
               <option>Main</option>
               <option>Side</option>
             </select>

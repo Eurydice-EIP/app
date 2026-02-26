@@ -14,7 +14,7 @@ interface ProjectCardProps {
 
 export default function ProjectCard({ project }: ProjectCardProps) {
   const t = useTranslations("projects");
-  const remainingTasks = project.totalTasks - project.doneTasks;
+  const remainingTasks = project.totalTasks - project.doneTasks || 0;
 
   return (
     <div className="flex w-full h-56 bg-[var(--color-background)] rounded-4xl overflow-visible flex-none shadow-md relative">
@@ -24,7 +24,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         todo={project.totalTasks}
         done={project.doneTasks}
       ></Bookmark>
-      <div className="flex flex-col justify-between p-6 w-full h-full ">
+      <div className="flex flex-col justify-between p-6 w-full max-w-2/3">
         <div className="flex flex-col">
           <h2 className="text-2xl font-bold text-[var(--color-text)] leading-tight overflow-hidden line-clamp-1 mr-12">
             {project.title}
@@ -103,13 +103,11 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           </Button>
         </div>
       </div>
-      {project.image && (
-        <img
-          src={project.image}
-          alt={project.title}
-          className="w-1/3 bg-[#B5B9BC] rounded-r-4xl"
-        />
-      )}
+      <img
+        src="https://img.daisyui.com/images/stock/photo-1559703248-dcaaec9fab78.webp"
+        alt={project.title}
+        className="w-1/3 bg-[#B5B9BC] rounded-r-4xl"
+      />
     </div>
   );
 }
