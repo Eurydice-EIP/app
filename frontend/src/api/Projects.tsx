@@ -24,6 +24,29 @@ export const fetchProjects = async () => {
   }
 };
 
+export const fetchProjectTasks = async (projectId: number) => {
+  try {
+    const response = await fetch(
+      `http://213.32.31.107:4000/v1/projects/${projectId}/tasks`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${Cookies.get("accessToken")}`,
+        },
+      },
+    );
+    if (!response.ok) {
+      throw new Error("Failed to fetch project tasks");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching project tasks:", error);
+    throw error;
+  }
+};
+
 export const createProject = async (project: ProjectCreationData) => {
   try {
     const response = await fetch("http://213.32.31.107:4000/v1/projects", {
