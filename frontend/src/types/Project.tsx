@@ -8,3 +8,11 @@ export type Project = {
   reward: number;
   remainingTime: number;
 };
+
+export type ProjectCreationData = {
+  title: string;
+  dueAt: string;
+  type: string;
+  importance: number;
+  estimatedTime: number;
+};

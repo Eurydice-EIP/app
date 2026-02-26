@@ -35,7 +35,7 @@ export default function Projects() {
   const [isModalTaskOpen, setIsModalTaskOpen] = useState(false);
 
   return (
-    <div className="flex flex-row h-full gap-10 px-8 py-4 text-black">
+    <div className="flex flex-row h-full gap-10 px-8 pt-4 pb-2 text-black">
       <ProjectsBar></ProjectsBar>
       <div className="flex w-full h-full flex-col gap-y-4">
         <div className="flex flex-row items-center justify-between">
