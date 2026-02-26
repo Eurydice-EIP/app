@@ -1,10 +1,15 @@
 import { Tasks } from "../types/Tasks";
+import Cookies from "js-cookie";
 
 export const fetchTasks = async () => {
   console.log("Fetching Tasks...");
   try {
     const response = await fetch("http://213.32.31.107:4000/v1/tasks", {
       method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Cookies.get("accessToken")}`,
+      },
     });
 
     if (response.ok) {

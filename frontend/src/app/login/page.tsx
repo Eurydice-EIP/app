@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { loginUser } from "@/api/Auth";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -10,10 +11,16 @@ export default function Login() {
 
   const router = useRouter();
 
+  const formData = {
+    email,
+    password,
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
-    alert(`Logging in with Email: ${email} and Password: ${password}`);
+    loginUser(formData).then((response) => {
+      console.log("User logged in:", response);
+    });
   };
 
   return (
@@ -100,7 +107,7 @@ export default function Login() {
           </button>
           <button
             type="button"
-            onClick={() => router.push("/accountcreation")}
+            onClick={() => router.push("/register")}
             className="w-full text-[var(--color-icon-sidebar-unselected)] hover:text-[var(--color-text)] font-semibold py-2 transition"
           >
             Create an account

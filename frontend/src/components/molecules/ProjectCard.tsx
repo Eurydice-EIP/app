@@ -7,7 +7,6 @@ import IconClipboard from "@/public/icons/clipboard.svg";
 import IconAward from "@/public/icons/award.svg";
 import IconZap from "@/public/icons/zap.svg";
 import { useTranslations } from "next-intl";
-import Image from 'next/image';
 
 interface ProjectCardProps {
   project: Project;
@@ -105,7 +104,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         </div>
       </div>
       {project.image && (
-        <Image
+        <img
           src={project.image}
           alt={project.title}
           className="w-1/3 bg-[#B5B9BC] rounded-r-4xl"
