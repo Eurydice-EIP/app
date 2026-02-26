@@ -1,27 +1,26 @@
 import { Tasks } from "../types/Tasks";
-// import Cookies from "js-cookie";
+import Cookies from "js-cookie";
 
 export const fetchTasks = async () => {
-  console.log("Fetching Tasks...");
-  // try {
-  //   const response = await fetch("http://213.32.31.107:4000/v1/tasks", {
-  //     method: "GET",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Authorization: `Bearer ${Cookies.get("accessToken")}`,
-  //     },
-  //   });
+  try {
+    const response = await fetch("http://213.32.31.107:4000/v1/tasks", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Cookies.get("accessToken")}`,
+      },
+    });
 
-  //   if (response.ok) {
-  //     const data = await response.json();
-  //     return data;
-  //   } else {
-  //     throw new Error("Failed to fetch tasks");
-  //   }
-  // } catch (error) {
-  //   console.error("Error fetching tasks:", error);
-  //   throw error;
-  // }
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error("Failed to fetch tasks");
+    }
+  } catch (error) {
+    console.error("Error fetching tasks:", error);
+    throw error;
+  }
 };
 
 export const createTask = async (task: Tasks) => {
@@ -31,6 +30,7 @@ export const createTask = async (task: Tasks) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${Cookies.get("accessToken")}`,
       },
       body: JSON.stringify(task),
     });

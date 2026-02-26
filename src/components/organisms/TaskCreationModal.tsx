@@ -2,26 +2,35 @@
 
 import Button from "../atoms/Button";
 import { useState } from "react";
+import { Project } from "@/types/Project";
+import { createTask } from "@/api/Tasks";
 
 export default function TaskCreationModal({
+  // selectedProject,
+  projects,
   isModalTaskOpen,
+  onTaskCreated,
   setIsModalTaskOpen,
 }: {
+  selectedProject: Project | null;
+  projects: Project[];
   isModalTaskOpen: boolean;
+  onTaskCreated?: () => void;
   setIsModalTaskOpen: (open: boolean) => void;
 }) {
   const taskCreationPercentage = 50;
   const [isBlocked, setIsBlocked] = useState(false);
 
-  const handleCreateTask = () => {
+  const handleCreateTask = async () => {
     const title = (
       document.querySelector('input[name="title"]') as HTMLInputElement
     )?.value;
     const deadline = (
       document.querySelector('input[name="deadline"]') as HTMLInputElement
     )?.value;
-    const projectType = (document.querySelector("select") as HTMLSelectElement)
-      ?.value;
+    const projectId = (
+      document.querySelector('select[name="project"]') as HTMLSelectElement
+    )?.value;
     const importance = (
       document.querySelector(
         'input[name="rating-importance"]:checked',
@@ -32,54 +41,28 @@ export default function TaskCreationModal({
         'input[name="rating-duration"]:checked',
       ) as HTMLInputElement
     )?.ariaLabel;
-    const isBlocked = (
-      document.querySelector('input[type="checkbox"]') as HTMLInputElement
-    )?.checked;
-    const blockingTask = isBlocked
-      ? (
-          document.querySelector(
-            "select[name='blocking-task']",
-          ) as HTMLSelectElement
-        )?.value
-      : null;
+    // const isBlocked = (
+    //   document.querySelector('input[type="checkbox"]') as HTMLInputElement
+    // )?.checked;
+    // const blockingTask = isBlocked
+    //   ? (
+    //       document.querySelector(
+    //         "select[name='blocking-task']",
+    //       ) as HTMLSelectElement
+    //     )?.value
+    //   : null;
 
-    const projectData = {
-      Title: title || "N/A",
-      Deadline: deadline || "N/A",
-      "Project Type": projectType || "N/A",
-      Importance: importance || "N/A",
-      Duration: duration || "N/A",
-      Blocked: isBlocked ? "Yes" : "No",
-      "Task Blocked By": blockingTask || "N/A",
-    };
+    await createTask({
+      title: title || "Untitled Task",
+      dueAt: deadline || new Date().toISOString(),
+      projectId: projectId ? Number(projectId) : 0,
+      importance: importance ? parseInt(importance) : 1,
+      estimatedTime: duration ? parseInt(duration) : 1,
+    });
 
-    alert(
-      Object.entries(projectData)
-        .map(([key, value]) => `${key}: ${value}`)
-        .join("\n"),
-    );
-
+    onTaskCreated?.();
     setIsModalTaskOpen(false);
   };
-
-  // const handleCreateTask = async () => {
-  //   const newTask: Tasks = {
-  //     title: "New Task",
-  //     dueAt: new Date().toISOString(),
-  //     userId: 1,
-  //     projectId: 1,
-  //     importance: 3,
-  //     estimatedTime: 4,
-  //   };
-  //   try {
-  //     const createdTask = await createTask(newTask);
-  //     setTasks((prevTasks) =>
-  //       prevTasks ? [...prevTasks, createdTask] : [createdTask],
-  //     );
-  //   } catch (err) {
-  //     console.error("Failed to create task:", err);
-  //   }
-  // };
 
   return (
     <dialog id="taskCreationModal" className="modal" open={isModalTaskOpen}>
@@ -136,13 +119,13 @@ export default function TaskCreationModal({
             </legend>
             <select
               className="select w-full rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
-              defaultValue="Project"
               name="project"
             >
-              <option disabled>Project</option>
-              <option>EIP</option>
-              <option>Website</option>
-              <option>Mobile App</option>
+              {projects.map((project) => (
+                <option key={project.id} value={project.id}>
+                  {project.title}
+                </option>
+              ))}
             </select>
           </fieldset>
           <fieldset className="fieldset">

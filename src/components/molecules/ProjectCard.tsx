@@ -10,14 +10,18 @@ import { useTranslations } from "next-intl";
 
 interface ProjectCardProps {
   project: Project;
+  onClick?: () => void;
 }
 
-export default function ProjectCard({ project }: ProjectCardProps) {
+export default function ProjectCard({ project, onClick }: ProjectCardProps) {
   const t = useTranslations("projects");
   const remainingTasks = project.totalTasks - project.doneTasks || 0;
 
   return (
-    <div className="flex w-full h-56 bg-[var(--color-background)] rounded-4xl overflow-visible flex-none shadow-md relative">
+    <div
+      className="flex w-full h-56 bg-[var(--color-background)] rounded-4xl overflow-visible flex-none shadow-md relative"
+      onClick={onClick}
+    >
       {/* LEFT CONTENT */}
       <Bookmark
         className="w-64 h-64 absolute top-[-86px] right-20 z-20"
