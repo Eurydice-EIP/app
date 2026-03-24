@@ -1,35 +1,96 @@
 {
-  "home": {
-    "dashboard": "Tableau de bord"
+  "dashboard": {
+    "title": "Bienvenue sur Eurydice",
+    "userSidebar": "Barre latérale",
+    "userSidebarPlaceholder": "Ceci est un espace réservé pour le contenu de la barre latérale."
   },
   "projects": {
-    "tasks": "Tâches",
+    "selectProject": "Sélectionnez un projet pour voir les détails"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "language": "Langue",
+    "theme": "Thème"
+  },
+  "login": {
+    "title": "Connectez-vous à votre compte",
+    "description": "Entrez votre email ci-dessous pour vous connecter",
+    "email": "Email",
+    "password": "Mot de passe",
+    "forgotPassword": "Mot de passe oublié ?",
+    "submit": "Connexion",
+    "loginWithGoogle": "Connexion avec Google",
+    "noAccount": "Pas encore de compte ?",
+    "signUp": "Inscrivez-vous"
+  },
+  "register": {
+    "title": "Créez votre compte",
+    "description": "Entrez votre email ci-dessous pour créer votre compte",
+    "fullName": "Nom complet",
+    "email": "Email",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "passwordHint": "Doit contenir au moins 8 caractères.",
+    "submit": "Créer un compte",
+    "hasAccount": "Déjà un compte ?",
+    "signIn": "Se connecter",
+    "termsText": "En continuant, vous acceptez nos {termsOfService} et notre {privacyPolicy}.",
+    "termsOfService": "Conditions d'utilisation",
+    "privacyPolicy": "Politique de confidentialité"
+  },
+  "common": {
+    "cancel": "Annuler",
+    "title": "Titre",
+    "dueDate": "Date d'échéance",
+    "selectDate": "Sélectionner une date",
+    "importance": "Importance",
+    "notImportant": "Pas important",
+    "veryImportant": "Très important",
+    "estimatedDuration": "Durée estimée",
+    "littleTime": "Peu de temps",
+    "lotsOfTime": "Beaucoup de temps",
+    "enterTitle": "Veuillez entrer un titre.",
+    "enterDueDate": "Veuillez entrer une date d'échéance.",
+    "selectImportance": "Veuillez sélectionner une importance.",
+    "selectEstimatedTime": "Veuillez sélectionner une durée estimée."
+  },
+  "task": {
+    "new": "Nouvelle tâche +",
+    "createTitle": "Créons une tâche !",
+    "project": "Projet",
+    "selectProject": "Sélectionner un projet",
     "projects": "Projets",
-    "calendar": "Calendrier",
-    "stats": "Statistiques",
-    "wip": "En cours",
-    "title": "Projets",
-    "newProject": "Nouveau +",
-    "newTask": "Nouvelle tâche +",
-    "sortBy": "Trier par:",
-    "deadline": "Échéance",
-    "tasksLeft": "Tâches restantes",
-    "rewards": "Récompenses",
-    "see": "Voir",
-    "days": "{count} jours",
-    "toDo": "{count} à faire"
+    "selectProjectError": "Veuillez sélectionner un projet.",
+    "create": "Créer la tâche"
+  },
+  "project": {
+    "new": "Nouveau +",
+    "createTitle": "Créons un projet !",
+    "type": "Type",
+    "selectType": "Sélectionner un type",
+    "types": "Types",
+    "typeMain": "Principal",
+    "typeSide": "Secondaire",
+    "selectTypeError": "Veuillez sélectionner un type.",
+    "create": "Créer le projet"
   },
   "timeTracker": {
     "title": "Suivi du temps",
-    "startWorking": "Commencer à travailler sur {task}"
+    "startWorking": "Commencez à travailler sur {projectTitle}"
+  },
+  "weekStats": {
+    "title": "Semaine passée"
   },
   "sidebar": {
-    "home": "Accueil",
+    "dashboard": "Tableau de bord",
     "projects": "Projets",
-    "analytics": "Analyses",
-    "calendar": "Calendrier",
-    "map": "Carte",
-    "favorites": "Favoris",
-    "profile": "Profil"
+    "analytics": "Analytiques",
+    "settings": "Paramètres"
+  },
+  "themeToggle": {
+    "toggle": "Changer le thème",
+    "light": "Clair",
+    "dark": "Sombre",
+    "system": "Système"
   }
 }

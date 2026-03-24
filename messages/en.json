@@ -1,35 +1,96 @@
 {
-  "home": {
-    "dashboard": "Dashboard"
+  "dashboard": {
+    "title": "Welcome to Eurydice",
+    "userSidebar": "User Sidebar",
+    "userSidebarPlaceholder": "This is a placeholder for the user sidebar content."
   },
   "projects": {
-    "tasks": "Tasks",
+    "selectProject": "Select a project to see details"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "theme": "Theme"
+  },
+  "login": {
+    "title": "Login to your account",
+    "description": "Enter your email below to login to your account",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot your password?",
+    "submit": "Login",
+    "loginWithGoogle": "Login with Google",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign up"
+  },
+  "register": {
+    "title": "Create your account",
+    "description": "Enter your email below to create your account",
+    "fullName": "Full Name",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "passwordHint": "Must be at least 8 characters long.",
+    "submit": "Create Account",
+    "hasAccount": "Already have an account?",
+    "signIn": "Sign in",
+    "termsText": "By clicking continue, you agree to our {termsOfService} and {privacyPolicy}.",
+    "termsOfService": "Terms of Service",
+    "privacyPolicy": "Privacy Policy"
+  },
+  "common": {
+    "cancel": "Cancel",
+    "title": "Title",
+    "dueDate": "Due Date",
+    "selectDate": "Select a date",
+    "importance": "Importance",
+    "notImportant": "Not important",
+    "veryImportant": "Very important",
+    "estimatedDuration": "Estimated duration",
+    "littleTime": "Little to no time",
+    "lotsOfTime": "A lot of time",
+    "enterTitle": "Please enter a title.",
+    "enterDueDate": "Please enter a due date.",
+    "selectImportance": "Please select an importance.",
+    "selectEstimatedTime": "Please select an estimated time."
+  },
+  "task": {
+    "new": "New task +",
+    "createTitle": "Let's create a task!",
+    "project": "Project",
+    "selectProject": "Select a project",
     "projects": "Projects",
-    "calendar": "Calendar",
-    "stats": "Stats",
-    "wip": "WIP",
-    "title": "Projects",
-    "newProject": "New +",
-    "newTask": "New Task +",
-    "sortBy": "Sort By:",
-    "deadline": "Deadline",
-    "tasksLeft": "Tasks left",
-    "rewards": "Rewards",
-    "see": "See",
-    "days": "{count} days",
-    "toDo": "{count} to do"
+    "selectProjectError": "Please select a project.",
+    "create": "Create task"
+  },
+  "project": {
+    "new": "New +",
+    "createTitle": "Let's create a project!",
+    "type": "Type",
+    "selectType": "Select a type",
+    "types": "Types",
+    "typeMain": "Main",
+    "typeSide": "Side",
+    "selectTypeError": "Please select a type.",
+    "create": "Create project"
   },
   "timeTracker": {
     "title": "Time Tracker",
-    "startWorking": "Start working on {task}"
+    "startWorking": "Start working on {projectTitle}"
+  },
+  "weekStats": {
+    "title": "Past Week"
   },
   "sidebar": {
-    "home": "Home",
+    "dashboard": "Dashboard",
     "projects": "Projects",
     "analytics": "Analytics",
-    "calendar": "Calendar",
-    "map": "Map",
-    "favorites": "Favorites",
-    "profile": "Profile"
+    "settings": "Settings"
+  },
+  "themeToggle": {
+    "toggle": "Toggle theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
   }
 }
