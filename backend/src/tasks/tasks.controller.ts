@@ -9,6 +9,7 @@ import {
     Version,
     ParseIntPipe,
     HttpStatus,
+    UseGuards,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -17,11 +18,13 @@ import { TaskResponseDto } from './dto/task-response.dto';
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
 import { CurrentUser, User } from 'src/common/decorators/user.decorator';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.gard';
 
 @Controller({
     path: 'tasks',
     version: '1',
 })
+@UseGuards(JwtAuthGuard)
 export class TasksController {
     constructor(private tasksService: TasksService) {}
 
@@ -71,7 +74,7 @@ export class TasksController {
 
     // ---------------- FIND ALL ----------------
     @ApiBearerAuth('Authorization')
-    @ApiOperation({ summary: 'Get all tasks' })
+    @ApiOperation({ summary: 'Get all tasks for a user' })
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'The tasks have been successfully retrieved.',

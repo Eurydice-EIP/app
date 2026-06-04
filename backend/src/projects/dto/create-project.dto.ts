@@ -14,24 +14,28 @@ import { ProjectType } from '@prisma/client';
 export class CreateProjectDto {
     @IsString()
     @IsNotEmpty()
-    title: string;
+    title!: string;
+
+    @IsString()
+    @IsOptional()
+    description?: string;
 
     @Type(() => Date)
     @IsDate()
     @IsNotEmpty()
-    dueAt: Date;
+    dueAt!: Date;
 
     @IsEnum(ProjectType)
-    type: ProjectType;
+    type!: ProjectType;
 
     @IsInt()
     @Min(1)
     @Max(5)
-    importance: number;
+    importance!: number;
 
     @IsOptional()
     @IsInt()
     @Min(1)
     @Max(5)
-    estimatedTime: number;
+    estimatedTime!: number;
 }

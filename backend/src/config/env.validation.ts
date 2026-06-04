@@ -34,6 +34,10 @@ class EnvConfig {
     @IsString()
     @IsNotEmpty()
     JWT_EXPIRES_IN: StringValue;
+
+    @IsString()
+    @IsNotEmpty()
+    UPLOADS_DIR: string;
 }
 
 export function validate(config: Record<string, unknown>): EnvConfig {

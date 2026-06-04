@@ -15,7 +15,7 @@ export class AuthService {
         const user = await this.usersService.findOne(dto.email);
 
         if (!user || !(await bcrypt.compare(dto.password, user.password))) {
-            throw new UnauthorizedException();
+            throw new UnauthorizedException('Invalid credentials');
         }
 
         const payload = { sub: user.id, email: user.email };
@@ -26,10 +26,18 @@ export class AuthService {
     }
 
     async signUp(dto: SignUpDto): Promise<{ accessToken: string }> {
-        const existingUser = await this.usersService.findOne(dto.email);
+        const existingUser = await this.usersService.findOne(
+            dto.email,
+            dto.username
+        );
 
         if (existingUser) {
-            throw new UnauthorizedException('Email already in use');
+            if (existingUser.email === dto.email) {
+                throw new UnauthorizedException('Email already in use');
+            }
+            if (existingUser.username === dto.username) {
+                throw new UnauthorizedException('Username already in use');
+            }
         }
 
         if (dto.password.length < 10) {

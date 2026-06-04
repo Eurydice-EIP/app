@@ -9,16 +9,24 @@ import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { TaskResponseDto } from 'src/tasks/dto/task-response.dto';
+import { GameEventProducer } from 'src/rabbitMQ/game-event.producer';
+import { ProjectStatus, TaskStatus } from '@prisma/client';
+import { TasksService } from 'src/tasks/tasks.service';
 
 @Injectable()
 export class ProjectsService {
-    constructor(private readonly prisma: PrismaService) {}
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly tasksService: TasksService,
+        private readonly gameEventProducer: GameEventProducer
+    ) {}
 
     // ---------------- CREATE ----------------
     async create(userId: number, dto: CreateProjectDto): Promise<Project> {
         return this.prisma.project.create({
             data: {
                 title: dto.title,
+                description: dto.description,
                 dueAt: new Date(dto.dueAt),
                 userId: userId,
                 type: dto.type,
@@ -60,15 +68,45 @@ export class ProjectsService {
         id: number,
         dto: UpdateProjectDto
     ): Promise<Project> {
+        const existingProject = await this.prisma.project.findUnique({
+            where: { id, userId },
+            include: { tasks: true },
+        });
+
+        if (!existingProject) {
+            throw new NotFoundException('Project not found');
+        }
+
+        if (
+            dto.status === ProjectStatus.COMPLETED &&
+            existingProject.status !== ProjectStatus.COMPLETED
+        ) {
+            if (existingProject.tasks.length === 0) {
+                throw new BadRequestException('Project has no tasks');
+            }
+
+            for (const task of existingProject.tasks) {
+                if (task.status !== TaskStatus.COMPLETED) {
+                    await this.tasksService.update(userId, task.id, {
+                        status: TaskStatus.COMPLETED,
+                    });
+                }
+            }
+        }
+
         try {
             return await this.prisma.project.update({
                 where: { id, userId },
                 data: {
                     ...(dto.title !== undefined && { title: dto.title }),
+                    ...(dto.description !== undefined && {
+                        description: dto.description,
+                    }),
                     ...(dto.dueAt !== undefined && {
                         dueAt: new Date(dto.dueAt),
                     }),
                     ...(dto.type !== undefined && { type: dto.type }),
+                    ...(dto.status !== undefined && { status: dto.status }),
                     ...(dto.importance !== undefined && {
                         importance: dto.importance,
                     }),
@@ -124,6 +162,11 @@ export class ProjectsService {
                 throw new NotFoundException('Project not found');
             }
 
+            if (project.status == ProjectStatus.COMPLETED)
+                throw new NotFoundException(
+                    "Project is completed, it can't anymore task"
+                );
+
             const task = await prisma.task.findUnique({
                 where: { id: taskId },
             });
@@ -166,7 +209,10 @@ export class ProjectsService {
     }
 
     // ---------------- GET ALL TASKS IN PROJECT ----------------
-    async getTasksInProject(userId: number, projectId: number): Promise<TaskResponseDto[]> {
+    async getTasksInProject(
+        userId: number,
+        projectId: number
+    ): Promise<TaskResponseDto[]> {
         const project = await this.prisma.project.findUnique({
             where: { id: projectId, userId },
             include: {
@@ -185,8 +231,11 @@ export class ProjectsService {
 
         return project.tasks.map((task) => ({
             ...task,
+
             blocks: task.blocks.map((b) => b.blockedId),
             blockedBy: task.blockedBy.map((b) => b.blockerId),
+
+            completedAt: task.completedAt ?? undefined,
         }));
     }
 }

@@ -1,4 +1,5 @@
-import { IsOptional, IsString } from 'class-validator';
+import { UserLanguage, UserTheme } from '@prisma/client';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
 
 export class UpdateUserDto {
     @IsString()
@@ -16,4 +17,16 @@ export class UpdateUserDto {
     @IsString()
     @IsOptional()
     confirmPassword?: string;
+
+    @IsString()
+    @IsOptional()
+    currentPassword?: string;
+
+    @IsEnum(UserLanguage)
+    @IsOptional()
+    language?: UserLanguage;
+
+    @IsEnum(UserTheme)
+    @IsOptional()
+    theme?: UserTheme;
 }

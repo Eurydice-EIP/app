@@ -8,10 +8,15 @@ import { PrismaService } from 'src/prisma.service';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { GameEventProducer } from 'src/rabbitMQ/game-event.producer';
+import { TaskStatus, ProjectType } from '@prisma/client';
 
 @Injectable()
 export class TasksService {
-    constructor(private readonly prisma: PrismaService) {}
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly gameEventProducer: GameEventProducer
+    ) {}
 
     private mapTask(
         task: PrismaTask & {
@@ -37,6 +42,7 @@ export class TasksService {
             const task = await prisma.task.create({
                 data: {
                     title: dto.title,
+                    description: dto.description,
                     dueAt: new Date(dto.dueAt),
                     userId: userId,
                     projectId: dto.projectId ?? null,
@@ -126,7 +132,15 @@ export class TasksService {
         id: number,
         dto: UpdateTaskDto
     ): Promise<PrismaTask & { blocks: number[]; blockedBy: number[] }> {
-        // Start a transaction to ensure data integrity
+        const existingTask = await this.prisma.task.findUnique({
+            where: { id, userId },
+            select: { status: true },
+        });
+
+        const isBeingCompleted =
+            dto.status === TaskStatus.COMPLETED &&
+            existingTask!.status !== TaskStatus.COMPLETED;
+
         const result = await this.prisma.$transaction(async (prisma) => {
             // Update the task
             try {
@@ -136,12 +150,16 @@ export class TasksService {
                         ...(dto.title !== undefined && {
                             title: dto.title,
                         }),
+                        ...(dto.description !== undefined && {
+                            description: dto.description,
+                        }),
                         ...(dto.dueAt !== undefined && {
                             dueAt: new Date(dto.dueAt),
                         }),
                         ...(dto.status !== undefined && {
                             status: dto.status,
                         }),
+                        ...(isBeingCompleted && { completedAt: new Date() }),
                         ...(dto.projectId !== undefined && {
                             projectId: dto.projectId,
                         }),
@@ -230,6 +248,34 @@ export class TasksService {
             };
         });
 
+        if (isBeingCompleted) {
+            let isBonus = false;
+            if (result.projectId) {
+                const project = await this.prisma.project.findUnique({
+                    where: { id: result.projectId },
+                    select: { type: true },
+                });
+                isBonus = project?.type === ProjectType.MAIN;
+            }
+
+            try {
+                this.gameEventProducer.taskCompleted({
+                    userId: result.userId.toString(),
+                    taskId: result.id.toString(),
+                    completedAt: result.completedAt!,
+                    isBonus,
+                });
+                console.log(
+                    `[TasksService] taskCompleted emitted (isBonus: ${isBonus})`
+                );
+            } catch (err) {
+                console.error(
+                    `[TasksService][update] RabbitMQ publish failed for task ${result.id}:`,
+                    err
+                );
+            }
+        }
+
         return result;
     }
 
@@ -271,5 +317,11 @@ export class TasksService {
         });
 
         return result;
+    }
+
+    async findById(id: number): Promise<PrismaTask | null> {
+        return this.prisma.task.findUnique({
+            where: { id },
+        });
     }
 }
