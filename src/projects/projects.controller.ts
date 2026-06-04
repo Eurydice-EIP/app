@@ -9,6 +9,7 @@ import {
     Version,
     ParseIntPipe,
     HttpStatus,
+    UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ProjectsService } from './projects.service';
@@ -18,11 +19,13 @@ import { ProjectResponseDto } from './dto/project-response.dto';
 import { plainToInstance } from 'class-transformer';
 import { CurrentUser, User } from 'src/common/decorators/user.decorator';
 import { TaskResponseDto } from 'src/tasks/dto/task-response.dto';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.gard';
 
 @Controller({
     path: 'projects',
     version: '1',
 })
+@UseGuards(JwtAuthGuard)
 export class ProjectsController {
     constructor(private readonly projectsService: ProjectsService) {}
 
@@ -48,7 +51,7 @@ export class ProjectsController {
 
     // ---------------- FIND ALL ----------------
     @ApiBearerAuth('Authorization')
-    @ApiOperation({ summary: 'Get all projects' })
+    @ApiOperation({ summary: 'Get all projects for a user' })
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Projects successfully retrieved',

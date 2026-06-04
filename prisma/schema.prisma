@@ -19,9 +19,15 @@ enum ProjectType {
   SIDE
 }
 
+enum ProjectStatus {
+  ACTIVE
+  COMPLETED
+}
+
 model Project {
   id            Int         @id @default(autoincrement())
   title         String
+  description   String?     @db.Text
   dueAt         DateTime    @db.Timestamptz(3)                                @map("due_at")
   userId        Int                                                           @map("user_id")
   type          ProjectType
@@ -29,6 +35,7 @@ model Project {
   estimatedTime Int         @default(0)                                       @map("estimated_min")
   createdAt     DateTime    @db.Timestamptz(3) @default(now())                @map("created_at")
   lastUpdate    DateTime    @db.Timestamptz(3) @default(now()) @updatedAt     @map("last_update")
+  status        ProjectStatus  @default(ACTIVE) 
 
   tasks         Task[]
 
@@ -47,6 +54,7 @@ enum TaskStatus {
 model Task {
   id            Int         @id @default(autoincrement())
   title         String      @db.VarChar(255)
+  description   String?     @db.Text
   dueAt         DateTime    @db.Timestamptz(3)                                @map("due_at")
   status        TaskStatus  @default(PENDING)
   userId        Int                                                           @map("user_id")
@@ -57,6 +65,7 @@ model Task {
   blockedBy     TaskBlock[] @relation("BlockedBy")
   createdAt     DateTime    @db.Timestamptz(3) @default(now())                @map("created_at")
   lastUpdate    DateTime    @db.Timestamptz(3) @default(now()) @updatedAt     @map("last_update")
+  completedAt   DateTime?   @map("completed_at")
 
   project       Project?    @relation(fields: [projectId], references: [id])
   user          User?       @relation(fields: [userId], references: [id])
@@ -80,16 +89,58 @@ model TaskBlock {
   @@map("task_block")
 }
 
+enum UserLanguage {
+  ENGLISH
+  FRENCH
+}
+
+enum UserTheme {
+  SYSTEM
+  LIGHT
+  DARK
+}
+
 model User {
-  id            Int         @id @default(autoincrement())
-  username      String      @db.VarChar(255)
-  email         String      @unique
-  password      String      @db.VarChar(255)
-  createdAt     DateTime    @db.Timestamptz(3) @default(now())                @map("created_at")
-  lastUpdate    DateTime    @db.Timestamptz(3) @default(now()) @updatedAt     @map("last_update")
+  id              Int           @id @default(autoincrement())
+  username        String        @unique @db.VarChar(255)
+  email           String        @unique
+  password        String        @db.VarChar(255)
+  createdAt       DateTime      @db.Timestamptz(3) @default(now())                @map("created_at")
+  lastUpdate      DateTime      @db.Timestamptz(3) @default(now()) @updatedAt     @map("last_update")
+  xp              Int           @default(0)
+  level           Int           @default(1)
+  language        UserLanguage  @default(ENGLISH)
+  theme           UserTheme     @default(LIGHT)
+  avatarPath      String?       @db.VarChar(255) @map("avatar_path")
+  avatarMime      String?       @db.VarChar(255) @map("avatar_mime")
+  avatarSize      Int?          @map("avatar_size")
+  avatarUpdatedAt DateTime?     @db.Timestamptz(3) @updatedAt                     @map("avatar_updated_at")
 
   projects       Project[]
   tasks          Task[]
 
+  friends        UserFriends[]  @relation("UserFriends")
+  friendOf       UserFriends[]  @relation("FriendOf")
+
   @@map("user")
+}
+
+enum UserFriendState {
+  PENDING
+  REQUESTED
+  CONFIRMED
+}
+
+model UserFriends {
+  userId    Int                                                                          @map("user_id")
+  friendId  Int                                                                          @map("friend_id")
+  state     UserFriendState @default(PENDING)
+
+  user      User            @relation("UserFriends", fields: [userId], references: [id], onDelete: Cascade)
+  friend    User            @relation("FriendOf", fields: [friendId], references: [id], onDelete: Cascade)
+
+  @@id([userId, friendId])
+  @@index([state], name: "idx_state")
+
+  @@map("user_friends")
 }

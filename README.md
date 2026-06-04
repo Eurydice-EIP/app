@@ -50,6 +50,21 @@ docker compose up --build -d
 docker compose down
 ```
 
+## Prisma / Database
+
+```bash
+# Generate prisma client. Run this after each migration or deployment
+docker compose exec app npm run prisma:generate
+# Optionally, you can run it locally in order to get auto-completion in your IDE
+npm run prisma:generate
+
+# Run database migrations, create a new migration file, only when you perform schema changes yourself
+docker compose exec app npm run prisma:migrate
+
+# Deploy Prisma schema changes, only when you receive migrations after pulling from GitHub
+docker compose exec app npm run prisma:deploy
+```
+
 ## Run tests
 
 ```bash
@@ -78,6 +93,59 @@ $ mau deploy
 ```
 
 With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+
+## RabbitMQ shema
+
+                  ┌──────────────────────────┐
+                  │        Client            │
+                  │  Web / Mobile (Next / RN)│
+                  └────────────┬─────────────┘
+                               │
+                               │ HTTP / REST
+                               ▼
+                  ┌──────────────────────────┐
+                  │       API NestJS         │
+                  │                          │
+                  │  ┌────────────────────┐  │
+                  │  │ Tasks Module       │  │
+                  │  │ Projects Module    │  │
+                  │  │ Timers Module      │  │
+                  │  │ Daily Quests       │  │
+                  │  │ Guilds             │  │
+                  │  └─────────┬──────────┘  │
+                  │            │             │
+                  │            │ emit events │
+                  └────────────┼─────────────┘
+                               │
+                               ▼
+                  ┌──────────────────────────┐
+                  │        RabbitMQ          │
+                  │  Exchange: game.events   │
+                  │                          │
+                  │  ┌────────────────────┐  │
+                  │  │ task.completed     │  │
+                  │  │ project.completed  │  │
+                  │  │ daily.quest.done   │  │
+                  │  │ timer.session.end  │  │
+                  │  │ guild.task.done    │  │
+                  │  └─────────┬──────────┘  │
+                  └────────────┼─────────────┘
+                               │
+              ┌────────────────┼─────┬─────────────┐
+              │          │           │             │
+              ▼          ▼           ▼             ▼
+          ┌────────┐ ┌────────┐ ┌─────────┐ ┌──────────────┐
+          │  XP    │ │ Stats  │ │ Notify  │ │ Achievements │
+          │Consumer│ │Consumer│ │Consumer │ │  (future)    │
+          └────┬───┘ └────┬───┘ └────┬────┘ └──────┬───────┘
+               │          │          │             │
+               ▼          ▼          ▼             ▼
+         ┌─────────────────────────────────────────────────┐
+         │                  PostgreSQL                     │
+         │                                                 │
+         │  XPEvent | UserProgress | Stats | GuildStats    │
+         └─────────────────────────────────────────────────┘
+
 
 ## Resources
 

@@ -7,6 +7,8 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
 import { exit } from 'process';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { Transport } from '@nestjs/microservices';
+import { rabbitMQConfig } from './rabbitMQ/rabbitmq.config';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule, { cors: true });
@@ -39,6 +41,14 @@ async function bootstrap() {
         new LoggingInterceptor(),
         new TimeoutInterceptor()
     );
+
+    app.connectMicroservice({
+        transport: Transport.RMQ,
+        options: rabbitMQConfig,
+    });
+
+    await app.startAllMicroservices();
+    console.log('[Nest] Microservices started - consumers should be ready');
     await app.listen(port || 3000);
 }
 

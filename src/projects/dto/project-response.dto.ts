@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ProjectType } from '@prisma/client';
+import { ProjectType, ProjectStatus } from '@prisma/client';
 import { Expose } from 'class-transformer';
 
 export class ProjectResponseDto {
@@ -8,21 +8,29 @@ export class ProjectResponseDto {
         description: 'The unique identifier of the project',
     })
     @Expose()
-    id: number;
+    id!: number;
 
     @ApiProperty({
         example: 'Refonte du site',
         description: 'The title of the project',
     })
     @Expose()
-    title: string;
+    title!: string;
+
+    @ApiProperty({
+        example:
+            "Refonte complète du site web pour améliorer l'expérience utilisateur.",
+        description: 'A detailed description of the project',
+    })
+    @Expose()
+    description!: string | null;
 
     @ApiProperty({
         example: '2026-03-01T23:59:59Z',
         description: 'The due date of the project',
     })
     @Expose()
-    dueAt: Date;
+    dueAt!: Date;
 
     @ApiProperty({
         example: 'MAIN',
@@ -30,7 +38,7 @@ export class ProjectResponseDto {
         description: 'The type of the project (MAIN or SIDE)',
     })
     @Expose()
-    type: ProjectType;
+    type!: ProjectType;
 
     @ApiProperty({
         example: 4,
@@ -38,7 +46,7 @@ export class ProjectResponseDto {
             'The importance level of the project, on a scale from 1 to 5',
     })
     @Expose()
-    importance: number;
+    importance!: number;
 
     @ApiProperty({
         example: 2,
@@ -46,19 +54,27 @@ export class ProjectResponseDto {
             'Estimated time to complete the project, on a scale from 1 to 5',
     })
     @Expose()
-    estimatedTime: number;
+    estimatedTime!: number;
 
     @ApiProperty({
         example: '2026-01-04T15:07:40Z',
         description: 'The creation date of the project',
     })
     @Expose()
-    createdAt: Date;
+    createdAt!: Date;
 
     @ApiProperty({
         example: '2026-01-10T09:22:11Z',
         description: 'The last update date of the project',
     })
     @Expose()
-    lastUpdate: Date;
+    lastUpdate!: Date;
+
+    @ApiProperty({
+        example: 'ACTIVE',
+        enum: ProjectStatus,
+        description: 'The status of the project (ACTIVE or COMPLETED)',
+    })
+    @Expose()
+    status!: ProjectStatus;
 }

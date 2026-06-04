@@ -13,12 +13,16 @@ import {
 export class CreateTaskDto {
     @IsString()
     @IsNotEmpty()
-    title: string;
+    title!: string;
+
+    @IsString()
+    @IsOptional()
+    description?: string;
 
     @Type(() => Date)
     @IsDate()
     @IsNotEmpty()
-    dueAt: Date;
+    dueAt!: Date;
 
     @IsInt()
     @Min(1)
@@ -28,12 +32,12 @@ export class CreateTaskDto {
     @IsInt()
     @Min(1)
     @Max(5)
-    importance: number;
+    importance!: number;
 
     @IsInt()
     @Min(1)
     @Max(5)
-    estimatedTime: number;
+    estimatedTime!: number;
 
     @ArrayUnique()
     @IsInt({ each: true })
