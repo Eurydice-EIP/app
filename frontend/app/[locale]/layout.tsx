@@ -20,8 +20,6 @@ export default async function LocaleLayout({
 }) {
   const { locale } = await params;
 
-  console.log("LOCALE:", locale);
-
   if (!locales.includes(locale)) notFound();
 
   const messages = await getMessages();

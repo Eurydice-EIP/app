@@ -6,7 +6,6 @@ import {
   ChartNoAxesColumn,
   BookOpen,
   Settings,
-  Moon,
   Map,
 } from "lucide-react";
 
@@ -23,15 +22,27 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { useTranslations } from "next-intl";
-
-const user = {
-  name: "Oscar",
-  email: "Oscar@test.com",
-  avatar: "/avatars/shadcn.jpg",
-};
+import { fetchUser } from "@/lib/user";
+import { User } from "@/types/entities/user";
+import { useEffect } from "react";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const t = useTranslations("sidebar");
+  const [user, setUser] = React.useState<User | null>(null);
+
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const result = await fetchUser();
+        setUser(result as User);
+      } catch (err) {
+        console.error("Failed to load user:", err);
+        setUser(null);
+      }
+    };
+
+    loadUser();
+  }, []);
 
   const navMain = [
     { title: t("dashboard"), url: "/", icon: House },
@@ -64,7 +75,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary items={navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={user} />
+        <NavUser user={user || null} />
       </SidebarFooter>
     </Sidebar>
   );

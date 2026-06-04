@@ -11,7 +11,14 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { DialogNewProject } from "./dialog-new-project";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ClipboardList,
+  Award,
+  Zap,
+  Clock,
+} from "lucide-react";
 
 export type ProjectWidgetProps = {
   projects: Project[];
@@ -83,27 +90,61 @@ export function ProjectWidget({
               {projects.map((project, index) => (
                 <li key={index} className="flex">
                   <Card
-                    className="w-full flex flex-row py-0 relative mt-4 min-h-[180px] mx-4"
+                    className="w-full flex flex-row p-0 relative mt-4 min-h-[180px] mx-4 rounded-2xl shadow-lg border-transparent bg-white/80 backdrop-blur-sm overflow-hidden cursor-pointer"
                     onClick={() => setSelectedProject?.(project)}
                   >
-                    <div className="flex flex-col flex-1 h-full">
-                      <CardHeader>
-                        <CardTitle>{project.title}</CardTitle>
-                        <CardDescription>
+                    <div className="flex flex-col flex-1 p-4">
+                      <CardHeader className="p-0">
+                        <CardTitle className="text-xl font-bold">
+                          {project.title}
+                        </CardTitle>
+                        <CardDescription className="text-sm">
                           {project.description || "No description provided."}
                         </CardDescription>
                       </CardHeader>
 
-                      <CardFooter className="flex-col gap-2 mt-auto">
-                        Footer
+                      <div className="border-t my-3"></div>
+
+                      <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
+                        <div className="flex items-center gap-1">
+                          <ClipboardList size={16} />
+                          <span>54 to do</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Award size={16} />
+                          <span>290</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Zap size={16} />
+                          <span>2610 XP</span>
+                        </div>
+                      </div>
+
+                      <CardFooter className="p-0 flex items-center justify-between mt-auto">
+                        <div className="flex items-center gap-1 text-red-500 bg-red-100 px-2 py-1 rounded-full text-xs">
+                          <Clock size={14} />
+                          <span>2 days</span>
+                        </div>
+                        <DialogNewProject
+                          project={project}
+                          onProjectCreated={onProjectUpdate}
+                        />
                       </CardFooter>
                     </div>
 
-                    <img
-                      src="https://img.daisyui.com/images/stock/photo-1601004890684-d8cbf643f5f2.webp"
-                      alt={project.title}
-                      className="absolute z-20 aspect-video w-1/3 object-cover h-full right-0 top-0"
-                    />
+                    <div className="absolute top-0 right-12 bg-yellow-200 text-yellow-800 px-2 py-1 text-sm font-semibold rounded-b-lg shadow-md">
+                      <span className="border-b border-yellow-600">15</span>
+                      <span>/</span>
+                      <span>56</span>
+                    </div>
+
+                    <div className="w-1/3">
+                      <img
+                        src="https://img.daisyui.com/images/stock/photo-1601004890684-d8cbf643f5f2.webp"
+                        alt={project.title}
+                        className="object-cover h-full w-full"
+                      />
+                    </div>
                   </Card>
                 </li>
               ))}

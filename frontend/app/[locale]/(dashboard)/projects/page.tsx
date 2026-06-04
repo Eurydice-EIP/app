@@ -15,52 +15,69 @@ import { WeekStatsWidget } from "@/components/week-stats-widget";
 import { CalendarTasksWidget } from "@/components/calendar-tasks-widget";
 
 import { useTranslations } from "next-intl";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ProjectsPage() {
   const t = useTranslations("projects");
   const [tasks, setTasks] = useState<Task[] | null>(null);
   const [projects, setProjects] = useState<Project[] | null>(null);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [refreshProjects, setRefreshProjects] = useState(0);
+  const [refreshTasks, setRefreshTasks] = useState(0);
 
-  const loadProjects = async () => {
-    try {
-      const result = await fetchProjects();
-      setProjects(result as Project[]);
-    } catch (err) {
-      console.error("Failed to load projects:", err);
-      setProjects(null);
-    }
-  };
+  const loadTasks = () => setRefreshTasks((prev) => prev + 1);
+  const loadProjects = () => setRefreshProjects((prev) => prev + 1);
 
-  const loadTasks = async () => {
-    if (selectedProject) {
-      try {
-        const result = await fetchProjectTasks(selectedProject?.id || 0);
-        setTasks(result as Task[]);
-      } catch (err) {
-        console.error("Failed to load tasks:", err);
-        setTasks(null);
+  useEffect(() => {
+    const fetch = async () => {
+      if (selectedProject) {
+        try {
+          const result = await fetchProjectTasks(selectedProject?.id || 0);
+          setTasks(result as Task[]);
+        } catch (err) {
+          console.error("Failed to load tasks:", err);
+          setTasks(null);
+        }
       }
-    }
-  };
+    };
+
+    fetch();
+  }, [selectedProject, refreshTasks]);
 
   useEffect(() => {
-    loadTasks();
-  }, [selectedProject]);
+    const fetch = async () => {
+      try {
+        const result = await fetchProjects();
+        setProjects(result as Project[]);
+      } catch (err) {
+        console.error("Failed to load projects:", err);
+        setProjects(null);
+      }
+    };
 
-  useEffect(() => {
-    loadProjects();
-  }, []);
+    fetch();
+  }, [refreshProjects]);
 
   const [calendarTasks, setCalendarTasks] = useState<Task[]>([]);
 
   return (
     <div className="flex flex-col lg:flex-row h-full p-4 overflow-auto">
-      <ProjectWidget
-        projects={projects || []}
-        onProjectUpdate={loadProjects}
-        setSelectedProject={setSelectedProject}
-      />
+      {!projects ? (
+        <div className="w-full lg:w-64 xl:w-80 shrink-0 p-4 space-y-4">
+          <Skeleton className="h-8 w-32" />
+          <div className="space-y-2">
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+        </div>
+      ) : (
+        <ProjectWidget
+          projects={projects || []}
+          onProjectUpdate={loadProjects}
+          setSelectedProject={setSelectedProject}
+        />
+      )}
       <div className="flex-1 min-w-0 lg:ml-4 h-full">
         {selectedProject ? (
           <div className="flex flex-col h-full">
@@ -75,15 +92,30 @@ export default function ProjectsPage() {
             </div>
             <div className="flex flex-col xl:flex-row w-full h-full mb-8 gap-4">
               <div className="flex flex-col gap-4 w-full min-w-0">
-                <TaskWidget
+                {!tasks ? (
+                  <div className="border rounded-md w-full h-full bg-[var(--widget-background)] p-4">
+                    <Skeleton className="h-8 w-32 mb-4" />
+                    <div className="space-y-2">
+                      <Skeleton className="h-10 w-full" />
+                      <Skeleton className="h-10 w-full" />
+                      <Skeleton className="h-10 w-full" />
+                    </div>
+                  </div>
+                ) : (
+                  <TaskWidget
+                    tasks={tasks || []}
+                    className="border rounded-md w-full h-full bg-[var(--widget-background)]"
+                    onTaskUpdate={loadTasks}
+                  />
+                )}
+                <WeekStatsWidget
                   tasks={tasks || []}
                   className="border rounded-md w-full h-full bg-[var(--widget-background)]"
                 />
-                <WeekStatsWidget />
               </div>
               <div className="flex flex-col items-center gap-4 w-full xl:w-[360px] shrink-0">
                 <CalendarTasksWidget
-                  tasks={calendarTasks}
+                  tasks={tasks || []}
                   className="w-full bg-[var(--widget-background)]"
                 />
                 <TimeTrackerWidget

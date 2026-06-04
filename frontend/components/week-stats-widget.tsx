@@ -3,13 +3,7 @@
 import * as React from "react";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartContainer,
   ChartLegend,
@@ -18,15 +12,9 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 import { useTranslations } from "next-intl";
+import { Task } from "@/types/entities/task";
 
 export const description = "An interactive area chart";
 
@@ -51,7 +39,14 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function WeekStatsWidget() {
+export type WeekStatsWidgetProps = {
+  tasks: Task[];
+};
+
+export function WeekStatsWidget({
+  className,
+  tasks,
+}: React.HTMLAttributes<HTMLDivElement> & WeekStatsWidgetProps) {
   const t = useTranslations("weekStats");
   const [timeRange, setTimeRange] = React.useState("90d");
 

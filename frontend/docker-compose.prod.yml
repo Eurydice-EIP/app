@@ -1,0 +1,10 @@
+name: eurydice-frontend-prod
+services:
+  app:
+    container_name: eurydice-front
+    restart: unless-stopped
+    image: ghcr.io/eurydice-eip/eurydice-frontend:latest
+    ports:
+      - 3000:3000
+    env_file:
+      - .env
