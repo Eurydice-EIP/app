@@ -1,11 +1,11 @@
 {
   "dashboard": {
-    "title": "Bienvenue sur Eurydice",
-    "userSidebar": "Barre latérale",
-    "userSidebarPlaceholder": "Ceci est un espace réservé pour le contenu de la barre latérale."
+    "title": "Bienvenue sur Eurydice"
   },
   "projects": {
-    "selectProject": "Sélectionnez un projet pour voir les détails"
+    "selectProject": "Sélectionnez un projet pour voir les détails",
+    "noProjects": "Aucun projet trouvé.",
+    "createProject": "Créer un projet"
   },
   "settings": {
     "title": "Paramètres",
@@ -41,6 +41,7 @@
   "common": {
     "cancel": "Annuler",
     "title": "Titre",
+    "loading": "Chargement...",
     "dueDate": "Date d'échéance",
     "selectDate": "Sélectionner une date",
     "importance": "Importance",
@@ -52,16 +53,23 @@
     "enterTitle": "Veuillez entrer un titre.",
     "enterDueDate": "Veuillez entrer une date d'échéance.",
     "selectImportance": "Veuillez sélectionner une importance.",
-    "selectEstimatedTime": "Veuillez sélectionner une durée estimée."
+    "selectEstimatedTime": "Veuillez sélectionner une durée estimée.",
+    "required": "Ce champ est obligatoire.",
+    "saving": "Enregistrement...",
+    "description": "Description"
   },
   "task": {
     "new": "Nouvelle tâche +",
+    "update": "Mettre à jour",
+    "taskFor": " Tâche pour ",
+    "tasksFor": " Tâches pour ",
     "createTitle": "Créons une tâche !",
     "project": "Projet",
     "selectProject": "Sélectionner un projet",
     "projects": "Projets",
     "selectProjectError": "Veuillez sélectionner un projet.",
-    "create": "Créer la tâche"
+    "create": "Créer la tâche",
+    "delete": "Supprimer la tâche"
   },
   "project": {
     "new": "Nouveau +",
@@ -72,7 +80,9 @@
     "typeMain": "Principal",
     "typeSide": "Secondaire",
     "selectTypeError": "Veuillez sélectionner un type.",
-    "create": "Créer le projet"
+    "create": "Créer le projet",
+    "delete": "Supprimer le projet",
+    "update": "Mettre à jour le projet"
   },
   "timeTracker": {
     "title": "Suivi du temps",
@@ -92,5 +102,18 @@
     "light": "Clair",
     "dark": "Sombre",
     "system": "Système"
-  }
+  },
+  "account": {
+    "title": "Compte",
+    "description": "Gérez les paramètres et les préférences de votre compte.",
+    "profile": "Profil",
+    "profileDescription": "C'est ainsi que les autres vous verront sur le site.",
+    "level": "Niveau",
+    "xp": "Points d'expérience",
+    "userSidebarPlaceholder": "Amis, succès et plus à venir bientôt !",
+    "language": "Langue",
+    "theme": "Thème"
+  },
+  "taskUpdated": "Tâche mise à jour",
+  "selectEstimatedTime": "Veuillez sélectionner une durée estimée."
 }

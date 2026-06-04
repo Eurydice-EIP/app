@@ -1,5 +1,6 @@
 import { CreateTaskDTO } from "@/types/dto/create-task.dto";
 import { apiFetch } from "./api";
+import { Task } from "@/types/entities/task";
 
 export const createTask = async (data: CreateTaskDTO) => {
   try {
@@ -32,20 +33,49 @@ export const fetchTasks = async () => {
   }
 };
 
-export const updateTaskStatus = async (taskId: number, status: string) => {
-  console.log("Updating task status:", { taskId, status });
-
+export const updateTask = async (task: Task) => {
   try {
-    return apiFetch(`/tasks/${taskId}`, {
+    return apiFetch(`/tasks/${task.id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-      body: JSON.stringify({ status }),
+      body: JSON.stringify(task),
     });
   } catch (error) {
-    console.error("Error updating task status:", error);
+    console.error("Error updating task:", error);
+    throw error;
+  }
+};
+
+export const validateTask = async (taskId: number) => {
+  try {
+    return apiFetch(`/tasks/${taskId}/validate`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({ status: "validated" }),
+    });
+  } catch (error) {
+    console.error("Error validating task:", error);
+    throw error;
+  }
+};
+
+export const deleteTask = async (taskId: number) => {
+  try {
+    return apiFetch(`/tasks/${taskId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+  } catch (error) {
+    console.error("Error deleting task:", error);
     throw error;
   }
 };

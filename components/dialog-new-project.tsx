@@ -26,9 +26,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { CreateProjectDTO } from "@/types/dto/create-project.dto";
-import { createProject } from "@/lib/project";
+import { createProject, updateProject, deleteProject } from "@/lib/project";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import {
@@ -44,7 +45,7 @@ import {
   InputGroupInput,
 } from "./ui/input-group";
 import { CalendarIcon, StarIcon } from "lucide-react";
-import { set } from "date-fns";
+import { Project } from "@/types/entities/project";
 
 function formatDate(date: Date | undefined) {
   if (!date) {
@@ -65,8 +66,10 @@ function isValidDate(date: Date | undefined) {
 
 export function DialogNewProject({
   onProjectCreated,
+  project: initialProject,
 }: {
   onProjectCreated?: () => void;
+  project?: Project;
 }) {
   const [open, setOpen] = useState(false);
   const [dateOpen, setDateOpen] = useState(false);
@@ -80,6 +83,7 @@ export function DialogNewProject({
   const [hoverEstimatedTime, setHoverEstimatedTime] = useState(0);
 
   const [titleError, setTitleError] = useState(false);
+  const [descriptionError, setDescriptionError] = useState(false);
   const [dateError, setDateError] = useState(false);
   const [typeError, setTypeError] = useState(false);
   const [importanceError, setImportanceError] = useState(false);
@@ -88,11 +92,20 @@ export function DialogNewProject({
   const t = useTranslations("project");
   const tCommon = useTranslations("common");
 
+  const setProjectData = (project: Project | undefined) => {
+    if (project) {
+      setType(project.type);
+      setImportance(project.importance);
+      setEstimatedTime(project.estimatedTime);
+    }
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
     const title = formData.get("title") as string;
+    const description = formData.get("description") as string;
     const typeValue = type;
 
     // Validate fields
@@ -102,6 +115,12 @@ export function DialogNewProject({
       hasError = true;
     } else {
       setTitleError(false);
+    }
+    if (!description || description.trim() === "") {
+      setDescriptionError(true);
+      hasError = true;
+    } else {
+      setDescriptionError(false);
     }
     if (!isValidDate(date)) {
       setDateError(true);
@@ -132,6 +151,7 @@ export function DialogNewProject({
 
     const data: CreateProjectDTO = {
       title,
+      description,
       dueAt: date ? date.toISOString() : new Date().toISOString(),
       type: typeValue,
       importance,
@@ -140,8 +160,14 @@ export function DialogNewProject({
 
     try {
       setOpen(false);
-      alert("Submitted data: " + JSON.stringify(data, null, 2));
-      await createProject(data);
+      if (initialProject) {
+        await updateProject({
+          ...initialProject,
+          ...data,
+        });
+      } else {
+        await createProject(data);
+      }
       setDate(undefined);
       setDateValue("");
       setType("");
@@ -153,10 +179,22 @@ export function DialogNewProject({
     }
   };
 
+  const handleDeleteProject = async () => {
+    await deleteProject(initialProject!.id);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(isOpen) => {
+        setOpen(isOpen);
+        if (isOpen) {
+          setProjectData(initialProject);
+        }
+      }}
+    >
       <DialogTrigger asChild>
-        <Button variant="outline">{t("new")}</Button>
+        <Button variant="outline">{initialProject ? "Edit" : t("new")}</Button>
       </DialogTrigger>
 
       <DialogContent className="min-w-1/2">
@@ -173,10 +211,27 @@ export function DialogNewProject({
               <Input
                 id="title"
                 name="title"
+                defaultValue={initialProject?.title || ""}
                 placeholder={tCommon("title")}
                 aria-invalid={titleError}
               />
               {titleError && <FieldError>{tCommon("enterTitle")}</FieldError>}
+            </Field>
+            <Field className="gap-2">
+              <FieldLabel htmlFor="description">
+                Description <span className="text-destructive">*</span>
+              </FieldLabel>
+              <Textarea
+                id="description"
+                name="description"
+                defaultValue={initialProject?.description || ""}
+                placeholder="Enter project description"
+                aria-invalid={descriptionError}
+                className="resize-none"
+              />
+              {descriptionError && (
+                <FieldError>Description is required</FieldError>
+              )}
             </Field>
             <Field className="gap-2">
               <FieldLabel htmlFor="dueDate">
@@ -340,13 +395,23 @@ export function DialogNewProject({
           </FieldGroup>
 
           <DialogFooter>
+            <Button
+              variant="destructive"
+              onClick={handleDeleteProject}
+              disabled={!initialProject}
+              type="button"
+            >
+              {t("delete")}
+            </Button>
             <DialogClose asChild>
               <Button type="button" variant="outline">
                 {tCommon("cancel")}
               </Button>
             </DialogClose>
 
-            <Button type="submit">{t("create")}</Button>
+            <Button type="submit">
+              {initialProject ? t("update") : t("create")}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

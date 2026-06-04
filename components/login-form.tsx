@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,18 +19,19 @@ import {
 import { Input } from "@/components/ui/input";
 import { login } from "@/lib/auth";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const t = useTranslations("login");
-  let email = "";
-  let password = "";
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const res = await login({ email, password });
-    localStorage.setItem("token", (res as any).accessToken);
+    localStorage.setItem("token", res.accessToken);
 
     window.location.href = "/";
   }
@@ -50,7 +52,7 @@ export function LoginForm({
                   id="email"
                   type="email"
                   placeholder="m@example.com"
-                  onChange={(e) => (email = e.target.value)}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </Field>
@@ -67,7 +69,7 @@ export function LoginForm({
                 <Input
                   id="password"
                   type="password"
-                  onChange={(e) => (password = e.target.value)}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
                 />
               </Field>
@@ -77,7 +79,7 @@ export function LoginForm({
                   {t("loginWithGoogle")}
                 </Button>
                 <FieldDescription className="text-center">
-                  {t("noAccount")} <a href="/register">{t("signUp")}</a>
+                  {t("noAccount")} <Link href="/register">{t("signUp")}</Link>
                 </FieldDescription>
               </Field>
             </FieldGroup>

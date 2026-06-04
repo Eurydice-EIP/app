@@ -1,11 +1,11 @@
 {
   "dashboard": {
-    "title": "Welcome to Eurydice",
-    "userSidebar": "User Sidebar",
-    "userSidebarPlaceholder": "This is a placeholder for the user sidebar content."
+    "title": "Welcome to Eurydice"
   },
   "projects": {
-    "selectProject": "Select a project to see details"
+    "selectProject": "Select a project to see details",
+    "noProjects": "No projects found.",
+    "createProject": "Create a project"
   },
   "settings": {
     "title": "Settings",
@@ -41,6 +41,7 @@
   "common": {
     "cancel": "Cancel",
     "title": "Title",
+    "loading": "Loading...",
     "dueDate": "Due Date",
     "selectDate": "Select a date",
     "importance": "Importance",
@@ -52,16 +53,23 @@
     "enterTitle": "Please enter a title.",
     "enterDueDate": "Please enter a due date.",
     "selectImportance": "Please select an importance.",
-    "selectEstimatedTime": "Please select an estimated time."
+    "selectEstimatedTime": "Please select an estimated time.",
+    "required": "This field is required.",
+    "saving": "Saving...",
+    "description": "Description"
   },
   "task": {
     "new": "New task +",
+    "update": "Update",
+    "taskFor": " Task for ",
+    "tasksFor": " Tasks for ",
     "createTitle": "Let's create a task!",
     "project": "Project",
     "selectProject": "Select a project",
     "projects": "Projects",
     "selectProjectError": "Please select a project.",
-    "create": "Create task"
+    "create": "Create task",
+    "delete": "Delete task"
   },
   "project": {
     "new": "New +",
@@ -72,7 +80,9 @@
     "typeMain": "Main",
     "typeSide": "Side",
     "selectTypeError": "Please select a type.",
-    "create": "Create project"
+    "create": "Create project",
+    "delete": "Delete project",
+    "update": "Update project"
   },
   "timeTracker": {
     "title": "Time Tracker",
@@ -92,5 +102,18 @@
     "light": "Light",
     "dark": "Dark",
     "system": "System"
-  }
+  },
+  "account": {
+    "title": "Account",
+    "description": "Manage your account settings and preferences.",
+    "profile": "Profile",
+    "profileDescription": "This is how others will see you on the site.",
+    "level": "Level",
+    "xp": "Experience Points",
+    "userSidebarPlaceholder": "Friends, achievements and more coming soon!",
+    "language": "Language",
+    "theme": "Theme"
+  },
+  "taskUpdated": "Task updated",
+  "selectEstimatedTime": "Please select an estimated time."
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,21 +19,22 @@ import {
 import { Input } from "@/components/ui/input";
 import { register } from "@/lib/auth";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 
 export function RegisterForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const t = useTranslations("register");
-  let email = "";
-  let password = "";
-  let confirmPassword = "";
-  let username = "";
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [username, setUsername] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const res = await register({ email, password, confirmPassword, username });
-    localStorage.setItem("token", (res as any).accessToken);
+    localStorage.setItem("token", res.accessToken);
 
     window.location.href = "/";
   }
@@ -54,7 +56,7 @@ export function RegisterForm({
                   type="text"
                   placeholder="John Doe"
                   required
-                  onChange={(e) => (username = e.target.value)}
+                  onChange={(e) => setUsername(e.target.value)}
                 />
               </Field>
               <Field>
@@ -63,7 +65,7 @@ export function RegisterForm({
                   id="email"
                   type="email"
                   placeholder="m@example.com"
-                  onChange={(e) => (email = e.target.value)}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </Field>
@@ -75,7 +77,7 @@ export function RegisterForm({
                       id="password"
                       type="password"
                       required
-                      onChange={(e) => (password = e.target.value)}
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                   </Field>
                   <Field>
@@ -86,7 +88,7 @@ export function RegisterForm({
                       id="confirm-password"
                       type="password"
                       required
-                      onChange={(e) => (confirmPassword = e.target.value)}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
                     />
                   </Field>
                 </Field>
@@ -95,7 +97,7 @@ export function RegisterForm({
               <Field>
                 <Button type="submit">{t("submit")}</Button>
                 <FieldDescription className="text-center">
-                  {t("hasAccount")} <a href="/login">{t("signIn")}</a>
+                  {t("hasAccount")} <Link href="/login">{t("signIn")}</Link>
                 </FieldDescription>
               </Field>
             </FieldGroup>

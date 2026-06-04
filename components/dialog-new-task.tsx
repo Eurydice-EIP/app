@@ -42,8 +42,13 @@ import {
 } from "./ui/input-group";
 import { CalendarIcon, StarIcon } from "lucide-react";
 import { CreateTaskDTO } from "@/types/dto/create-task.dto";
-import { createTask } from "@/lib/task";
+import { createTask, deleteTask, updateTask } from "@/lib/task";
 import { useTranslations } from "next-intl";
+import { Task } from "@/types/entities/task";
+import { fetchProjects } from "@/lib/project";
+import { Project } from "@/types/entities/project";
+import { Spinner } from "@/components/ui/spinner";
+import { Textarea } from "./ui/textarea";
 
 function formatDate(date: Date | undefined) {
   if (!date) {
@@ -64,12 +69,16 @@ function isValidDate(date: Date | undefined) {
 
 export function DialogNewTask({
   onTaskCreated,
+  task,
   projects,
 }: {
   onTaskCreated?: () => void;
-  projects?: { id: number; title: string }[];
+  task?: Task;
+  projects?: Project[];
 }) {
   const [open, setOpen] = useState(false);
+  const [projectList, setProjectList] = useState(projects || []);
+  const [isLoading, setIsLoading] = useState(false);
   const [dateOpen, setDateOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>();
   const [month, setMonth] = useState<Date | undefined>(date);
@@ -81,6 +90,7 @@ export function DialogNewTask({
   const [hoverEstimatedTime, setHoverEstimatedTime] = useState(0);
 
   const [titleError, setTitleError] = useState(false);
+  const [descriptionError, setDescriptionError] = useState(false);
   const [dateError, setDateError] = useState(false);
   const [projectError, setProjectError] = useState(false);
   const [importanceError, setImportanceError] = useState(false);
@@ -88,6 +98,30 @@ export function DialogNewTask({
   const [project, setProject] = useState<number | null>(null);
   const t = useTranslations("task");
   const tCommon = useTranslations("common");
+
+  const loadProjects = async () => {
+    setIsLoading(true);
+    try {
+      const result = await fetchProjects();
+      setProjectList(result);
+    } catch (err) {
+      console.error("Failed to load projects:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const setTaskData = async (task: Task | undefined) => {
+    if (task) {
+      loadProjects().then(() => {
+        setProject(Number(task.projectId));
+      });
+      setDate(new Date(task.dueAt));
+      setDateValue(formatDate(new Date(task.dueAt)));
+      setImportance(task.importance);
+      setEstimatedTime(task.estimatedTime);
+    }
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -103,6 +137,13 @@ export function DialogNewTask({
       hasError = true;
     } else {
       setTitleError(false);
+    }
+    const description = formData.get("description") as string;
+    if (!description || description.trim() === "") {
+      setDescriptionError(true);
+      hasError = true;
+    } else {
+      setDescriptionError(false);
     }
     if (!isValidDate(date)) {
       setDateError(true);
@@ -133,6 +174,7 @@ export function DialogNewTask({
 
     const data: CreateTaskDTO = {
       title,
+      description,
       dueAt: date ? date.toISOString() : new Date().toISOString(),
       projectId: projectValue!,
       importance,
@@ -141,8 +183,14 @@ export function DialogNewTask({
 
     try {
       setOpen(false);
-      alert("Submitted data: " + JSON.stringify(data, null, 2));
-      await createTask(data);
+      if (task) {
+        const updatedTask = await updateTask({
+          ...task,
+          ...data,
+        });
+      } else {
+        await createTask(data);
+      }
       setDate(undefined);
       setDateValue("");
       setProject(null);
@@ -154,10 +202,24 @@ export function DialogNewTask({
     }
   };
 
+  const handleDeleteTask = async () => {
+    if (task?.id) {
+      await deleteTask(task.id);
+    }
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(isOpen) => {
+        setOpen(isOpen);
+        if (isOpen) {
+          setTaskData(task);
+        }
+      }}
+    >
       <DialogTrigger asChild>
-        <Button variant="outline">{t("new")}</Button>
+        <Button variant="outline">{task ? "Edit" : t("new")}</Button>
       </DialogTrigger>
 
       <DialogContent className="min-w-1/2">
@@ -166,199 +228,234 @@ export function DialogNewTask({
             <DialogTitle>{t("createTitle")}</DialogTitle>
           </DialogHeader>
 
-          <FieldGroup className="gap-2">
-            <Field className="gap-2">
-              <FieldLabel htmlFor="title">
-                {tCommon("title")} <span className="text-destructive">*</span>
-              </FieldLabel>
-              <Input
-                id="title"
-                name="title"
-                placeholder={tCommon("title")}
-                aria-invalid={titleError}
-              />
-              {titleError && <FieldError>{tCommon("enterTitle")}</FieldError>}
-            </Field>
-            <Field className="gap-2">
-              <FieldLabel htmlFor="dueDate">
-                {tCommon("dueDate")} <span className="text-destructive">*</span>
-              </FieldLabel>
-              <InputGroup>
-                <InputGroupInput
-                  id="date-required"
-                  value={dateValue}
-                  placeholder={tCommon("selectDate")}
-                  onChange={(e) => {
-                    const date = new Date(e.target.value);
-                    setDateValue(e.target.value);
-                    if (isValidDate(date)) {
-                      setDate(date);
-                      setMonth(date);
-                    }
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === "ArrowDown") {
-                      e.preventDefault();
-                      setDateOpen(true);
-                    }
-                  }}
-                  aria-invalid={dateError}
+          {isLoading ? (
+            <div className="flex flex-col gap-4 items-center justify-center h-32">
+              <Spinner className="size-8" />
+              <span className="ml-2">{tCommon("loading")}</span>
+            </div>
+          ) : (
+            <FieldGroup className="gap-2">
+              <Field className="gap-2">
+                <FieldLabel htmlFor="title">
+                  {tCommon("title")} <span className="text-destructive">*</span>
+                </FieldLabel>
+                <Input
+                  id="title"
+                  name="title"
+                  defaultValue={task?.title || ""}
+                  placeholder={tCommon("title")}
+                  aria-invalid={titleError}
                 />
-                <InputGroupAddon align="inline-end">
-                  <Popover open={dateOpen} onOpenChange={setDateOpen}>
-                    <PopoverTrigger asChild>
-                      <InputGroupButton
-                        id="date-picker"
-                        variant="ghost"
-                        size="icon-xs"
-                        aria-label="Select date"
+                {titleError && <FieldError>{tCommon("enterTitle")}</FieldError>}
+              </Field>
+              <Field className="gap-2">
+                <FieldLabel htmlFor="description">
+                  {tCommon("description")}{" "}
+                  <span className="text-destructive">*</span>
+                </FieldLabel>
+                <Textarea
+                  id="description"
+                  name="description"
+                  defaultValue={task?.description || ""}
+                  placeholder={tCommon("description")}
+                  aria-invalid={descriptionError}
+                />
+                {descriptionError && (
+                  <FieldError>{tCommon("enterDescription")}</FieldError>
+                )}
+              </Field>
+              <Field className="gap-2">
+                <FieldLabel htmlFor="dueDate">
+                  {tCommon("dueDate")}{" "}
+                  <span className="text-destructive">*</span>
+                </FieldLabel>
+                <InputGroup>
+                  <InputGroupInput
+                    id="date-required"
+                    value={task ? formatDate(new Date(task.dueAt)) : dateValue}
+                    placeholder={tCommon("selectDate")}
+                    onChange={(e) => {
+                      const date = new Date(e.target.value);
+                      setDateValue(e.target.value);
+                      if (isValidDate(date)) {
+                        setDate(date);
+                        setMonth(date);
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "ArrowDown") {
+                        e.preventDefault();
+                        setDateOpen(true);
+                      }
+                    }}
+                    aria-invalid={dateError}
+                  />
+                  <InputGroupAddon align="inline-end">
+                    <Popover open={dateOpen} onOpenChange={setDateOpen}>
+                      <PopoverTrigger asChild>
+                        <InputGroupButton
+                          id="date-picker"
+                          variant="ghost"
+                          size="icon-xs"
+                          aria-label="Select date"
+                        >
+                          <CalendarIcon />
+                          <span className="sr-only">Select date</span>
+                        </InputGroupButton>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        className="w-auto overflow-hidden p-0"
+                        align="end"
+                        alignOffset={-8}
+                        sideOffset={10}
                       >
-                        <CalendarIcon />
-                        <span className="sr-only">Select date</span>
-                      </InputGroupButton>
-                    </PopoverTrigger>
-                    <PopoverContent
-                      className="w-auto overflow-hidden p-0"
-                      align="end"
-                      alignOffset={-8}
-                      sideOffset={10}
-                    >
-                      <Calendar
-                        mode="single"
-                        selected={date}
-                        month={month}
-                        onMonthChange={setMonth}
-                        onSelect={(date) => {
-                          setDate(date);
-                          setDateValue(formatDate(date));
-                          setDateOpen(false);
-                        }}
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </InputGroupAddon>
-              </InputGroup>
-              {dateError && <FieldError>{tCommon("enterDueDate")}</FieldError>}
-            </Field>
+                        <Calendar
+                          mode="single"
+                          selected={date}
+                          month={month}
+                          onMonthChange={setMonth}
+                          onSelect={(date) => {
+                            setDate(date);
+                            setDateValue(formatDate(date));
+                            setDateOpen(false);
+                          }}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </InputGroupAddon>
+                </InputGroup>
+                {dateError && (
+                  <FieldError>{tCommon("enterDueDate")}</FieldError>
+                )}
+              </Field>
 
-            <Field className="gap-2">
-              <FieldLabel htmlFor="type">
-                {t("project")} <span className="text-destructive">*</span>
-              </FieldLabel>
-              <Select
-                value={project?.toString() || ""}
-                onValueChange={(value) => setProject(Number(value))}
-              >
-                <SelectTrigger className="gap-2" id="type" name="type">
-                  <SelectValue placeholder={t("selectProject")} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>{t("projects")}</SelectLabel>
-                    {projects?.map((project) => (
-                      <SelectItem
-                        key={project.id}
-                        value={project.id.toString()}
+              <Field className="gap-2">
+                <FieldLabel htmlFor="type">
+                  {t("project")} <span className="text-destructive">*</span>
+                </FieldLabel>
+                <Select
+                  value={project?.toString() || ""}
+                  onValueChange={(value) => setProject(Number(value))}
+                >
+                  <SelectTrigger className="gap-2" id="type" name="type">
+                    <SelectValue placeholder={t("selectProject")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>{t("projects")}</SelectLabel>
+                      {projectList?.map((project) => (
+                        <SelectItem
+                          key={project.id}
+                          value={project.id.toString()}
+                        >
+                          {project.title}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                {projectError && (
+                  <FieldError>{t("selectProjectError")}</FieldError>
+                )}
+              </Field>
+
+              <Field className="gap-2">
+                <FieldLabel htmlFor="Importance">
+                  {tCommon("importance")}{" "}
+                  <span className="text-destructive">*</span>
+                </FieldLabel>
+                <div className="flex flex-row w-full items-center justify-between">
+                  <p className="text-sm font-light text-gray-500 text-center w-1/4">
+                    {tCommon("notImportant")}
+                  </p>
+                  <div className="flex gap-1 w-full justify-between max-w-xs mx-10">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        className="transition-transform hover:scale-110"
+                        key={star}
+                        onClick={() => setImportance(star)}
+                        onMouseEnter={() => setHoverImportance(star)}
+                        onMouseLeave={() => setHoverImportance(0)}
+                        type="button"
+                        aria-label={`Set importance to ${star}`}
                       >
-                        {project.title}
-                      </SelectItem>
+                        <StarIcon
+                          className={cn(
+                            "h-8 w-8 transition-colors",
+                            (hoverImportance || importance) >= star
+                              ? "fill-yellow-400 text-yellow-400"
+                              : "text-muted-foreground",
+                          )}
+                        />
+                      </button>
                     ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              {projectError && (
-                <FieldError>{t("selectProjectError")}</FieldError>
-              )}
-            </Field>
-
-            <Field className="gap-2">
-              <FieldLabel htmlFor="Importance">
-                {tCommon("importance")}{" "}
-                <span className="text-destructive">*</span>
-              </FieldLabel>
-              <div className="flex flex-row w-full items-center justify-between">
-                <p className="text-sm font-light text-gray-500 text-center w-1/4">
-                  {tCommon("notImportant")}
-                </p>
-                <div className="flex gap-1 w-full justify-between max-w-xs mx-10">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      className="transition-transform hover:scale-110"
-                      key={star}
-                      onClick={() => setImportance(star)}
-                      onMouseEnter={() => setHoverImportance(star)}
-                      onMouseLeave={() => setHoverImportance(0)}
-                      type="button"
-                      aria-label={`Set importance to ${star}`}
-                    >
-                      <StarIcon
-                        className={cn(
-                          "h-8 w-8 transition-colors",
-                          (hoverImportance || importance) >= star
-                            ? "fill-yellow-400 text-yellow-400"
-                            : "text-muted-foreground",
-                        )}
-                      />
-                    </button>
-                  ))}
+                  </div>
+                  <p className="text-sm font-light text-gray-500 text-center w-1/4">
+                    {tCommon("veryImportant")}
+                  </p>
                 </div>
-                <p className="text-sm font-light text-gray-500 text-center w-1/4">
-                  {tCommon("veryImportant")}
-                </p>
-              </div>
-              {importanceError && (
-                <FieldError>{tCommon("selectImportance")}</FieldError>
-              )}
-            </Field>
-            <Field className="gap-2">
-              <FieldLabel htmlFor="estimatedTime">
-                {tCommon("estimatedDuration")}{" "}
-                <span className="text-destructive">*</span>
-              </FieldLabel>
-              <div className="flex flex-row w-full items-center justify-between">
-                <p className="text-sm font-light text-gray-500 text-center w-1/4">
-                  {tCommon("littleTime")}
-                </p>
-                <div className="flex gap-1 w-full justify-between max-w-xs mx-10">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      className="transition-transform hover:scale-110"
-                      key={star}
-                      onClick={() => setEstimatedTime(star)}
-                      onMouseEnter={() => setHoverEstimatedTime(star)}
-                      onMouseLeave={() => setHoverEstimatedTime(0)}
-                      type="button"
-                      aria-label={`Set estimated time to ${star}`}
-                    >
-                      <StarIcon
-                        className={cn(
-                          "h-8 w-8 transition-colors",
-                          (hoverEstimatedTime || estimatedTime) >= star
-                            ? "fill-yellow-400 text-yellow-400"
-                            : "text-muted-foreground",
-                        )}
-                      />
-                    </button>
-                  ))}
+                {importanceError && (
+                  <FieldError>{tCommon("selectImportance")}</FieldError>
+                )}
+              </Field>
+              <Field className="gap-2">
+                <FieldLabel htmlFor="estimatedTime">
+                  {tCommon("estimatedDuration")}{" "}
+                  <span className="text-destructive">*</span>
+                </FieldLabel>
+                <div className="flex flex-row w-full items-center justify-between">
+                  <p className="text-sm font-light text-gray-500 text-center w-1/4">
+                    {tCommon("littleTime")}
+                  </p>
+                  <div className="flex gap-1 w-full justify-between max-w-xs mx-10">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        className="transition-transform hover:scale-110"
+                        key={star}
+                        onClick={() => setEstimatedTime(star)}
+                        onMouseEnter={() => setHoverEstimatedTime(star)}
+                        onMouseLeave={() => setHoverEstimatedTime(0)}
+                        type="button"
+                        aria-label={`Set estimated time to ${star}`}
+                      >
+                        <StarIcon
+                          className={cn(
+                            "h-8 w-8 transition-colors",
+                            (hoverEstimatedTime || estimatedTime) >= star
+                              ? "fill-yellow-400 text-yellow-400"
+                              : "text-muted-foreground",
+                          )}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-sm font-light text-gray-500 text-center w-1/4">
+                    {tCommon("lotsOfTime")}
+                  </p>
                 </div>
-                <p className="text-sm font-light text-gray-500 text-center w-1/4">
-                  {tCommon("lotsOfTime")}
-                </p>
-              </div>
-              {estimatedTimeError && (
-                <FieldError>{tCommon("selectEstimatedTime")}</FieldError>
-              )}
-            </Field>
-          </FieldGroup>
+                {estimatedTimeError && (
+                  <FieldError>{tCommon("selectEstimatedTime")}</FieldError>
+                )}
+              </Field>
+            </FieldGroup>
+          )}
 
           <DialogFooter>
+            <Button
+              variant="destructive"
+              onClick={handleDeleteTask}
+              disabled={!task}
+              type="button"
+            >
+              {t("delete")}
+            </Button>
             <DialogClose asChild>
               <Button type="button" variant="outline">
                 {tCommon("cancel")}
               </Button>
             </DialogClose>
 
-            <Button type="submit">{t("create")}</Button>
+            <Button type="submit">{task ? t("update") : t("create")}</Button>
           </DialogFooter>
         </form>
       </DialogContent>
