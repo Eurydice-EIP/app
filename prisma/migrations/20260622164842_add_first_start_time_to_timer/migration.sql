@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "timer" ADD COLUMN     "first_start_time" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
