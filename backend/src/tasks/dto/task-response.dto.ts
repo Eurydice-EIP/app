@@ -91,7 +91,36 @@ export class TaskResponseDto {
 
     @Expose()
     @ApiProperty({
-        required: false,
+        example: '2024-01-03T12:00:00Z',
+        description: 'The completion date of the task, if completed',
     })
     completedAt?: Date;
+
+    @Expose()
+    @ApiProperty({
+        example: 1,
+        description: 'The ID of the timer associated with the task, if any',
+    })
+    timerId?: number;
+
+    @Expose()
+    @ApiProperty({
+        example: {
+            id: 1,
+            firstStartTime: '2024-01-01T12:00:00Z',
+            startTime: '2024-01-02T12:00:00Z',
+            endTime: null,
+            duration: 3600,
+            running: true,
+        },
+        description: 'The timer details associated with the task, if any',
+    })
+    timer?: {
+        id: number;
+        firstStartTime: Date;
+        startTime: Date;
+        endTime: Date | null;
+        duration: number;
+        running: boolean;
+    };
 }

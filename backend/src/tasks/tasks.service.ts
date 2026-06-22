@@ -3,7 +3,7 @@ import {
     Injectable,
     NotFoundException,
 } from '@nestjs/common';
-import { Task as PrismaTask } from '@prisma/client';
+import { Task as PrismaTask, Timer as PrismaTimer } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -22,12 +22,14 @@ export class TasksService {
         task: PrismaTask & {
             blocks: { blockedId: number }[];
             blockedBy: { blockerId: number }[];
+            timer: PrismaTimer | null;
         }
-    ): PrismaTask & { blocks: number[]; blockedBy: number[] } {
+    ): PrismaTask & { blocks: number[]; blockedBy: number[]; timer: PrismaTimer | null } {
         return {
             ...task,
             blocks: task.blocks.map((b) => b.blockedId),
             blockedBy: task.blockedBy.map((b) => b.blockerId),
+            timer: task.timer ? { ...task.timer } : null,
         };
     }
 
@@ -39,17 +41,22 @@ export class TasksService {
         // Start a transaction to ensure data integrity
         const result = await this.prisma.$transaction(async (prisma) => {
             // Create the task
-            const task = await prisma.task.create({
-                data: {
-                    title: dto.title,
-                    description: dto.description,
-                    dueAt: new Date(dto.dueAt),
-                    userId: userId,
-                    projectId: dto.projectId ?? null,
-                    importance: dto.importance,
-                    estimatedTime: dto.estimatedTime,
-                },
-            });
+            let task: PrismaTask;
+            try {
+                task = await prisma.task.create({
+                    data: {
+                        title: dto.title,
+                        description: dto.description,
+                        dueAt: new Date(dto.dueAt),
+                        userId: userId,
+                        projectId: dto.projectId ?? null,
+                        importance: dto.importance,
+                        estimatedTime: dto.estimatedTime,
+                    },
+                });
+            } catch {
+                throw new BadRequestException('Failed to create task');
+            }
 
             // Handle blocked tasks if any
             if (dto.blocks?.length) {
@@ -101,6 +108,7 @@ export class TasksService {
             include: {
                 blocks: { select: { blockedId: true } },
                 blockedBy: { select: { blockerId: true } },
+                timer: true,
             },
         });
 
@@ -120,6 +128,7 @@ export class TasksService {
             include: {
                 blocks: { select: { blockedId: true } },
                 blockedBy: { select: { blockerId: true } },
+                timer: true,
             },
         });
 

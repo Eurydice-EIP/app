@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import jwtConfig from './config/jwt.config';
 import { LevelModule } from './level/level.module';
+import { TimerModule } from './timer/timer.module';
 import uploadsConfig from './config/uploads.config';
 
 @Module({
@@ -26,6 +27,7 @@ import uploadsConfig from './config/uploads.config';
         AuthModule,
         UsersModule,
         LevelModule,
+        TimerModule,
     ],
 })
 export class AppModule {}

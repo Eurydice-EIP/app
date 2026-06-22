@@ -4,7 +4,7 @@ import {
     BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { Project } from '@prisma/client';
+import { Project, Task } from '@prisma/client';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
@@ -212,7 +212,7 @@ export class ProjectsService {
     async getTasksInProject(
         userId: number,
         projectId: number
-    ): Promise<TaskResponseDto[]> {
+    ): Promise<(Task & { blocks: number[]; blockedBy: number[] })[]> {
         const project = await this.prisma.project.findUnique({
             where: { id: projectId, userId },
             include: {
@@ -231,11 +231,8 @@ export class ProjectsService {
 
         return project.tasks.map((task) => ({
             ...task,
-
             blocks: task.blocks.map((b) => b.blockedId),
             blockedBy: task.blockedBy.map((b) => b.blockerId),
-
-            completedAt: task.completedAt ?? undefined,
         }));
     }
 }
