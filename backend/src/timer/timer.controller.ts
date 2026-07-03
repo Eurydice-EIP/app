@@ -1,4 +1,12 @@
-import { Controller, HttpStatus, Param, ParseIntPipe, Post, UseGuards, Version } from '@nestjs/common';
+import {
+    Controller,
+    HttpStatus,
+    Param,
+    ParseIntPipe,
+    Post,
+    UseGuards,
+    Version,
+} from '@nestjs/common';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.gard';
 import { TimerService } from './timer.service';
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
@@ -23,9 +31,14 @@ export class TimerController {
     })
     @Version('1')
     @Post('start/:taskId')
-    async start(@User() user: CurrentUser, @Param('taskId', ParseIntPipe) taskId: number): Promise<TimerResponseDto> {
+    async start(
+        @User() user: CurrentUser,
+        @Param('taskId', ParseIntPipe) taskId: number
+    ): Promise<TimerResponseDto> {
         const duration = await this.timerService.start(user.sub, taskId);
-        return plainToInstance(TimerResponseDto, duration, { excludeExtraneousValues: true });
+        return plainToInstance(TimerResponseDto, duration, {
+            excludeExtraneousValues: true,
+        });
     }
 
     @ApiBearerAuth('Authorization')
@@ -37,8 +50,13 @@ export class TimerController {
     })
     @Version('1')
     @Post('stop/:taskId')
-    async stop(@User() user: CurrentUser, @Param('taskId', ParseIntPipe) taskId: number): Promise<TimerResponseDto> {
+    async stop(
+        @User() user: CurrentUser,
+        @Param('taskId', ParseIntPipe) taskId: number
+    ): Promise<TimerResponseDto> {
         const duration = await this.timerService.stop(user.sub, taskId);
-        return plainToInstance(TimerResponseDto, duration, { excludeExtraneousValues: true });
+        return plainToInstance(TimerResponseDto, duration, {
+            excludeExtraneousValues: true,
+        });
     }
 }

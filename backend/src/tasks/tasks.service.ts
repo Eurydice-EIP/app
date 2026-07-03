@@ -24,7 +24,11 @@ export class TasksService {
             blockedBy: { blockerId: number }[];
             timer: PrismaTimer | null;
         }
-    ): PrismaTask & { blocks: number[]; blockedBy: number[]; timer: PrismaTimer | null } {
+    ): PrismaTask & {
+        blocks: number[];
+        blockedBy: number[];
+        timer: PrismaTimer | null;
+    } {
         return {
             ...task,
             blocks: task.blocks.map((b) => b.blockedId),

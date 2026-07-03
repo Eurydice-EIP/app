@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+    BadRequestException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import { Timer as PrismaTimer } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 
@@ -31,7 +35,9 @@ export class TimerService {
         }
 
         if (task.timer.running) {
-            throw new BadRequestException('Timer is already running for this task');
+            throw new BadRequestException(
+                'Timer is already running for this task'
+            );
         }
 
         await this.prisma.timer.update({
@@ -64,7 +70,9 @@ export class TimerService {
         }
 
         const endTime = new Date();
-        const duration = task.timer.duration + (endTime.getTime() - task.timer.startTime.getTime()) / 1000;
+        const duration =
+            task.timer.duration +
+            (endTime.getTime() - task.timer.startTime.getTime()) / 1000;
 
         const timer = await this.prisma.timer.update({
             where: { id: task.timer.id },
