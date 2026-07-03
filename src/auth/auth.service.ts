@@ -1,4 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+    Injectable,
+    BadRequestException,
+    UnauthorizedException,
+    ConflictException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
@@ -33,21 +38,21 @@ export class AuthService {
 
         if (existingUser) {
             if (existingUser.email === dto.email) {
-                throw new UnauthorizedException('Email already in use');
+                throw new ConflictException('Email already in use');
             }
             if (existingUser.username === dto.username) {
-                throw new UnauthorizedException('Username already in use');
+                throw new ConflictException('Username already in use');
             }
         }
 
         if (dto.password.length < 10) {
-            throw new UnauthorizedException(
+            throw new BadRequestException(
                 'Password must be at least 10 characters long'
             );
         }
 
         if (dto.password !== dto.confirmPassword) {
-            throw new UnauthorizedException('Passwords do not match');
+            throw new BadRequestException('Passwords do not match');
         }
 
         dto.password = await bcrypt.hash(dto.password, await bcrypt.genSalt());

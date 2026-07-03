@@ -8,7 +8,6 @@ import { Project, Task } from '@prisma/client';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { TaskResponseDto } from 'src/tasks/dto/task-response.dto';
 import { GameEventProducer } from 'src/rabbitMQ/game-event.producer';
 import { ProjectStatus, TaskStatus } from '@prisma/client';
 import { TasksService } from 'src/tasks/tasks.service';
