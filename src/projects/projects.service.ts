@@ -36,21 +36,78 @@ export class ProjectsService {
     }
 
     // ---------------- FIND ALL ----------------
-    async findAll(userId: number): Promise<Project[]> {
-        return this.prisma.project.findMany({
+    async findAll(
+        userId: number
+    ): Promise<(Project & { totalTasks: number; completedTasks: number })[]> {
+        const projects = await this.prisma.project.findMany({
             where: { userId },
-            include: {
-                tasks: true,
+            select: {
+                id: true,
+                title: true,
+                description: true,
+                dueAt: true,
+                userId: true,
+                type: true,
+                importance: true,
+                estimatedTime: true,
+                createdAt: true,
+                lastUpdate: true,
+                status: true,
+                _count: {
+                    select: {
+                        tasks: true,
+                    },
+                },
+                tasks: {
+                    where: {
+                        status: TaskStatus.COMPLETED,
+                    },
+                    select: {
+                        id: true,
+                    },
+                },
             },
         });
+
+        return projects.map(({ _count, tasks, ...project }) => ({
+            ...project,
+            totalTasks: _count.tasks,
+            completedTasks: tasks.length,
+        }));
     }
 
     // ---------------- FIND ONE ----------------
-    async findOne(userId: number, id: number): Promise<Project> {
+    async findOne(
+        userId: number,
+        id: number
+    ): Promise<Project & { totalTasks: number; completedTasks: number }> {
         const project = await this.prisma.project.findUnique({
             where: { id, userId },
-            include: {
-                tasks: true,
+            select: {
+                id: true,
+                title: true,
+                description: true,
+                dueAt: true,
+                userId: true,
+                type: true,
+                importance: true,
+                estimatedTime: true,
+                createdAt: true,
+                lastUpdate: true,
+                status: true,
+                _count: {
+                    select: {
+                        tasks: true,
+                    },
+                },
+                tasks: {
+                    where: {
+                        status: TaskStatus.COMPLETED,
+                    },
+                    select: {
+                        id: true,
+                    },
+                },
             },
         });
 
@@ -58,7 +115,13 @@ export class ProjectsService {
             throw new NotFoundException('Project not found');
         }
 
-        return project;
+        const { _count, tasks, ...projectData } = project;
+
+        return {
+            ...projectData,
+            totalTasks: _count.tasks,
+            completedTasks: tasks.length,
+        };
     }
 
     // ---------------- UPDATE ----------------
