@@ -77,4 +77,18 @@ export class ProjectResponseDto {
     })
     @Expose()
     status!: ProjectStatus;
+
+    @ApiProperty({
+        example: 7,
+        description: 'The total number of tasks associated to the project.',
+    })
+    @Expose()
+    totalTasks!: number;
+
+    @ApiProperty({
+        example: 2,
+        description: 'The total number of completed tasks of the project.',
+    })
+    @Expose()
+    completedTasks!: number;
 }
