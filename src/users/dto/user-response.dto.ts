@@ -79,5 +79,5 @@ export class UserResponseDto {
         description: "IDs of the user's friends",
     })
     @Expose()
-    friends: { id: number; state: UserFriendState }[];
+    friends!: { id: number; state: UserFriendState }[];
 }

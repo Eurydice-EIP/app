@@ -76,27 +76,21 @@ export class UsersController {
     }
 
     @ApiBearerAuth('Authorization')
-    @ApiOperation({ summary: 'Get friend requests' })
+    @ApiOperation({ summary: 'Get user friends' })
     @ApiResponse({
         status: 200,
-        description: 'The friend requests have been successfully retrieved.',
-        type: UserResponseDto,
+        description: 'The user friends have been successfully retrieved.',
+        type: [OtherUserResponseDto],
     })
     @Version('1')
-    @Get('friend-requests')
-    async getFriendRequests(
+    @Get('friends')
+    async getFriends(
         @User() user: CurrentUser
-    ): Promise<UserResponseDto> {
-        const friendRequests = await this.usersService.getFriendRequests(
-            user.sub
-        );
-        return plainToInstance(
-            UserResponseDto,
-            { friends: friendRequests },
-            {
-                excludeExtraneousValues: true,
-            }
-        );
+    ): Promise<OtherUserResponseDto[]> {
+        const friends = await this.usersService.getFriends(user.sub);
+        return plainToInstance(OtherUserResponseDto, friends, {
+            excludeExtraneousValues: true,
+        });
     }
 
     @ApiBearerAuth('Authorization')
