@@ -1,11 +1,18 @@
 {
+  "sessionExpired": {
+    "title": "La session a expiré",
+    "message": "Votre session a expiré. Veuillez vous reconnecter.",
+    "actionLabel": "Aller à la page de connexion"
+  },
   "dashboard": {
     "title": "Bienvenue sur Eurydice"
   },
   "projects": {
     "selectProject": "Sélectionnez un projet pour voir les détails",
     "noProjects": "Aucun projet trouvé.",
-    "createProject": "Créer un projet"
+    "createProject": "Créer un projet",
+    "noDescription": "Aucune description disponible.",
+    "toDo": "à faire"
   },
   "settings": {
     "title": "Paramètres",
@@ -21,22 +28,28 @@
     "submit": "Connexion",
     "loginWithGoogle": "Connexion avec Google",
     "noAccount": "Pas encore de compte ?",
-    "signUp": "Inscrivez-vous"
+    "signUp": "Inscrivez-vous",
+    "errorDialTitle": "Identifiants invalides",
+    "invalidCredentials": "Email ou mot de passe invalide."
   },
   "register": {
     "title": "Créez votre compte",
     "description": "Entrez votre email ci-dessous pour créer votre compte",
-    "fullName": "Nom complet",
+    "username": "Nom d'utilisateur",
     "email": "Email",
     "password": "Mot de passe",
     "confirmPassword": "Confirmer le mot de passe",
-    "passwordHint": "Doit contenir au moins 8 caractères.",
+    "passwordHint": "Doit contenir au moins 10 caractères.",
     "submit": "Créer un compte",
     "hasAccount": "Déjà un compte ?",
     "signIn": "Se connecter",
     "termsText": "En continuant, vous acceptez nos {termsOfService} et notre {privacyPolicy}.",
     "termsOfService": "Conditions d'utilisation",
-    "privacyPolicy": "Politique de confidentialité"
+    "privacyPolicy": "Politique de confidentialité",
+    "errorDialTitle": "Identifiants invalides",
+    "passwordsMismatch": "Les mots de passe ne correspondent pas.",
+    "conflictUsername": "Ce nom d'utilisateur est déjà utilisé.",
+    "conflictEmail": "Cet email est déjà utilisé."
   },
   "common": {
     "cancel": "Annuler",
@@ -51,15 +64,20 @@
     "littleTime": "Peu de temps",
     "lotsOfTime": "Beaucoup de temps",
     "enterTitle": "Veuillez entrer un titre.",
+    "enterDescription": "Veuillez entrer une description.",
     "enterDueDate": "Veuillez entrer une date d'échéance.",
     "selectImportance": "Veuillez sélectionner une importance.",
     "selectEstimatedTime": "Veuillez sélectionner une durée estimée.",
     "required": "Ce champ est obligatoire.",
     "saving": "Enregistrement...",
-    "description": "Description"
+    "description": "Description",
+    "days": "jour(s)",
+    "hours": "heure(s)",
+    "minutes": "minute(s)"
   },
   "task": {
     "new": "Nouvelle tâche +",
+    "edit": "Modifier",
     "update": "Mettre à jour",
     "taskFor": " Tâche pour ",
     "tasksFor": " Tâches pour ",
@@ -73,6 +91,7 @@
   },
   "project": {
     "new": "Nouveau +",
+    "edit": "Modifier",
     "createTitle": "Créons un projet !",
     "type": "Type",
     "selectType": "Sélectionner un type",
@@ -97,6 +116,10 @@
     "analytics": "Analytiques",
     "settings": "Paramètres"
   },
+  "navUser": {
+    "account": "Compte",
+    "logOut": "Déconnexion"
+  },
   "themeToggle": {
     "toggle": "Changer le thème",
     "light": "Clair",
@@ -112,8 +135,15 @@
     "xp": "Points d'expérience",
     "userSidebarPlaceholder": "Amis, succès et plus à venir bientôt !",
     "language": "Langue",
-    "theme": "Thème"
+    "theme": "Thème",
+    "charClass": "Classe de personnage",
+    "health": "Santé",
+    "attack": "Attaque",
+    "damages": "Dégâts",
+    "defense": "Défense",
+    "inventory": "Inventaire"
   },
   "taskUpdated": "Tâche mise à jour",
-  "selectEstimatedTime": "Veuillez sélectionner une durée estimée."
+  "selectEstimatedTime": "Veuillez sélectionner une durée estimée.",
+  "unknownError": "Une erreur s'est produite. Veuillez réessayer dans quelques instants."
 }

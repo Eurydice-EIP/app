@@ -20,23 +20,59 @@ import { Input } from "@/components/ui/input";
 import { register } from "@/lib/auth";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { ErrorAlertDialog } from "./ui/error-alert";
 
 export function RegisterForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const t = useTranslations("register");
+  const tGlob = useTranslations("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [errorOpen, setErrorOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const res = await register({ email, password, confirmPassword, username });
-    localStorage.setItem("token", res.accessToken);
+    const data = { email, password, confirmPassword, username };
 
-    window.location.href = "/";
+    if (data.password !== data.confirmPassword) {
+      setErrorMessage(t("passwordsMismatch"));
+      setErrorOpen(true);
+      return;
+    }
+
+    try {
+
+      const res = await register({ email, password, confirmPassword, username });
+      localStorage.setItem("token", res.accessToken);
+      window.location.href = "/";
+
+    } catch (err) {
+
+      setErrorMessage(tGlob("unknownError"));
+      setErrorOpen(true);
+
+      if (!(err instanceof Error)) {
+        return;
+      }
+
+      if (err.cause === 400) {
+        setErrorMessage(t("passwordsMismatch"));
+      }
+
+      if (err.cause === 409) {
+        if (err.message.toLowerCase().includes("username")) {
+          setErrorMessage(t("conflictUsername"));
+        } else {
+          setErrorMessage(t("conflictEmail"));
+        }
+      }
+
+    }
   }
 
   return (
@@ -50,7 +86,7 @@ export function RegisterForm({
           <form onSubmit={handleSubmit}>
             <FieldGroup>
               <Field>
-                <FieldLabel htmlFor="name">{t("fullName")}</FieldLabel>
+                <FieldLabel htmlFor="name">{t("username")}</FieldLabel>
                 <Input
                   id="name"
                   type="text"
@@ -76,6 +112,7 @@ export function RegisterForm({
                     <Input
                       id="password"
                       type="password"
+                      minLength={10}
                       required
                       onChange={(e) => setPassword(e.target.value)}
                     />
@@ -87,6 +124,7 @@ export function RegisterForm({
                     <Input
                       id="confirm-password"
                       type="password"
+                      minLength={10}
                       required
                       onChange={(e) => setConfirmPassword(e.target.value)}
                     />
@@ -104,6 +142,9 @@ export function RegisterForm({
           </form>
         </CardContent>
       </Card>
+
+      <ErrorAlertDialog open={errorOpen} onOpenChange={setErrorOpen} title={t("errorDialTitle")} description={errorMessage} />
+
       <FieldDescription className="px-6 text-center">
         {t.rich("termsText", {
           termsOfService: (chunks) => <a href="#">{chunks}</a>,

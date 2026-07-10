@@ -13,7 +13,7 @@ export async function apiFetch<T>(
   });
 
   if (!res.ok) {
-    throw new Error("API Error");
+    throw new Error(`API Error: ${(await res.json()).message}`, { cause: res.status });
   }
 
   return res.json();
@@ -32,7 +32,7 @@ export async function apiPost<T>(
   });
 
   if (!res.ok) {
-    throw new Error("API Error");
+    throw new Error(`API Error: ${(await res.json()).message}`, { cause: res.status });
   }
 
   return res.json();

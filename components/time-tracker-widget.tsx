@@ -54,7 +54,7 @@ export function TimeTrackerWidget({
     <Card
       className={`flex flex-row items-center justify-center bg-[var(--widget-background)] ${className || ""}`}
     >
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 max-w-4/7">
         <h3 className="text-lg font-medium">{t("title")}</h3>
         {isRunning || time > 0 ? (
           <p className="text-2xl font-bold">{formatTime(time)}</p>

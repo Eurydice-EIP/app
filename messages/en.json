@@ -1,11 +1,18 @@
 {
+  "sessionExpired": {
+    "title": "Session Expired",
+    "message": "Your session has expired. Please log in again.",
+    "actionLabel": "Go to Login page"
+  },
   "dashboard": {
     "title": "Welcome to Eurydice"
   },
   "projects": {
     "selectProject": "Select a project to see details",
     "noProjects": "No projects found.",
-    "createProject": "Create a project"
+    "createProject": "Create a project",
+    "noDescription": "No description provided.",
+    "toDo": "to do"
   },
   "settings": {
     "title": "Settings",
@@ -21,22 +28,28 @@
     "submit": "Login",
     "loginWithGoogle": "Login with Google",
     "noAccount": "Don't have an account?",
-    "signUp": "Sign up"
+    "signUp": "Sign up",
+    "errorDialTitle": "Invalid Credentials",
+    "invalidCredentials": "Invalid email or password."
   },
   "register": {
     "title": "Create your account",
     "description": "Enter your email below to create your account",
-    "fullName": "Full Name",
+    "username": "Username",
     "email": "Email",
     "password": "Password",
     "confirmPassword": "Confirm Password",
-    "passwordHint": "Must be at least 8 characters long.",
+    "passwordHint": "Must be at least 10 characters long.",
     "submit": "Create Account",
     "hasAccount": "Already have an account?",
     "signIn": "Sign in",
     "termsText": "By clicking continue, you agree to our {termsOfService} and {privacyPolicy}.",
     "termsOfService": "Terms of Service",
-    "privacyPolicy": "Privacy Policy"
+    "privacyPolicy": "Privacy Policy",
+    "errorDialTitle": "Invalid Credentials",
+    "passwordsMismatch": "Passwords do not match.",
+    "conflictUsername": "This username is already in use.",
+    "conflictEmail": "This email already in use."
   },
   "common": {
     "cancel": "Cancel",
@@ -51,15 +64,20 @@
     "littleTime": "Little to no time",
     "lotsOfTime": "A lot of time",
     "enterTitle": "Please enter a title.",
+    "enterDescription": "Please enter a description.",
     "enterDueDate": "Please enter a due date.",
     "selectImportance": "Please select an importance.",
     "selectEstimatedTime": "Please select an estimated time.",
     "required": "This field is required.",
     "saving": "Saving...",
-    "description": "Description"
+    "description": "Description",
+    "days": "day(s)",
+    "hours": "hour(s)",
+    "minutes": "minute(s)"
   },
   "task": {
     "new": "New task +",
+    "edit": "Edit",
     "update": "Update",
     "taskFor": " Task for ",
     "tasksFor": " Tasks for ",
@@ -73,6 +91,7 @@
   },
   "project": {
     "new": "New +",
+    "edit": "Edit",
     "createTitle": "Let's create a project!",
     "type": "Type",
     "selectType": "Select a type",
@@ -97,6 +116,10 @@
     "analytics": "Analytics",
     "settings": "Settings"
   },
+  "navUser": {
+    "account": "Account",
+    "logOut": "Log out"
+  },
   "themeToggle": {
     "toggle": "Toggle theme",
     "light": "Light",
@@ -112,8 +135,15 @@
     "xp": "Experience Points",
     "userSidebarPlaceholder": "Friends, achievements and more coming soon!",
     "language": "Language",
-    "theme": "Theme"
+    "theme": "Theme",
+    "charClass": "Character Class",
+    "health": "Health",
+    "attack": "Attack",
+    "damages": "Damages",
+    "defense": "Defense",
+    "inventory": "Inventory"
   },
   "taskUpdated": "Task updated",
-  "selectEstimatedTime": "Please select an estimated time."
+  "selectEstimatedTime": "Please select an estimated time.",
+  "unknownError": "An error occurred. Please try again in a few moments."
 }

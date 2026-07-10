@@ -83,7 +83,6 @@ export function DialogNewProject({
   const [hoverEstimatedTime, setHoverEstimatedTime] = useState(0);
 
   const [titleError, setTitleError] = useState(false);
-  const [descriptionError, setDescriptionError] = useState(false);
   const [dateError, setDateError] = useState(false);
   const [typeError, setTypeError] = useState(false);
   const [importanceError, setImportanceError] = useState(false);
@@ -94,9 +93,14 @@ export function DialogNewProject({
 
   const setProjectData = (project: Project | undefined) => {
     if (project) {
+      const projectDate = new Date(project.dueAt);
+
       setType(project.type);
       setImportance(project.importance);
       setEstimatedTime(project.estimatedTime);
+      setDate(projectDate);
+      setMonth(projectDate);
+      setDateValue(formatDate(projectDate));
     }
   };
 
@@ -115,12 +119,6 @@ export function DialogNewProject({
       hasError = true;
     } else {
       setTitleError(false);
-    }
-    if (!description || description.trim() === "") {
-      setDescriptionError(true);
-      hasError = true;
-    } else {
-      setDescriptionError(false);
     }
     if (!isValidDate(date)) {
       setDateError(true);
@@ -194,7 +192,7 @@ export function DialogNewProject({
       }}
     >
       <DialogTrigger asChild>
-        <Button variant="outline">{initialProject ? "Edit" : t("new")}</Button>
+        <Button variant="outline">{initialProject ? t("edit") : t("new")}</Button>
       </DialogTrigger>
 
       <DialogContent className="min-w-1/2">
@@ -219,19 +217,15 @@ export function DialogNewProject({
             </Field>
             <Field className="gap-2">
               <FieldLabel htmlFor="description">
-                Description <span className="text-destructive">*</span>
+                Description
               </FieldLabel>
               <Textarea
                 id="description"
                 name="description"
                 defaultValue={initialProject?.description || ""}
-                placeholder="Enter project description"
-                aria-invalid={descriptionError}
+                placeholder={tCommon("enterDescription")}
                 className="resize-none"
               />
-              {descriptionError && (
-                <FieldError>Description is required</FieldError>
-              )}
             </Field>
             <Field className="gap-2">
               <FieldLabel htmlFor="dueDate">
@@ -326,7 +320,7 @@ export function DialogNewProject({
                 <div className="flex gap-1 w-full justify-between max-w-xs mx-10">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
-                      className="transition-transform hover:scale-110"
+                      className="transition-transform hover:scale-110 cursor-pointer"
                       key={star}
                       onClick={() => setImportance(star)}
                       onMouseEnter={() => setHoverImportance(star)}
@@ -365,7 +359,7 @@ export function DialogNewProject({
                 <div className="flex gap-1 w-full justify-between max-w-xs mx-10">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
-                      className="transition-transform hover:scale-110"
+                      className="transition-transform hover:scale-110 cursor-pointer"
                       key={star}
                       onClick={() => setEstimatedTime(star)}
                       onMouseEnter={() => setHoverEstimatedTime(star)}
