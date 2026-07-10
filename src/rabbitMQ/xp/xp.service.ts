@@ -24,7 +24,7 @@ export class XpService {
         const taskId = Number(data.taskId);
 
         const [user, task] = await Promise.all([
-            this.usersService.findById(userId),
+            this.usersService.findById(userId, userId),
             this.tasksService.findById(taskId),
         ]);
         console.log('user = ', user);

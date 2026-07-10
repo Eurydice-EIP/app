@@ -126,8 +126,8 @@ export class UsersService {
         });
     }
 
-    async findById(id: number): Promise<PrismaUser | null> {
-        return this.prisma.user.findUnique({
+    async findById(userId: number, id: number): Promise<PrismaUser | PrismaUser & { friendState: string } | null> {
+        const user = await this.prisma.user.findUnique({
             where: { id },
             include: {
                 friends: {
@@ -138,6 +138,26 @@ export class UsersService {
                 },
             },
         });
+
+        if (!user) {
+            return null;
+        }
+        if (userId === id) {
+            return user;
+        }
+
+        const friendState = await this.prisma.userFriends.findFirst({
+            select: { state: true },
+            where: {
+                userId: userId,
+                friendId: id,
+            },
+        });
+
+        if (friendState?.state) {
+            return { ...user, friendState: friendState.state };
+        }
+        return user;
     }
 
     async uploadAvatar(
@@ -185,18 +205,21 @@ export class UsersService {
         return updatedUser;
     }
 
-    async getFriends(userId: number): Promise<PrismaUser[]> {
+    async getFriends(userId: number): Promise<(PrismaUser & { friendState: string })[] | Promise<PrismaUser[]>> {
         const userFriends = await this.prisma.userFriends.findMany({
             where: { userId },
-            select: { friendId: true },
         });
         const friendIds = userFriends.map((friend) => friend.friendId);
 
         if (friendIds.length === 0) {
             return [];
         }
-        return this.prisma.user.findMany({
+        const friends = await this.prisma.user.findMany({
             where: { id: { in: friendIds } },
+        });
+
+        return friends.map((friend) => {
+            return { ...friend, friendState: userFriends.find((f) => f.friendId === friend.id)?.state };
         });
     }
 
@@ -302,8 +325,8 @@ export class UsersService {
         });
     }
 
-    async searchUsers(userId: number, query: string): Promise<PrismaUser[]> {
-        return this.prisma.user.findMany({
+    async searchUsers(userId: number, query: string) {
+        const foundUsers = await this.prisma.user.findMany({
             where: {
                 username: {
                     contains: query,
@@ -313,6 +336,22 @@ export class UsersService {
                     not: userId,
                 },
             },
+        });
+
+        const userIds = foundUsers.map((user) => user.id);
+        if (userIds.length === 0) {
+            return [];
+        }
+
+        const friends = await this.prisma.userFriends.findMany({
+            where: {
+                userId: userId,
+                friendId: { in: userIds },
+            },
+        });
+
+        return foundUsers.filter((user) => {
+            return !friends.find((friend) => friend.friendId === user.id);
         });
     }
 }

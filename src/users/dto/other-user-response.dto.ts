@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
+import { UserFriendState } from '@prisma/client';
 
 export class OtherUserResponseDto {
     @ApiProperty({
@@ -43,4 +44,11 @@ export class OtherUserResponseDto {
     })
     @Expose()
     avatarSize?: number;
+
+    @ApiProperty({
+        example: 'PENDING',
+        description: "The state of the friendship",
+    })
+    @Expose()
+    friendState?: UserFriendState | null;
 }

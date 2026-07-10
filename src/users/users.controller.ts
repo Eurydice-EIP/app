@@ -69,7 +69,7 @@ export class UsersController {
     @Version('1')
     @Get('profile')
     async getProfile(@User() user: CurrentUser): Promise<UserResponseDto> {
-        const foundUser = await this.usersService.findById(user.sub);
+        const foundUser = await this.usersService.findById(user.sub, user.sub);
         return plainToInstance(UserResponseDto, foundUser, {
             excludeExtraneousValues: true,
         });
@@ -103,9 +103,11 @@ export class UsersController {
     @Version('1')
     @Get(':id')
     async getProfileById(
+        @User() user: CurrentUser,
         @Param('id', ParseIntPipe) id: number
     ): Promise<OtherUserResponseDto> {
-        const foundUser = await this.usersService.findById(id);
+        const foundUser = await this.usersService.findById(user.sub, id);
+        console.log(foundUser)
         return plainToInstance(OtherUserResponseDto, foundUser, {
             excludeExtraneousValues: true,
         });
