@@ -47,7 +47,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const navMain = [
     { title: t("dashboard"), url: "/", icon: House },
     { title: t("projects"), url: "/projects", icon: BookOpen },
-    { title: t("analytics"), url: "/analytics", icon: ChartNoAxesColumn },
+    // { title: t("analytics"), url: "/analytics", icon: ChartNoAxesColumn },
   ];
 
   const navSecondary = [

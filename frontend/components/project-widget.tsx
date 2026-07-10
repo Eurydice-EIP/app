@@ -19,6 +19,9 @@ import {
   Zap,
   Clock,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { fetchProjectTasks } from "@/lib/project";
+import { Task } from "@/types/entities/task";
 
 export type ProjectWidgetProps = {
   projects: Project[];
@@ -32,7 +35,29 @@ export function ProjectWidget({
   onProjectUpdate,
   setSelectedProject,
 }: React.HTMLAttributes<HTMLDivElement> & ProjectWidgetProps) {
+  const tProj = useTranslations("projects");
+  const tCom = useTranslations("common");
   const [collapsed, setCollapsed] = useState(false);
+
+  function getRemainingTime(dueAt: string): string {
+    let timeDiff = new Date(dueAt).valueOf() - Date.now();
+
+    if (timeDiff < 0) {
+      timeDiff = 0;
+    }
+
+    const days = Math.round(timeDiff / (1000 * 60 * 60 * 24));
+    const hours = Math.round((timeDiff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.round((timeDiff / (1000 * 60)) % 60);
+
+    if (days > 0) {
+      return `${days} ${tCom("days")}`;
+    } else if (hours > 0) {
+      return `${hours} ${tCom("hours")}`;
+    } else {
+      return `${minutes} ${tCom("minutes")}`;
+    }
+  }
 
   return (
     <Card
@@ -99,7 +124,7 @@ export function ProjectWidget({
                           {project.title}
                         </CardTitle>
                         <CardDescription className="text-sm">
-                          {project.description || "No description provided."}
+                          {project.description || tProj("noDescription")}
                         </CardDescription>
                       </CardHeader>
 
@@ -108,12 +133,12 @@ export function ProjectWidget({
                       <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
                         <div className="flex items-center gap-1">
                           <ClipboardList size={16} />
-                          <span>54 to do</span>
+                          <span>{project.totalTasks} {tProj("toDo")}</span>
                         </div>
-                        <div className="flex items-center gap-1">
+                        {/* <div className="flex items-center gap-1">
                           <Award size={16} />
                           <span>290</span>
-                        </div>
+                        </div> */}
                         <div className="flex items-center gap-1">
                           <Zap size={16} />
                           <span>2610 XP</span>
@@ -123,7 +148,7 @@ export function ProjectWidget({
                       <CardFooter className="p-0 flex items-center justify-between mt-auto">
                         <div className="flex items-center gap-1 text-red-500 bg-red-100 px-2 py-1 rounded-full text-xs">
                           <Clock size={14} />
-                          <span>2 days</span>
+                          <span>{getRemainingTime(project.dueAt)}</span>
                         </div>
                         <DialogNewProject
                           project={project}
@@ -133,9 +158,9 @@ export function ProjectWidget({
                     </div>
 
                     <div className="absolute top-0 right-12 bg-yellow-200 text-yellow-800 px-2 py-1 text-sm font-semibold rounded-b-lg shadow-md">
-                      <span className="border-b border-yellow-600">15</span>
+                      <span className="border-b border-yellow-600">{project.completedTasks}</span>
                       <span>/</span>
-                      <span>56</span>
+                      <span>{project.totalTasks}</span>
                     </div>
 
                     <div className="w-1/3">
@@ -151,7 +176,7 @@ export function ProjectWidget({
             </ul>
           )
         ) : (
-          <p className="p-4">No projects found.</p>
+          <p className="p-4">{tProj("noProjects")}</p>
         )}
       </div>
     </Card>

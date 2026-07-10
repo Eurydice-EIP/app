@@ -7,6 +7,8 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import { Spinner } from "@/components/ui/spinner";
 import { useTranslations } from "next-intl";
+import { getTokenExpiration, isTokenValid } from "@/lib/auth";
+import { ErrorAlertDialog } from "@/components/ui/error-alert";
 
 export default function DashboardLayout({
   children,
@@ -15,15 +17,39 @@ export default function DashboardLayout({
 }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
+  const [errorOpen, setErrorOpen] = useState(false);
   const tCommon = useTranslations("common");
+  const tSessionExpired = useTranslations("sessionExpired");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) {
+
+    if (!token || !isTokenValid(token)) {
+      localStorage.removeItem("token");
       router.push("/login");
-    } else {
-      setIsLoading(false);
+      return;
     }
+
+    setIsLoading(false);
+
+    const expirationTime = getTokenExpiration(token);
+    if (!expirationTime) {
+      return;
+    }
+
+    const remaining = expirationTime - Date.now();
+    if (remaining <= 0) {
+      localStorage.removeItem("token");
+      setErrorOpen(true);
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      localStorage.removeItem("token");
+      setErrorOpen(true);
+    }, remaining);
+
+    return () => window.clearTimeout(timer);
   }, [router]);
 
   if (isLoading) {
@@ -45,6 +71,7 @@ export default function DashboardLayout({
         </main>
         <Toaster />
       </div>
+      <ErrorAlertDialog open={errorOpen} onOpenChange={setErrorOpen} title={tSessionExpired("title")} description={tSessionExpired("message")} actionLabel={tSessionExpired("actionLabel")} action={() => router.push("/login")} />
     </SidebarProvider>
   );
 }

@@ -25,9 +25,18 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { User } from "@/types/entities/user";
+import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 
 export function NavUser({ user }: { user: User | null }) {
+  const tNavUser = useTranslations("navUser");
   const { isMobile } = useSidebar();
+  const router = useRouter();
+
+  function logOut() {
+    localStorage.removeItem("token");
+    router.push("/login");
+  }
 
   return (
     <SidebarMenu>
@@ -36,7 +45,7 @@ export function NavUser({ user }: { user: User | null }) {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground cursor-pointer"
             >
               <Avatar className="h-8 w-8 rounded-lg grayscale">
                 <AvatarImage src={user?.avatar} alt={user?.username} />
@@ -78,24 +87,28 @@ export function NavUser({ user }: { user: User | null }) {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem
+                className="cursor-pointer"
                 onClick={() => (window.location.href = "/account")}
               >
                 <UserCircle className="mr-2 size-4" />
-                Account
+                {tNavUser("account")}
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              {/* <DropdownMenuItem className="cursor-pointer">
                 <CreditCard className="mr-2 size-4" />
                 Billing
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer">
                 <Bell className="mr-2 size-4" />
                 Notifications
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={logOut}
+            >
               <LogOut className="mr-2 size-4" />
-              Log out
+              {tNavUser("logOut")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

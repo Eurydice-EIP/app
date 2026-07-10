@@ -26,6 +26,18 @@ export default function AccountPage() {
     loadUser();
   }, []);
 
+  const handleCopyUsername = async () => {
+    if (!user?.username) {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(user.username);
+    } catch (err) {
+      console.error("Failed to copy username:", err);
+    }
+  };
+
   const xpPercentage = user ? (user.xp / 1246) * 100 : 0;
 
   return (
@@ -35,25 +47,25 @@ export default function AccountPage() {
         {/* Tabs */}
         <div className="flex justify-end mb-4 -mt-10">
           <button
-            className={`px-4 py-2 rounded-t-lg ${activeTab === "inventory" ? "bg-muted" : "bg-secondary"}`}
+            className={`px-4 py-2 rounded-t-lg cursor-pointer ${activeTab === "inventory" ? "bg-muted" : "bg-secondary"}`}
             onClick={() => setActiveTab("inventory")}
           >
             <Swords size={20} />
           </button>
           <button
-            className={`px-4 py-2 rounded-t-lg ${activeTab === "friends" ? "bg-muted" : "bg-secondary"}`}
+            className={`px-4 py-2 rounded-t-lg cursor-pointer ${activeTab === "friends" ? "bg-muted" : "bg-secondary"}`}
             onClick={() => setActiveTab("friends")}
           >
             <Users size={20} />
           </button>
           <button
-            className={`px-4 py-2 rounded-t-lg ${activeTab === "achievements" ? "bg-muted" : "bg-secondary"}`}
+            className={`px-4 py-2 rounded-t-lg cursor-pointer ${activeTab === "achievements" ? "bg-muted" : "bg-secondary"}`}
             onClick={() => setActiveTab("achievements")}
           >
             <Award size={20} />
           </button>
           <button
-            className={`px-4 py-2 rounded-t-lg ${activeTab === "settings" ? "bg-muted" : "bg-secondary"}`}
+            className={`px-4 py-2 rounded-t-lg cursor-pointer ${activeTab === "settings" ? "bg-muted" : "bg-secondary"}`}
             onClick={() => setActiveTab("settings")}
           >
             <Settings size={20} />
@@ -81,7 +93,7 @@ export default function AccountPage() {
                     <div className="flex items-start gap-4">
                       <div className="text-center">
                         <p className="text-xs text-muted-foreground">
-                          Character class
+                          {t("charClass")}
                         </p>
                         <p className="font-bold">Archer</p>
                         <Avatar className="h-20 w-20 mt-2 border-4 border-primary">
@@ -93,10 +105,9 @@ export default function AccountPage() {
                       </div>
                       <div className="flex-1">
                         <div className="bg-muted p-2 rounded-md relative">
-                          <p className="text-xl font-bold">{user.username}</p>
-                          <p className="text-xs text-muted-foreground flex items-center">
-                            Friend code: 424272{" "}
-                            <Copy size={12} className="ml-1" />
+                          <p className="text-xl font-bold flex items-center">
+                            {user.username}
+                            <Copy size={16} className="ml-1 cursor-pointer" onClick={handleCopyUsername} />
                           </p>
                           <div className="absolute -right-4 top-1/2 -translate-y-1/2 w-8 h-8 bg-muted transform rotate-45"></div>
                         </div>
@@ -107,7 +118,7 @@ export default function AccountPage() {
                       <div className="flex items-center">
                         <p className="text-4xl font-bold mr-2">{user.level}</p>
                         <div>
-                          <p className="text-sm font-semibold">Level</p>
+                          <p className="text-sm font-semibold">{t("level")}</p>
                           <Progress value={xpPercentage} className="h-2 w-48" />
                         </div>
                         <p className="text-xs text-muted-foreground ml-auto">
@@ -122,7 +133,7 @@ export default function AccountPage() {
                       </CardHeader>
                       <CardContent className="space-y-2">
                         <div className="flex justify-between items-center">
-                          <span>Health</span>
+                          <span>{t("health")}</span>
                           <div className="flex items-center gap-2">
                             <span className="font-semibold">21</span>
                             <button className="bg-primary text-primary-foreground rounded-md p-1">
@@ -131,7 +142,7 @@ export default function AccountPage() {
                           </div>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span>Attack</span>
+                          <span>{t("attack")}</span>
                           <div className="flex items-center gap-2">
                             <span className="font-semibold">5</span>
                             <button className="bg-primary text-primary-foreground rounded-md p-1">
@@ -140,7 +151,7 @@ export default function AccountPage() {
                           </div>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span>Damage</span>
+                          <span>{t("damages")}</span>
                           <div className="flex items-center gap-2">
                             <span className="font-semibold">4</span>
                             <button className="bg-primary text-primary-foreground rounded-md p-1">
@@ -149,7 +160,7 @@ export default function AccountPage() {
                           </div>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span>Defense</span>
+                          <span>{t("defense")}</span>
                           <div className="flex items-center gap-2">
                             <span className="font-semibold">4</span>
                             <button className="bg-primary text-primary-foreground rounded-md p-1">
@@ -171,7 +182,7 @@ export default function AccountPage() {
               <div className="flex-1 bg-card p-6 rounded-r-2xl mt-4 lg:mt-0">
                 <div className="relative text-center mb-6">
                   <div className="bg-secondary inline-block px-8 py-2">
-                    <h2 className="text-xl font-bold">Inventory</h2>
+                    <h2 className="text-xl font-bold">{t("inventory")}</h2>
                   </div>
                   <div className="absolute left-0 top-1/2 w-full h-px bg-secondary -z-10"></div>
                 </div>

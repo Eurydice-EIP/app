@@ -90,7 +90,6 @@ export function DialogNewTask({
   const [hoverEstimatedTime, setHoverEstimatedTime] = useState(0);
 
   const [titleError, setTitleError] = useState(false);
-  const [descriptionError, setDescriptionError] = useState(false);
   const [dateError, setDateError] = useState(false);
   const [projectError, setProjectError] = useState(false);
   const [importanceError, setImportanceError] = useState(false);
@@ -139,12 +138,6 @@ export function DialogNewTask({
       setTitleError(false);
     }
     const description = formData.get("description") as string;
-    if (!description || description.trim() === "") {
-      setDescriptionError(true);
-      hasError = true;
-    } else {
-      setDescriptionError(false);
-    }
     if (!isValidDate(date)) {
       setDateError(true);
       hasError = true;
@@ -219,7 +212,7 @@ export function DialogNewTask({
       }}
     >
       <DialogTrigger asChild>
-        <Button variant="outline">{task ? "Edit" : t("new")}</Button>
+        <Button variant="outline">{task ? t("edit") : t("new")}</Button>
       </DialogTrigger>
 
       <DialogContent className="min-w-1/2">
@@ -251,18 +244,13 @@ export function DialogNewTask({
               <Field className="gap-2">
                 <FieldLabel htmlFor="description">
                   {tCommon("description")}{" "}
-                  <span className="text-destructive">*</span>
                 </FieldLabel>
                 <Textarea
                   id="description"
                   name="description"
                   defaultValue={task?.description || ""}
-                  placeholder={tCommon("description")}
-                  aria-invalid={descriptionError}
+                  placeholder={tCommon("enterDescription")}
                 />
-                {descriptionError && (
-                  <FieldError>{tCommon("enterDescription")}</FieldError>
-                )}
               </Field>
               <Field className="gap-2">
                 <FieldLabel htmlFor="dueDate">
@@ -371,7 +359,7 @@ export function DialogNewTask({
                   <div className="flex gap-1 w-full justify-between max-w-xs mx-10">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <button
-                        className="transition-transform hover:scale-110"
+                        className="transition-transform hover:scale-110 cursor-pointer"
                         key={star}
                         onClick={() => setImportance(star)}
                         onMouseEnter={() => setHoverImportance(star)}
@@ -410,7 +398,7 @@ export function DialogNewTask({
                   <div className="flex gap-1 w-full justify-between max-w-xs mx-10">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <button
-                        className="transition-transform hover:scale-110"
+                        className="transition-transform hover:scale-110 cursor-pointer"
                         key={star}
                         onClick={() => setEstimatedTime(star)}
                         onMouseEnter={() => setHoverEstimatedTime(star)}

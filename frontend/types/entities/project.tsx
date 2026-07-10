@@ -1,14 +1,18 @@
 export type Project = {
   id: number;
   title: string;
-  image: string;
+  description?: string;
+  dueAt: string;
   type: string;
   importance: number;
-  description?: string;
   estimatedTime: number;
-  doneTasks: number;
+  status: string;
   totalTasks: number;
+  completedTasks: number;
+
+
+
+  image: string;
   xp: number;
   reward: number;
-  remainingTime: number;
 };

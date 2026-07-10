@@ -20,20 +20,42 @@ import { Input } from "@/components/ui/input";
 import { login } from "@/lib/auth";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { ErrorAlertDialog } from "./ui/error-alert";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const t = useTranslations("login");
+  const tGlob = useTranslations("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorOpen, setErrorOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const res = await login({ email, password });
-    localStorage.setItem("token", res.accessToken);
 
-    window.location.href = "/";
+    try {
+
+      const res = await login({ email, password });
+      localStorage.setItem("token", res.accessToken);
+      window.location.href = "/";
+
+    } catch (err) {
+
+      setErrorMessage(tGlob("unknownError"));
+      setErrorOpen(true);
+
+      if (!(err instanceof Error)) {
+        return;
+      }
+
+      if (err.cause === 401) {
+        setErrorMessage(t("invalidCredentials"));
+      }
+
+    }
   }
 
   return (
@@ -59,12 +81,12 @@ export function LoginForm({
               <Field>
                 <div className="flex items-center">
                   <FieldLabel htmlFor="password">{t("password")}</FieldLabel>
-                  <a
+                  {/* <a
                     href="#"
                     className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                   >
                     {t("forgotPassword")}
-                  </a>
+                  </a> */}
                 </div>
                 <Input
                   id="password"
@@ -75,9 +97,9 @@ export function LoginForm({
               </Field>
               <Field>
                 <Button type="submit">{t("submit")}</Button>
-                <Button variant="outline" type="button">
+                {/* <Button variant="outline" type="button">
                   {t("loginWithGoogle")}
-                </Button>
+                </Button> */}
                 <FieldDescription className="text-center">
                   {t("noAccount")} <Link href="/register">{t("signUp")}</Link>
                 </FieldDescription>
@@ -86,6 +108,8 @@ export function LoginForm({
           </form>
         </CardContent>
       </Card>
+
+      <ErrorAlertDialog open={errorOpen} onOpenChange={setErrorOpen} title={t("errorDialTitle")} description={errorMessage} />
     </div>
   );
 }
