@@ -185,12 +185,18 @@ export class UsersService {
         return updatedUser;
     }
 
-    async getFriendRequests(userId: number): Promise<PrismaUserFriends[]> {
-        return this.prisma.userFriends.findMany({
-            where: {
-                userId: userId,
-                state: 'REQUESTED',
-            },
+    async getFriends(userId: number): Promise<PrismaUser[]> {
+        const userFriends = await this.prisma.userFriends.findMany({
+            where: { userId },
+            select: { friendId: true },
+        });
+        const friendIds = userFriends.map((friend) => friend.friendId);
+
+        if (friendIds.length === 0) {
+            return [];
+        }
+        return this.prisma.user.findMany({
+            where: { id: { in: friendIds } },
         });
     }
 
