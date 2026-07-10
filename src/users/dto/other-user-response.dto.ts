@@ -4,6 +4,13 @@ import { UserFriendState } from '@prisma/client';
 
 export class OtherUserResponseDto {
     @ApiProperty({
+        example: 2,
+        description: 'The unique identifier of the user',
+    })
+    @Expose()
+    id?: number;
+
+    @ApiProperty({
         example: 'john_doe',
         description: 'The username of the user',
     })
