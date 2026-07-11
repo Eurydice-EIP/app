@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ProjectType, ProjectStatus } from '@prisma/client';
 import { Expose } from 'class-transformer';
+import { TaskResponseDto } from 'src/tasks/dto/task-response.dto';
 
 export class ProjectResponseDto {
     @ApiProperty({
@@ -77,6 +78,20 @@ export class ProjectResponseDto {
     })
     @Expose()
     status!: ProjectStatus;
+
+    @ApiProperty({
+        example: 250,
+        description: 'The amount of XP earned by completing this project',
+    })
+    @Expose()
+    xp: number;
+
+    @ApiProperty({
+        type: () => [TaskResponseDto],
+        description: 'Tasks belonging to this project',
+    })
+    @Expose()
+    tasks: TaskResponseDto[];
 
     @ApiProperty({
         example: 7,

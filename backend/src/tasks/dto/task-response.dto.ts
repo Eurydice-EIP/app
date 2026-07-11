@@ -96,6 +96,13 @@ export class TaskResponseDto {
     })
     completedAt?: Date;
 
+    @ApiProperty({
+        example: 120,
+        description: 'The amount of XP earned by completing this task',
+    })
+    @Expose()
+    xp: number;
+
     @Expose()
     @ApiProperty({
         example: 1,

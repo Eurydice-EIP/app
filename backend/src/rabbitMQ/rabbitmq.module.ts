@@ -3,10 +3,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { rabbitMQConfig } from './rabbitmq.config';
 import { GameEventProducer } from './game-event.producer';
 import { XpConsumer } from './consumers/xp.consumer';
-import { XpService } from './xp/xp.service';
-import { UsersModule } from 'src/users/users.module';
-import { TasksModule } from 'src/tasks/tasks.module';
-import { forwardRef } from '@nestjs/common';
+import { XpModule } from './xp/xp-service/xp.module';
 
 @Module({
     imports: [
@@ -17,11 +14,9 @@ import { forwardRef } from '@nestjs/common';
                 options: rabbitMQConfig,
             },
         ]),
-        forwardRef(() => UsersModule),
-        forwardRef(() => TasksModule),
-    ],
+        XpModule,],
     controllers: [XpConsumer],
-    providers: [XpService, GameEventProducer],
+    providers: [GameEventProducer],
     exports: [GameEventProducer],
 })
 export class RabbitMQModule {}

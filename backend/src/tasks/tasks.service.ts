@@ -10,12 +10,14 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { GameEventProducer } from 'src/rabbitMQ/game-event.producer';
 import { TaskStatus, ProjectType } from '@prisma/client';
+import { XpCalculatorService } from 'src/rabbitMQ/xp/xp-calculate.service';
 
 @Injectable()
 export class TasksService {
     constructor(
         private readonly prisma: PrismaService,
-        private readonly gameEventProducer: GameEventProducer
+        private readonly gameEventProducer: GameEventProducer,
+        private readonly xpCalculator: XpCalculatorService,
     ) {}
 
     private mapTask(
@@ -102,9 +104,13 @@ export class TasksService {
         userId: number,
         id: number
     ): Promise<
-        (PrismaTask & { blocks: number[]; blockedBy: number[] }) | null
+        PrismaTask & {
+            blocks: number[];
+            blockedBy: number[];
+            xp: number;
+        }
     > {
-        const task = await this.prisma.task.findUnique({
+        const task = await this.prisma.task.findFirst({
             where: {
                 id,
                 userId,
@@ -112,6 +118,7 @@ export class TasksService {
             include: {
                 blocks: { select: { blockedId: true } },
                 blockedBy: { select: { blockerId: true } },
+                project: { select: { type: true } },
                 timer: true,
             },
         });
@@ -120,23 +127,48 @@ export class TasksService {
             throw new NotFoundException('Task not found');
         }
 
-        return this.mapTask(task);
+        const mappedTask = this.mapTask(task);
+
+        return {
+            ...mappedTask,
+            xp: this.xpCalculator.calculateTaskXp({
+                ...task,
+                isMainProject: task.project?.type === ProjectType.MAIN,
+            }),
+        };
     }
 
     // ---------------- FIND ALL ----------------
     async findAll(
-        userId: number
-    ): Promise<(PrismaTask & { blocks: number[]; blockedBy: number[] })[]> {
+        userId: number,
+    ): Promise<
+        (PrismaTask & {
+            blocks: number[];
+            blockedBy: number[];
+            xp: number;
+        })[]
+    > {
         const tasks = await this.prisma.task.findMany({
             where: { userId },
             include: {
                 blocks: { select: { blockedId: true } },
                 blockedBy: { select: { blockerId: true } },
+                project: { select: { type: true } },
                 timer: true,
             },
         });
 
-        return tasks.map((task) => this.mapTask(task));
+        return tasks.map((task) => {
+            const mappedTask = this.mapTask(task);
+
+            return {
+                ...mappedTask,
+                xp: this.xpCalculator.calculateTaskXp({
+                ...task,
+                isMainProject: task.project?.type === ProjectType.MAIN,
+            }),
+            };
+        });
     }
 
     // ---------------- UPDATE ----------------

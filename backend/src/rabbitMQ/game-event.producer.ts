@@ -20,7 +20,13 @@ export class GameEventProducer {
         completedAt: Date;
         isBonus?: boolean;
     }) {
-        console.log('coucouuuuuuuuuuuuuu');
         return this.client.emit(GameEvents.TASK_COMPLETED, payload);
+    }
+
+    projectCompleted(data: {
+        userId: string;
+        projectId: string;
+    }) {
+        return this.client.emit(GameEvents.PROJECT_COMPLETED, data);
     }
 }
