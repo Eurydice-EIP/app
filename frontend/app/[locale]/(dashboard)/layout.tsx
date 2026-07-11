@@ -8,7 +8,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { Spinner } from "@/components/ui/spinner";
 import { useTranslations } from "next-intl";
 import { getTokenExpiration, isTokenValid } from "@/lib/auth";
-import { ErrorAlertDialog } from "@/components/ui/error-alert";
+import { MsgAlertDialog } from "@/components/msg-alert-dialog";
 
 export default function DashboardLayout({
   children,
@@ -71,7 +71,7 @@ export default function DashboardLayout({
         </main>
         <Toaster />
       </div>
-      <ErrorAlertDialog open={errorOpen} onOpenChange={setErrorOpen} title={tSessionExpired("title")} description={tSessionExpired("message")} actionLabel={tSessionExpired("actionLabel")} action={() => router.push("/login")} />
+      <MsgAlertDialog open={errorOpen} onOpenChange={setErrorOpen} title={tSessionExpired("title")} description={tSessionExpired("message")} actionLabel={tSessionExpired("actionLabel")} action={() => router.push("/login")} />
     </SidebarProvider>
   );
 }

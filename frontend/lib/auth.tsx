@@ -4,17 +4,27 @@ import { LoginUserDTO } from "@/types/dto/login-user.dto";
 import { AuthResponseDto } from "@/types/dto/auth-response.dto";
 
 export const login = async (data: LoginUserDTO) => {
-  return apiFetch<AuthResponseDto>("/auth/login", {
+  const res = await apiFetch<AuthResponseDto>("/auth/login", {
     method: "POST",
     body: JSON.stringify(data),
   });
+
+  if (!res) {
+    throw new Error("Invalid API response");
+  }
+  return res;
 };
 
 export const register = async (data: RegisterUserDto) => {
-  return apiFetch<AuthResponseDto>("/auth/register", {
+  const res = await apiFetch<AuthResponseDto>("/auth/register", {
     method: "POST",
     body: JSON.stringify(data),
   });
+
+  if (!res) {
+    throw new Error("Invalid API response");
+  }
+  return res;
 };
 
 export function isTokenValid(token = localStorage.getItem("token")): boolean {

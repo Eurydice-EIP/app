@@ -20,7 +20,7 @@ import { Input } from "@/components/ui/input";
 import { login } from "@/lib/auth";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { ErrorAlertDialog } from "./ui/error-alert";
+import { MsgAlertDialog } from "./msg-alert-dialog";
 
 export function LoginForm({
   className,
@@ -109,7 +109,7 @@ export function LoginForm({
         </CardContent>
       </Card>
 
-      <ErrorAlertDialog open={errorOpen} onOpenChange={setErrorOpen} title={t("errorDialTitle")} description={errorMessage} />
+      <MsgAlertDialog open={errorOpen} onOpenChange={setErrorOpen} title={t("errorDialTitle")} description={errorMessage} />
     </div>
   );
 }

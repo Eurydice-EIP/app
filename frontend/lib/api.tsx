@@ -3,7 +3,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 export async function apiFetch<T>(
   endpoint: string,
   options?: RequestInit,
-): Promise<T> {
+): Promise<T | undefined> {
   const res = await fetch(`${API_URL}${endpoint}`, {
     ...options,
     headers: {
@@ -16,7 +16,11 @@ export async function apiFetch<T>(
     throw new Error(`API Error: ${(await res.json()).message}`, { cause: res.status });
   }
 
-  return res.json();
+  try {
+    return await res.json();
+  } catch {
+    return undefined;
+  }
 }
 
 export async function apiPost<T>(
