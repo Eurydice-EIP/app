@@ -3,26 +3,36 @@
 import { useTranslations } from "next-intl";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { LanguageSwitcher } from "@/components/ui/language-toggle";
-import { fetchUser } from "@/lib/user";
+import { addFriend, deleteFriend, fetchUser, fetchUserFriends } from "@/lib/user";
 import { useEffect, useState } from "react";
 import { User } from "@/types/entities/user";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Swords, Users, Award, Settings, PlusCircle, Copy } from "lucide-react";
+import { Swords, Users, Award, Settings, PlusCircle, Copy, CircleCheck, CircleX, Ban } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { UserFriend } from "@/types/entities/userFriend";
+import { DialogAddFriend } from "@/components/dialog-add-friend";
+import { ConfirmAlertDialog } from "@/components/confirm-alert-dialog";
 
 export default function AccountPage() {
   const t = useTranslations("account");
+  const tCom = useTranslations("common");
   const [user, setUser] = useState<User | null>(null);
+  const [userFriends, setUserFriends] = useState<UserFriend[] | null>(null);
   const [activeTab, setActiveTab] = useState("inventory");
+  const [cancelReqOpen, setCancelReqOpen] = useState(false);
+  const [rmFriendOpen, setRmFriendOpen] = useState(false);
+
+  const loadUser = async () => {
+    const userData = await fetchUser();
+    setUser(userData as User);
+
+    const userFriendsData = await fetchUserFriends();
+    setUserFriends(userFriendsData as UserFriend[]);
+  };
 
   useEffect(() => {
-    const loadUser = async () => {
-      const userData = await fetchUser();
-      setUser(userData as User);
-    };
-
     loadUser();
   }, []);
 
@@ -200,13 +210,125 @@ export default function AccountPage() {
               </div>
             </>
           ) : activeTab === "friends" ? (
-            <Card className="w-full h-64 flex items-center justify-center">
-              <CardContent>
-                <p className="text-muted-foreground">
-                  {t("userSidebarPlaceholder")}
-                </p>
-              </CardContent>
-            </Card>
+            <div className="flex-1 bg-card p-6 rounded-l-2xl relative w-full h-120">
+              <div className="relative w-full h-full flex gap-10 justify-center">
+                <DialogAddFriend
+                  triggerClassName="absolute items-center m-auto"
+                  onFriendAdded={loadUser}
+                />
+                <div className="w-1/2">
+                  <div className="w-1/2 bg-secondary px-8 py-2 m-auto">
+                    <h2 className="text-xl font-bold text-center">{t("friendList")}</h2>
+                  </div>
+                  <Card className="h-4/5 my-8">
+                    <CardContent className="h-full overflow-y-auto">
+                      {userFriends?.filter((friend) => friend.friendState === "CONFIRMED").map((friend) => {
+                        return (
+                          <div key={friend.id} className="p-2 flex gap-6 items-center rounded-lg hover:bg-muted">
+                            <img
+                              src={friend.avatar ?? '/default-avatar.svg'}
+                              width={32}
+                              height={32}
+                              alt={`${friend.username} avatar`}
+                              className="bg-foreground rounded-full border border-solid border-white"
+                            />
+                            <p className="text-lg w-full">{friend.username}</p>
+                            <Ban
+                              className="w-8 h-8 p-1 rounded-full cursor-pointer hover:bg-input"
+                              aria-label="Remove friend"
+                              onClick={() => setRmFriendOpen(true)}
+                            />
+                            <ConfirmAlertDialog
+                              open={rmFriendOpen}
+                              onOpenChange={setRmFriendOpen}
+                              title={t("removeFriend")}
+                              description={t("rmFriendDesc")}
+                              actionLabel={tCom("confirm")}
+                              action={async () => {
+                                await deleteFriend({ friendId: friend.id });
+                                loadUser();
+                              }}
+                            />
+                          </div>
+                        );
+                      })}
+                    </CardContent>
+                  </Card>
+                </div>
+                <div className="w-1/2">
+                  <div className="w-1/2 bg-secondary px-8 py-2 m-auto">
+                    <h2 className="text-xl font-bold text-center">{t("friendRequests")}</h2>
+                  </div>
+                  <Card className="h-4/5 my-8">
+                    <CardContent className="h-full overflow-y-auto">
+                      {userFriends?.filter((friend) => friend.friendState?.match(/REQUESTED|PENDING/))
+                        .sort((a, b) => {
+                          if (a.friendState === "PENDING" && b.friendState === "REQUESTED") {
+                            return 1;
+                          }
+                          return -1;
+                        })
+                        .map((friend) => {
+                          return (
+                            <div key={friend.id} className="p-2 flex gap-6 items-center rounded-lg hover:bg-muted">
+                              <img
+                                src={friend.avatar ?? '/default-avatar.svg'}
+                                width={32}
+                                height={32}
+                                alt={`${friend.username} avatar`}
+                                className="bg-foreground rounded-full border border-solid border-white"
+                              />
+                              <p className="text-lg w-full">{friend.username}</p>
+                              {friend.friendState === "REQUESTED" ? (
+                                  <div className="flex gap-2 items-center justify-between">
+                                    <CircleCheck
+                                      className="w-8 h-8 p-1 rounded-full cursor-pointer hover:bg-input"
+                                      aria-label="Accept friend request"
+                                      onClick={async () => {
+                                        await addFriend({ friendId: friend.id });
+                                        loadUser();
+                                      }}
+                                    />
+                                    <CircleX
+                                      className="w-8 h-8 p-1 rounded-full cursor-pointer hover:bg-input"
+                                      aria-label="Deny friend request"
+                                      onClick={async () => {
+                                        await deleteFriend({ friendId: friend.id });
+                                        loadUser();
+                                      }}
+                                    />
+                                  </div>
+                                ) : (
+                                  <div className="flex gap-2 items-center justify-between">
+                                    <p className="text-xs w-28">{t("requestSent")}</p>
+                                    <Ban
+                                      className="w-8 h-8 p-1 rounded-full cursor-pointer hover:bg-input"
+                                      aria-label="Cancel friend request"
+                                      onClick={() => setCancelReqOpen(true)}
+                                    />
+                                    <ConfirmAlertDialog
+                                      open={cancelReqOpen}
+                                      onOpenChange={setCancelReqOpen}
+                                      title={t("cancelFriendReq")}
+                                      description={t("cancelFriendReqDesc")}
+                                      actionLabel={tCom("confirm")}
+                                      action={async () => {
+                                        await deleteFriend({ friendId: friend.id });
+                                        loadUser();
+                                      }}
+                                    />
+                                  </div>
+                                )
+                              }
+                            </div>
+                          );
+                        })
+                      }
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+            </div>
           ) : activeTab === "achievements" ? (
             <Card className="w-full h-64 flex items-center justify-center">
               <CardContent>

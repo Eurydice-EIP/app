@@ -20,13 +20,18 @@ export const createProject = async (data: CreateProjectDTO) => {
 
 export const fetchProjects = async (): Promise<Project[]> => {
   try {
-    return apiFetch("/projects", {
+    const res = await apiFetch("/projects", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
+
+    if (!res) {
+      throw new Error("Invalid API response");
+    }
+    return res as Project[];
   } catch (error) {
     console.error("Error fetching projects:", error);
     throw error;

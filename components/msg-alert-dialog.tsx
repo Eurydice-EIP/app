@@ -8,9 +8,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "./alert-dialog";
+} from "./ui/alert-dialog";
 
-type ErrorAlertDialogProps = {
+type MsgAlertDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title: string;
@@ -19,14 +19,14 @@ type ErrorAlertDialogProps = {
   action?: any;
 };
 
-export function ErrorAlertDialog({
+export function MsgAlertDialog({
   open,
   onOpenChange,
   title,
   description,
   actionLabel = "OK",
   action = () => {},
-}: ErrorAlertDialogProps) {
+}: MsgAlertDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent className="justify-center">

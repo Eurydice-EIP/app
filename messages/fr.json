@@ -52,6 +52,8 @@
     "conflictEmail": "Cet email est déjà utilisé."
   },
   "common": {
+    "continue": "Continuer",
+    "confirm": "Confirmer",
     "cancel": "Annuler",
     "title": "Titre",
     "loading": "Chargement...",
@@ -141,7 +143,19 @@
     "attack": "Attaque",
     "damages": "Dégâts",
     "defense": "Défense",
-    "inventory": "Inventaire"
+    "inventory": "Inventaire",
+    "friendList": "Liste d'amis",
+    "addFriend": "Ajouter un ami",
+    "friendRequests": "Demandes d'amis",
+    "requestSent": "Demande envoyée",
+    "searchFriend": "Rechercher un ami",
+    "enterUsername": "Entrez un nom d'utilisateur",
+    "noMatchRes": "Aucun résultat correspondant trouvé.",
+    "confirmReqSent": "La demande d'ami a été envoyée avec succès.",
+    "removeFriend": "Retirer un ami",
+    "rmFriendDesc": "Souhaitez-vous vraiment retirer cet ami de votre liste d'amis ? Cette action ne peut être annulée.",
+    "cancelFriendReq": "Annuler la demande d'ami",
+    "cancelFriendReqDesc": "Souhaitez-vous vraiment annuler cette demande d'ami ? Cette action ne peut pas être annulée."
   },
   "taskUpdated": "Tâche mise à jour",
   "selectEstimatedTime": "Veuillez sélectionner une durée estimée.",

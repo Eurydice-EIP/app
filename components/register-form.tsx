@@ -20,7 +20,7 @@ import { Input } from "@/components/ui/input";
 import { register } from "@/lib/auth";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { ErrorAlertDialog } from "./ui/error-alert";
+import { MsgAlertDialog } from "./msg-alert-dialog";
 
 export function RegisterForm({
   className,
@@ -143,7 +143,7 @@ export function RegisterForm({
         </CardContent>
       </Card>
 
-      <ErrorAlertDialog open={errorOpen} onOpenChange={setErrorOpen} title={t("errorDialTitle")} description={errorMessage} />
+      <MsgAlertDialog open={errorOpen} onOpenChange={setErrorOpen} title={t("errorDialTitle")} description={errorMessage} />
 
       <FieldDescription className="px-6 text-center">
         {t.rich("termsText", {
