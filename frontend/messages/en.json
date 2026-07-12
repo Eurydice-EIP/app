@@ -105,6 +105,13 @@
     "delete": "Delete project",
     "update": "Update project"
   },
+  "timer": {
+    "startTitle": "Start a timer",
+    "selectTask": "Select a task",
+    "tasksLabel": "Tasks",
+    "taskError": "Please select a task.",
+    "startButton": "Start timer"
+  },
   "timeTracker": {
     "title": "Time Tracker",
     "startWorking": "Start working on {projectTitle}"
