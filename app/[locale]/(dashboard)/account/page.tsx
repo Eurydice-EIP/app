@@ -14,6 +14,7 @@ import { Progress } from "@/components/ui/progress";
 import { UserFriend } from "@/types/entities/userFriend";
 import { DialogAddFriend } from "@/components/dialog-add-friend";
 import { ConfirmAlertDialog } from "@/components/confirm-alert-dialog";
+import { DialogUpdateUser } from "@/components/dialog-update-user";
 
 export default function AccountPage() {
   const t = useTranslations("account");
@@ -23,6 +24,9 @@ export default function AccountPage() {
   const [activeTab, setActiveTab] = useState("inventory");
   const [cancelReqOpen, setCancelReqOpen] = useState(false);
   const [rmFriendOpen, setRmFriendOpen] = useState(false);
+  const avatarUrl = user?.avatarPath
+    ? `${process.env.NEXT_PUBLIC_UPLOAD_API_URL}/${user.avatarPath}`
+    : undefined;
 
   const loadUser = async () => {
     const userData = await fetchUser();
@@ -49,6 +53,15 @@ export default function AccountPage() {
   };
 
   const xpPercentage = user ? (user.xp / 1246) * 100 : 0;
+
+  const handleUpdateUser = async () => {
+    try {
+      const updatedUser = await fetchUser();
+      setUser(updatedUser as User);
+    } catch (err) {
+      console.error("Failed to refresh user data:", err);
+    }
+  };
 
   return (
     <div className="p-4 sm:p-8">
@@ -107,7 +120,7 @@ export default function AccountPage() {
                         </p>
                         <p className="font-bold">Archer</p>
                         <Avatar className="h-20 w-20 mt-2 border-4 border-primary">
-                          <AvatarImage src={user.avatar} alt={user.username} />
+                          <AvatarImage src={avatarUrl} alt={user.username} />
                           <AvatarFallback>
                             {user.username.charAt(0).toUpperCase()}
                           </AvatarFallback>
@@ -120,6 +133,10 @@ export default function AccountPage() {
                             <Copy size={16} className="ml-1 cursor-pointer" onClick={handleCopyUsername} />
                           </p>
                           <div className="absolute -right-4 top-1/2 -translate-y-1/2 w-8 h-8 bg-muted transform rotate-45"></div>
+                          <DialogUpdateUser
+                            user={user}
+                            onUserUpdated={handleUpdateUser}
+                          />
                         </div>
                       </div>
                     </div>

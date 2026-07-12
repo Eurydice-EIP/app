@@ -164,7 +164,13 @@
     "removeFriend": "Retirer un ami",
     "rmFriendDesc": "Souhaitez-vous vraiment retirer cet ami de votre liste d'amis ? Cette action ne peut être annulée.",
     "cancelFriendReq": "Annuler la demande d'ami",
-    "cancelFriendReqDesc": "Souhaitez-vous vraiment annuler cette demande d'ami ? Cette action ne peut pas être annulée."
+    "cancelFriendReqDesc": "Souhaitez-vous vraiment annuler cette demande d'ami ? Cette action ne peut pas être annulée.",
+    "editProfile": "Modifier le profil",
+    "username": "Nom d'utilisateur",
+    "avatar": "Avatar",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "saving": "Enregistrement..."
   },
   "taskUpdated": "Tâche mise à jour",
   "selectEstimatedTime": "Veuillez sélectionner une durée estimée.",

@@ -32,6 +32,9 @@ export default function DashboardPage() {
   const [projects, setProjects] = useState<Project[] | null>(null);
   const [tasks, setTasks] = useState<Task[] | null>(null);
   const [user, setUser] = useState<User | null>(null);
+  const avatarUrl = user?.avatarPath
+    ? `${process.env.NEXT_PUBLIC_UPLOAD_API_URL}/${user.avatarPath}`
+    : undefined;
 
   useEffect(() => {
     const loadUser = async () => {
@@ -167,7 +170,7 @@ export default function DashboardPage() {
         ) : (
           <div className="flex flex-col items-center w-full">
             <Avatar className="h-24 w-24 rounded-lg grayscale mb-2">
-              <AvatarImage src={user?.avatar} alt={user?.username} />
+              <AvatarImage src={avatarUrl} alt={user?.username} />
               <AvatarFallback>
                 {user?.username?.charAt(0).toUpperCase()}
               </AvatarFallback>

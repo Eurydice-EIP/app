@@ -18,6 +18,49 @@ export const fetchUser = async () => {
   }
 };
 
+export const postUserAvatar = async (file: File) => {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/avatar`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: formData,
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to upload avatar");
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error("Error uploading avatar:", error);
+    throw error;
+  }
+};
+
+export const updateUser = async (data: {
+  username?: string;
+  avatar?: string;
+}) => {
+  try {
+    return apiFetch("/users", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify(data),
+    });
+  } catch (error) {
+    console.error("Error updating user:", error);
+    throw error;
+  }
+};
+
 export const fetchUserFriends = async () => {
   try {
     return apiFetch("/users/friends", {
