@@ -141,7 +141,7 @@ export function ProjectWidget({
                         </div> */}
                         <div className="flex items-center gap-1">
                           <Zap size={16} />
-                          <span>2610 XP</span>
+                          <span>{project.xp}</span>
                         </div>
                       </div>
 

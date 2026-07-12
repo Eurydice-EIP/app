@@ -18,13 +18,6 @@ import { Task } from "@/types/entities/task";
 
 export const description = "An interactive area chart";
 
-const chartData = [
-  { date: "2024-04-01", thisProject: 222, allProjects: 150 },
-  { date: "2024-04-02", thisProject: 97, allProjects: 180 },
-  { date: "2024-04-03", thisProject: 167, allProjects: 120 },
-  { date: "2024-04-04", thisProject: 242, allProjects: 260 },
-];
-
 const chartConfig = {
   visitors: {
     label: "Visitors",
@@ -40,29 +33,60 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export type WeekStatsWidgetProps = {
-  tasks: Task[];
+  projectTasks: Task[];
+  allTasks: Task[];
 };
 
 export function WeekStatsWidget({
   className,
-  tasks,
+  projectTasks,
+  allTasks,
 }: React.HTMLAttributes<HTMLDivElement> & WeekStatsWidgetProps) {
   const t = useTranslations("weekStats");
-  const [timeRange, setTimeRange] = React.useState("90d");
+  const today = new Date((new Date()).setHours(0, 0, 0, 0));
 
-  const filteredData = chartData.filter((item) => {
-    const date = new Date(item.date);
-    const referenceDate = new Date("2024-06-30");
-    let daysToSubtract = 90;
-    if (timeRange === "30d") {
-      daysToSubtract = 30;
-    } else if (timeRange === "7d") {
-      daysToSubtract = 7;
+  const filterTask = (task: Task) => {
+    const sixDays = 6 * 24 * 3600 * 1000;
+
+    if (task.status !== "COMPLETED" || !task.completedAt) {
+      return false;
     }
-    const startDate = new Date(referenceDate);
-    startDate.setDate(startDate.getDate() - daysToSubtract);
-    return date >= startDate;
-  });
+
+    const taskCompletionDate = new Date((new Date(task.completedAt)).setHours(0, 0, 0, 0));
+
+    if (today.getTime() - taskCompletionDate.getTime() <= sixDays) {
+      return true;
+    }
+    return false;
+  };
+
+  const filteredProjTasks = projectTasks
+    .filter(filterTask)
+    .map((task) => task.completedAt ? new Date((new Date(task.completedAt)).setHours(0, 0, 0, 0)) : null);
+  const filteredAllTasks = allTasks
+    .filter(filterTask)
+    .map((task) => task.completedAt ? new Date((new Date(task.completedAt)).setHours(0, 0, 0, 0)) : null);
+
+  const chartData: {
+    date: string,
+    thisProject: number,
+    allProjects: number,
+  }[] = [];
+
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(today);
+    date.setDate(date.getDate() - i);
+
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, "0");
+    const dd = String(date.getDate()).padStart(2, "0");
+
+    chartData.unshift({
+      date: `${yyyy}-${mm}-${dd}`,
+      thisProject: filteredProjTasks.filter((task) => task && task.getTime() === date.getTime()).length,
+      allProjects: filteredAllTasks.filter((task) => task && task.getTime() === date.getTime()).length,
+    });
+  }
 
   return (
     <Card className="pt-0 rounded-md bg-[var(--widget-background)]">
@@ -76,7 +100,7 @@ export function WeekStatsWidget({
           config={chartConfig}
           className="aspect-auto h-[250px] w-full"
         >
-          <AreaChart data={filteredData}>
+          <AreaChart data={chartData}>
             <defs>
               <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
                 <stop

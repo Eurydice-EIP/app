@@ -32,7 +32,7 @@ export default function ProjectsPage() {
     const fetch = async () => {
       if (selectedProject) {
         try {
-          const result = await fetchProjectTasks(selectedProject?.id || 0);
+          const result = await fetchProjectTasks(selectedProject.id || 0);
           setTasks(result as Task[]);
         } catch (err) {
           console.error("Failed to load tasks:", err);
@@ -109,7 +109,8 @@ export default function ProjectsPage() {
                   />
                 )}
                 <WeekStatsWidget
-                  tasks={tasks || []}
+                  projectTasks={tasks || []}
+                  allTasks={projects?.map((project) => project.tasks).flat(1) || []}
                   className="border rounded-md w-full h-full bg-[var(--widget-background)]"
                 />
               </div>

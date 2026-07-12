@@ -1,3 +1,5 @@
+import { Task } from "./task";
+
 export type Project = {
   id: number;
   title: string;
@@ -15,4 +17,7 @@ export type Project = {
   image: string;
   xp: number;
   reward: number;
+
+
+  tasks: Task[];
 };
