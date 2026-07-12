@@ -8,18 +8,8 @@ import { TasksModule } from 'src/tasks/tasks.module';
 import { PrismaService } from 'src/prisma.service';
 
 @Module({
-  imports: [
-    UsersModule,
-    forwardRef(() => TasksModule),
-  ],
-  providers: [
-    PrismaService,
-    XpService,
-    XpCalculatorService,
-  ],
-  exports: [
-    XpService,
-    XpCalculatorService,
-  ],
+    imports: [UsersModule, forwardRef(() => TasksModule)],
+    providers: [PrismaService, XpService, XpCalculatorService],
+    exports: [XpService, XpCalculatorService],
 })
 export class XpModule {}
