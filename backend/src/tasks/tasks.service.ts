@@ -17,7 +17,7 @@ export class TasksService {
     constructor(
         private readonly prisma: PrismaService,
         private readonly gameEventProducer: GameEventProducer,
-        private readonly xpCalculator: XpCalculatorService,
+        private readonly xpCalculator: XpCalculatorService
     ) {}
 
     private mapTask(
@@ -139,9 +139,7 @@ export class TasksService {
     }
 
     // ---------------- FIND ALL ----------------
-    async findAll(
-        userId: number,
-    ): Promise<
+    async findAll(userId: number): Promise<
         (PrismaTask & {
             blocks: number[];
             blockedBy: number[];
@@ -164,9 +162,9 @@ export class TasksService {
             return {
                 ...mappedTask,
                 xp: this.xpCalculator.calculateTaskXp({
-                ...task,
-                isMainProject: task.project?.type === ProjectType.MAIN,
-            }),
+                    ...task,
+                    isMainProject: task.project?.type === ProjectType.MAIN,
+                }),
             };
         });
     }

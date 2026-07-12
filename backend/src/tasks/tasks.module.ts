@@ -6,10 +6,7 @@ import { RabbitMQModule } from 'src/rabbitMQ/rabbitmq.module';
 import { XpModule } from 'src/rabbitMQ/xp/xp-service/xp.module';
 
 @Module({
-    imports: [
-        RabbitMQModule,
-        forwardRef(() => XpModule),
-    ],
+    imports: [RabbitMQModule, forwardRef(() => XpModule)],
     controllers: [TasksController],
     providers: [PrismaService, TasksService],
     exports: [TasksService],

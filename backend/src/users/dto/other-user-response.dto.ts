@@ -54,7 +54,7 @@ export class OtherUserResponseDto {
 
     @ApiProperty({
         example: 'PENDING',
-        description: "The state of the friendship",
+        description: 'The state of the friendship',
     })
     @Expose()
     friendState?: UserFriendState | null;

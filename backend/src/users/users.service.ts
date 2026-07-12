@@ -126,7 +126,10 @@ export class UsersService {
         });
     }
 
-    async findById(userId: number, id: number): Promise<PrismaUser | PrismaUser & { friendState: string } | null> {
+    async findById(
+        userId: number,
+        id: number
+    ): Promise<PrismaUser | (PrismaUser & { friendState: string }) | null> {
         const user = await this.prisma.user.findUnique({
             where: { id },
             include: {
@@ -205,7 +208,11 @@ export class UsersService {
         return updatedUser;
     }
 
-    async getFriends(userId: number): Promise<(PrismaUser & { friendState: string })[] | Promise<PrismaUser[]>> {
+    async getFriends(
+        userId: number
+    ): Promise<
+        (PrismaUser & { friendState: string })[] | Promise<PrismaUser[]>
+    > {
         const userFriends = await this.prisma.userFriends.findMany({
             where: { userId },
         });
@@ -219,7 +226,11 @@ export class UsersService {
         });
 
         return friends.map((friend) => {
-            return { ...friend, friendState: userFriends.find((f) => f.friendId === friend.id)?.state };
+            return {
+                ...friend,
+                friendState: userFriends.find((f) => f.friendId === friend.id)
+                    ?.state,
+            };
         });
     }
 

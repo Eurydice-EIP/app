@@ -10,7 +10,7 @@ export class XpService {
         private readonly usersService: UsersService,
         private readonly tasksService: TasksService,
         private readonly xpCalculator: XpCalculatorService,
-        private readonly prisma: PrismaService,
+        private readonly prisma: PrismaService
     ) {}
 
     async handleTaskCompleted(data: {
@@ -51,26 +51,21 @@ export class XpService {
         let xpNeeded = this.xpCalculator.xpToNextLevel(newLevel);
 
         while (newXp >= xpNeeded) {
-          newXp -= xpNeeded;
+            newXp -= xpNeeded;
             newLevel += 1;
             xpNeeded = this.xpCalculator.xpToNextLevel(newLevel);
 
-          console.log(
-            `[XP] LEVEL UP ! User ${userId} => level ${newLevel}`,
-          );
+            console.log(`[XP] LEVEL UP ! User ${userId} => level ${newLevel}`);
         }
 
         await this.usersService.updateXpAndLevel(userId, newXp, newLevel);
 
         console.log(
-          `[XP] User ${userId} gained ${earnedXp} XP (lvl ${user.level} -> ${newLevel})`,
+            `[XP] User ${userId} gained ${earnedXp} XP (lvl ${user.level} -> ${newLevel})`
         );
     }
 
-    async handleProjectCompleted(data: {
-        userId: string;
-        projectId: string;
-    }) {
+    async handleProjectCompleted(data: { userId: string; projectId: string }) {
         const userId = Number(data.userId);
         const projectId = Number(data.projectId);
 
@@ -92,14 +87,10 @@ export class XpService {
 
         const newXp = user.xp + earnedXp;
 
-        await this.usersService.updateXpAndLevel(
-            userId,
-            newXp,
-            user.level,
-        );
+        await this.usersService.updateXpAndLevel(userId, newXp, user.level);
 
         console.log(
-            `[XP] User ${userId} gained ${earnedXp} XP from project ${projectId}`,
+            `[XP] User ${userId} gained ${earnedXp} XP from project ${projectId}`
         );
     }
 }

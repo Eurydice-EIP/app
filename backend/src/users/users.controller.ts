@@ -107,7 +107,6 @@ export class UsersController {
         @Param('id', ParseIntPipe) id: number
     ): Promise<OtherUserResponseDto> {
         const foundUser = await this.usersService.findById(user.sub, id);
-        console.log(foundUser)
         return plainToInstance(OtherUserResponseDto, foundUser, {
             excludeExtraneousValues: true,
         });

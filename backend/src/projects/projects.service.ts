@@ -19,7 +19,7 @@ export class ProjectsService {
         private readonly prisma: PrismaService,
         private readonly tasksService: TasksService,
         private readonly gameEventProducer: GameEventProducer,
-        private readonly xpCalculator: XpCalculatorService,
+        private readonly xpCalculator: XpCalculatorService
     ) {}
 
     // ---------------- CREATE ----------------
@@ -38,11 +38,18 @@ export class ProjectsService {
     }
 
     // ---------------- FIND ALL ----------------
-    async findAll(userId: number): Promise<any[]> {
+    async findAll(userId: number): Promise<
+        (Project & {
+            xp: number;
+            totalTasks: number;
+            completedTasks: number;
+            tasks: (Task & { xp: number })[];
+        })[]
+    > {
         const projects = await this.prisma.project.findMany({
             where: { userId },
             include: {
-            tasks: true,
+                tasks: true,
             },
         });
 
@@ -51,7 +58,7 @@ export class ProjectsService {
             xp: this.xpCalculator.getBaseProjectXp(project),
             totalTasks: project.tasks.length,
             completedTasks: project.tasks.filter(
-                (task) => task.status === TaskStatus.COMPLETED,
+                (task) => task.status === TaskStatus.COMPLETED
             ).length,
             tasks: project.tasks.map((task) => ({
                 ...task,
@@ -64,7 +71,17 @@ export class ProjectsService {
     }
 
     // ---------------- FIND ONE ----------------
-    async findOne(userId: number, id: number): Promise<any> {
+    async findOne(
+        userId: number,
+        id: number
+    ): Promise<
+        Project & {
+            xp: number;
+            totalTasks: number;
+            completedTasks: number;
+            tasks: (Task & { xp: number })[];
+        }
+    > {
         const project = await this.prisma.project.findFirst({
             where: {
                 id,
@@ -74,19 +91,19 @@ export class ProjectsService {
                 tasks: true,
             },
         });
-    
+
         if (!project) {
             throw new NotFoundException('Project not found');
         }
-    
+
         const isMainProject = project.type === 'MAIN';
-    
+
         return {
             ...project,
             xp: this.xpCalculator.getBaseProjectXp(project),
             totalTasks: project.tasks.length,
             completedTasks: project.tasks.filter(
-                (task) => task.status === TaskStatus.COMPLETED,
+                (task) => task.status === TaskStatus.COMPLETED
             ).length,
             tasks: project.tasks.map((task) => ({
                 ...task,
@@ -104,7 +121,6 @@ export class ProjectsService {
         id: number,
         dto: UpdateProjectDto
     ): Promise<Project> {
-
         const existingProject = await this.prisma.project.findUnique({
             where: { id, userId },
             include: { tasks: true },
@@ -119,7 +135,6 @@ export class ProjectsService {
             existingProject.status !== ProjectStatus.COMPLETED;
 
         if (isBeingCompleted) {
-
             for (const task of existingProject.tasks) {
                 if (task.status !== TaskStatus.COMPLETED) {
                     await this.tasksService.update(userId, task.id, {
@@ -129,7 +144,7 @@ export class ProjectsService {
             }
 
             try {
-                await this.gameEventProducer.projectCompleted({
+                this.gameEventProducer.projectCompleted({
                     userId: userId.toString(),
                     projectId: existingProject.id.toString(),
                 });
@@ -137,7 +152,6 @@ export class ProjectsService {
                 console.log(
                     `[ProjectsService] projectCompleted emitted (projectId: ${existingProject.id})`
                 );
-
             } catch (err) {
                 console.error(
                     `[ProjectsService] RabbitMQ publish failed for project ${existingProject.id}:`,
@@ -171,7 +185,6 @@ export class ProjectsService {
                     }),
                 },
             });
-
         } catch (err) {
             if (
                 err instanceof PrismaClientKnownRequestError &&
@@ -294,9 +307,9 @@ export class ProjectsService {
 
             completedAt: task.completedAt,
             xp: this.xpCalculator.calculateTaskXp({
-                    ...task,
-                    isMainProject: project.type === 'MAIN',
-                }),
+                ...task,
+                isMainProject: project.type === 'MAIN',
+            }),
         }));
     }
 }

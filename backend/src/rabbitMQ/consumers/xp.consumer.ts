@@ -11,11 +11,7 @@ export class XpConsumer {
 
     @EventPattern(GameEvents.TASK_COMPLETED)
     async handleTaskCompleted(
-        @Payload() data: {
-            userId: string;
-            taskId: string;
-            completedAt: string;
-        }
+        @Payload() data: { userId: string; taskId: string; completedAt: string }
     ) {
         console.log('[XP] Task completed event received:', data);
 
@@ -24,10 +20,7 @@ export class XpConsumer {
 
     @EventPattern(GameEvents.PROJECT_COMPLETED)
     async handleProjectCompleted(
-        @Payload() data: {
-            userId: string;
-            projectId: string;
-        }
+        @Payload() data: { userId: string; projectId: string }
     ) {
         console.log('[XP] Project completed event received:', data);
 

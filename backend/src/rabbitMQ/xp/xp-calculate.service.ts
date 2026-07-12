@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class XpCalculatorService {
-
     public calculateTaskXp(task: {
         importance: number;
         estimatedTime: number;
@@ -10,10 +9,7 @@ export class XpCalculatorService {
         completedAt?: Date | null;
         isMainProject?: boolean;
     }): number {
-        let xp =
-            10 +
-            task.importance * 10 +
-            task.estimatedTime * 2;
+        let xp = 10 + task.importance * 10 + task.estimatedTime * 2;
 
         if (task.isMainProject) {
             xp *= 2;
@@ -32,15 +28,10 @@ export class XpCalculatorService {
         importance: number;
         estimatedTime: number;
     }): number {
-        return (
-            50 +
-            project.importance * 25 +
-            project.estimatedTime * 5
-        );
+        return 50 + project.importance * 25 + project.estimatedTime * 5;
     }
 
     public xpToNextLevel(level: number): number {
         return 100 * level * level;
     }
-
 }

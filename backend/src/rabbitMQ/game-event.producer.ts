@@ -23,10 +23,7 @@ export class GameEventProducer {
         return this.client.emit(GameEvents.TASK_COMPLETED, payload);
     }
 
-    projectCompleted(data: {
-        userId: string;
-        projectId: string;
-    }) {
+    projectCompleted(data: { userId: string; projectId: string }) {
         return this.client.emit(GameEvents.PROJECT_COMPLETED, data);
     }
 }
