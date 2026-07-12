@@ -89,7 +89,9 @@
     "projects": "Projects",
     "selectProjectError": "Please select a project.",
     "create": "Create task",
-    "delete": "Delete task"
+    "delete": "Delete task",
+    "removeTask": "Remove task",
+    "rmTaskDesc": "Are you sure you want to remove this task? This action cannot be undone."
   },
   "project": {
     "new": "New +",

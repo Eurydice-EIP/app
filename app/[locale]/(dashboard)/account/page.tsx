@@ -234,7 +234,7 @@ export default function AccountPage() {
                             />
                             <p className="text-lg w-full">{friend.username}</p>
                             <Ban
-                              className="w-8 h-8 p-1 rounded-full cursor-pointer hover:bg-input"
+                              className="w-8 min-w-8 h-8 p-1 rounded-full cursor-pointer hover:bg-input"
                               aria-label="Remove friend"
                               onClick={() => setRmFriendOpen(true)}
                             />

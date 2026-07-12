@@ -3,8 +3,10 @@ export type Task = {
   title: string;
   description?: string;
   dueAt: string;
-  status: string;
+  status: "PENDING" | "IN_PROGRESS" | "COMPLETED" | "BLOCKED";
   projectId: number;
   importance: number;
   estimatedTime: number;
+  completedAt: number | null;
+  xp: number;
 };

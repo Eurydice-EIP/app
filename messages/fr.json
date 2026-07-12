@@ -89,7 +89,9 @@
     "projects": "Projets",
     "selectProjectError": "Veuillez sélectionner un projet.",
     "create": "Créer la tâche",
-    "delete": "Supprimer la tâche"
+    "delete": "Supprimer la tâche",
+    "removeTask": "Supprimer la tâche",
+    "rmTaskDesc": "Souhaitez-vous vraiment supprimer cette tâche? Cette action ne peut être annulée."
   },
   "project": {
     "new": "Nouveau +",

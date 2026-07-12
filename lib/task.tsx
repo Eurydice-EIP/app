@@ -49,22 +49,6 @@ export const updateTask = async (task: Task) => {
   }
 };
 
-export const validateTask = async (taskId: number) => {
-  try {
-    return apiFetch(`/tasks/${taskId}/validate`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify({ status: "validated" }),
-    });
-  } catch (error) {
-    console.error("Error validating task:", error);
-    throw error;
-  }
-};
-
 export const deleteTask = async (taskId: number) => {
   try {
     return apiFetch(`/tasks/${taskId}`, {

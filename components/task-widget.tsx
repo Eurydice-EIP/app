@@ -1,12 +1,14 @@
 import { Task } from "@/types/entities/task";
 import { Button } from "@base-ui/react";
-import { Check } from "lucide-react";
+import { Ban, Check } from "lucide-react";
 import * as React from "react";
-import { updateTask, validateTask } from "@/lib/task";
+import { useState } from "react";
+import { deleteTask, updateTask } from "@/lib/task";
 import { Card } from "./ui/card";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { DialogNewTask } from "./dialog-new-task";
+import { ConfirmAlertDialog } from "./confirm-alert-dialog";
 
 export type TaskWidgetProps = {
   tasks: Task[];
@@ -21,23 +23,19 @@ export function TaskWidget({
   showDetails,
 }: React.HTMLAttributes<HTMLDivElement> & TaskWidgetProps) {
   const t = useTranslations("");
+  const tCom = useTranslations("common");
+  const tTask = useTranslations("task");
+
+  const [rmTaskOpen, setRmTaskOpen] = useState(false);
 
   const updateTask1 = async (taskId: number, status: string) => {
-    if (status === "COMPLETED") {
-      try {
-        await validateTask(taskId);
-      } catch (err) {
-        console.error("Failed to validate task:", err);
-      }
-    } else {
-      try {
-        await updateTask({
-          id: taskId,
-          status,
-        } as Task);
-      } catch (err) {
-        console.error("Failed to update task:", err);
-      }
+    try {
+      await updateTask({
+        id: taskId,
+        status,
+      } as Task);
+    } catch (err) {
+      console.error("Failed to update task:", err);
     }
     onTaskUpdate?.();
   };
@@ -74,10 +72,26 @@ export function TaskWidget({
                     }}
                     task={task}
                   />
+                  <Ban
+                    className="w-8 min-w-8 h-8 p-1 rounded-full cursor-pointer hover:bg-input"
+                    aria-label="Remove task"
+                    onClick={() => setRmTaskOpen(true)}
+                  />
+                  <ConfirmAlertDialog
+                    open={rmTaskOpen}
+                    onOpenChange={setRmTaskOpen}
+                    title={tTask("removeTask")}
+                    description={tTask("rmTaskDesc")}
+                    actionLabel={tCom("confirm")}
+                    action={async () => {
+                      await deleteTask(task.id);
+                      onTaskUpdate?.();
+                    }}
+                  />
                   <div>
                     <Button
                       className={
-                        "p-1 rounded-full border-2 " +
+                        "p-1 rounded-full border-2 cursor-pointer hover:bg-muted " +
                         (task?.status === "COMPLETED"
                           ? "border-green-500"
                           : task?.status === "IN_PROGRESS"
