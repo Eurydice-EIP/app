@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
-import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
@@ -50,9 +49,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     // { title: t("analytics"), url: "/analytics", icon: ChartNoAxesColumn },
   ];
 
-  const navSecondary = [
-    { title: t("settings"), url: "/settings", icon: Settings },
-  ];
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -72,7 +68,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={navMain} />
-        <NavSecondary items={navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={user || null} />

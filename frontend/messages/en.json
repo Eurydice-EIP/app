@@ -164,7 +164,13 @@
     "removeFriend": "Remove Friend",
     "rmFriendDesc": "Are you sure you want to remove this friend from your friends list? This action cannot be undone.",
     "cancelFriendReq": "Cancel Friend Request",
-    "cancelFriendReqDesc": "Are you sure you want to cancel this friend request? This action cannot be undone"
+    "cancelFriendReqDesc": "Are you sure you want to cancel this friend request? This action cannot be undone",
+    "editProfile": "Edit Profile",
+    "username": "Username",
+    "avatar": "Avatar",
+    "save": "Save",
+    "cancel": "Cancel",
+    "saving": "Saving..."
   },
   "taskUpdated": "Task updated",
   "selectEstimatedTime": "Please select an estimated time.",

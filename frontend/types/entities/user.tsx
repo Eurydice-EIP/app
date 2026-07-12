@@ -3,5 +3,7 @@ export type User = {
   email: string;
   xp: number;
   level: number;
-  avatar: string;
+  avatarMime: string;
+  avatarPath: string;
+  avatarSize: number;
 };
