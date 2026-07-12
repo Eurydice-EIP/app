@@ -15,7 +15,6 @@ import {
   useDropzone as rootUseDropzone,
 } from "react-dropzone";
 import { Button, ButtonProps } from "./button";
-import * as crypto from 'node:crypto';
 
 type DropzoneResult<TUploadRes, TUploadError> =
   | {
@@ -120,6 +119,14 @@ const getDropZoneErrorCodes = (fileRejections: FileRejection[]) => {
       .map((error) => error.code) as DropZoneErrorCode[];
   });
   return Array.from(new Set(errors.flat()));
+};
+
+const createDropzoneId = () => {
+  if (typeof globalThis.crypto?.randomUUID === "function") {
+    return globalThis.crypto.randomUUID();
+  }
+
+  return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 };
 
 const getRootError = (
@@ -349,7 +356,7 @@ const useDropzone = <TUploadRes, TUploadError = string>(
           await onRemoveFile(fileStatuses[index].id);
         }
 
-        const id = crypto.randomUUID();
+        const id = createDropzoneId();
         dispatch({ type: "add", fileName: file.name, file, id });
         await _uploadFile(file, id);
       });
