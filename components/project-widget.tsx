@@ -111,7 +111,7 @@ export function ProjectWidget({
               </ul>
             </div>
           ) : (
-            <ul className="flex flex-col overflow-auto max-h-[calc(100vh-10rem)] pb-4">
+            <ul className="flex flex-col overflow-auto max-h-[calc(100vh-12rem)] pb-4">
               {projects.map((project, index) => (
                 <li key={index} className="flex">
                   <Card

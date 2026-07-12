@@ -120,6 +120,7 @@ export default function ProjectsPage() {
                 />
                 <TimeTrackerWidget
                   projectTitle={selectedProject.title}
+                  projectTasks={tasks?.map((task) => ({ id: task.id, title: task.title })) || []}
                   className="border rounded-md w-full py-4"
                 />
               </div>

@@ -5,18 +5,24 @@ import { PlayIcon, Square } from "lucide-react";
 import { Card } from "./ui/card";
 import { useTranslations } from "next-intl";
 import { useState, useEffect } from "react";
+import { DialogStartTimer } from "./dialog-start-timer";
+import { startTimer, stopTimer } from "@/lib/timer";
 
 export type TimeTrackerWidgetProps = {
   projectTitle: string;
+  projectTasks: { id: number, title: string }[];
 };
 
 export function TimeTrackerWidget({
   className,
   projectTitle,
+  projectTasks,
 }: React.HTMLAttributes<HTMLDivElement> & TimeTrackerWidgetProps) {
   const t = useTranslations("timeTracker");
   const [isRunning, setIsRunning] = useState(false);
   const [time, setTime] = useState(0);
+  const [open, setOpen] = useState(false);
+  const [activeTask, setActiveTask] = useState<number>();
 
   useEffect(() => {
     let interval: NodeJS.Timeout | undefined = undefined;
@@ -47,7 +53,16 @@ export function TimeTrackerWidget({
   };
 
   const handleToggle = () => {
-    setIsRunning(!isRunning);
+    if (!isRunning) {
+      setOpen(true);
+      return;
+    }
+
+    if (!activeTask) {
+      return;
+    }
+    setIsRunning(false);
+    stopTimer(activeTask);
   };
 
   return (
@@ -74,6 +89,19 @@ export function TimeTrackerWidget({
           <PlayIcon className="w-8 h-8" fill="currentColor" />
         )}
       </Button>
+      <DialogStartTimer
+        open={open}
+        onOpenChange={setOpen}
+        tasks={projectTasks}
+        onTimerStarted={(taskId: number) => {
+          if (activeTask !== taskId) {
+            setTime(0);
+          }
+          startTimer(taskId);
+          setIsRunning(true);
+          setActiveTask(taskId);
+        }}
+      />
     </Card>
   );
 }

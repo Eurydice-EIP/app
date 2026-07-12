@@ -105,6 +105,13 @@
     "delete": "Supprimer le projet",
     "update": "Mettre à jour le projet"
   },
+  "timer": {
+    "startTitle": "Lancer un chronomètre",
+    "selectTask": "Sélectionner une tâche",
+    "tasksLabel": "Tâches",
+    "taskError": "Veuillez sélectionner une tâche.",
+    "startButton": "Lancer le chrono"
+  },
   "timeTracker": {
     "title": "Suivi du temps",
     "startWorking": "Commencez à travailler sur {projectTitle}"
