@@ -15,6 +15,7 @@ import {
   useDropzone as rootUseDropzone,
 } from "react-dropzone";
 import { Button, ButtonProps } from "./button";
+import * as crypto from 'node:crypto';
 
 type DropzoneResult<TUploadRes, TUploadError> =
   | {

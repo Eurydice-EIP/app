@@ -34,6 +34,7 @@ jobs:
           tags: ghcr.io/eurydice-eip/eurydice-frontend:latest
           build-args: |
             NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
+            NEXT_PUBLIC_UPLOAD_API_URL=${{ secrets.NEXT_PUBLIC_UPLOAD_API_URL }}
 
       - name: Deploy to Production Server
         uses: appleboy/ssh-action@v1.2.0
