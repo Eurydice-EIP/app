@@ -260,7 +260,7 @@ export function DialogNewTask({
                 <InputGroup>
                   <InputGroupInput
                     id="date-required"
-                    value={task ? formatDate(new Date(task.dueAt)) : dateValue}
+                    value={dateValue}
                     placeholder={tCommon("selectDate")}
                     onChange={(e) => {
                       const date = new Date(e.target.value);
