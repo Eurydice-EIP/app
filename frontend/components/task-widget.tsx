@@ -45,7 +45,12 @@ export function TaskWidget({
       {tasks ? (
         <ul className="flex flex-col">
           {[...tasks]
-            .sort((a, b) => (a.id || 0) - (b.id || 0))
+            .sort((a, b) => {
+              if (a.status === "COMPLETED" && b.status !== "COMPLETED") {
+                return 1;
+              }
+              return (a.id || 0) - (b.id || 0)
+            })
             .map((task, index) => (
               <li
                 key={index}
