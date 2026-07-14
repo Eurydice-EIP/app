@@ -2,21 +2,43 @@
 sidebar_position: 1
 ---
 
-# Eurydice
+# Eurydice Docs
 
-## Overview
+Eurydice is a focus-first project management app with a modern web frontend, a modular NestJS backend, and event-driven game progression.
 
-**Eurydice** is a web and mobile application that helps people with attention problems manage their projects and time in a gamified way.
+This documentation set is organized around the code that exists today. It covers the current frontend, backend, development flow, organizational rules, and reference material needed to work in the repository without chasing legacy ideas.
 
-## Features
+## What is covered
 
-- **Feature 1**: Gamification
-- **Feature 2**: Organize Tasks
+| Area         | Purpose                                                                                        |
+| ------------ | ---------------------------------------------------------------------------------------------- |
+| Frontend     | Next.js App Router, localization, dashboard widgets, and the design system used in the web app |
+| Backend      | NestJS modules, Prisma data access, RabbitMQ event handling, and API delivery                  |
+| Development  | Local setup, testing, and deployment commands                                                  |
+| Organization | Team structure, working rules, delivery flow, and maintenance expectations                     |
+| Reference    | API entry points, environment expectations, and git workflow rules                             |
 
-## Installation
+## Quick start
 
-To get started with **Eurydice**, follow these simple steps:
+If you are new to the codebase, read these pages in order:
 
-### Good Luck
+1. [Frontend architecture](architecture/frontend)
+2. [Backend architecture](architecture/backend)
+3. [Local setup](development/local-setup)
+4. [Testing](development/testing)
+5. [Deployment](development/deployment)
+6. [Organization](organization)
 
-No tutorial Yet
+## Current product shape
+
+Eurydice currently ships as a task and project workspace with:
+
+- dashboard widgets for projects, tasks, time tracking, and weekly stats
+- authenticated account and settings flows
+- a versioned REST API with Swagger documentation
+- PostgreSQL persistence through Prisma
+- RabbitMQ events for XP and game progression work
+
+## Team organization
+
+The organization guide explains how the team should work across branches, reviews, releases, and ongoing maintenance.
