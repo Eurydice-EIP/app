@@ -243,11 +243,9 @@ export default function AccountPage() {
                         return (
                           <div key={friend.id} className="p-2 flex gap-6 items-center rounded-lg hover:bg-muted">
                             <img
-                              src={friend.avatar ?? '/default-avatar.svg'}
-                              width={32}
-                              height={32}
+                              src={friend.avatarPath ? `${process.env.NEXT_PUBLIC_UPLOAD_API_URL}/${friend.avatarPath}` : '/default-avatar.svg'}
                               alt={`${friend.username} avatar`}
-                              className="bg-foreground rounded-full border border-solid border-white"
+                              className="w-8 h-8 bg-foreground rounded-full border border-solid border-white"
                             />
                             <p className="text-lg w-full">{friend.username}</p>
                             <Ban
@@ -289,11 +287,9 @@ export default function AccountPage() {
                           return (
                             <div key={friend.id} className="p-2 flex gap-6 items-center rounded-lg hover:bg-muted">
                               <img
-                                src={friend.avatar ?? '/default-avatar.svg'}
-                                width={32}
-                                height={32}
+                                src={friend.avatarPath ? `${process.env.NEXT_PUBLIC_UPLOAD_API_URL}/${friend.avatarPath}` : '/default-avatar.svg'}
                                 alt={`${friend.username} avatar`}
-                                className="bg-foreground rounded-full border border-solid border-white"
+                                className="w-8 h-8 bg-foreground rounded-full border border-solid border-white"
                               />
                               <p className="text-lg w-full">{friend.username}</p>
                               {friend.friendState === "REQUESTED" ? (
