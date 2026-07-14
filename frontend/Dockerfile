@@ -29,5 +29,6 @@ WORKDIR /app
 COPY --from=base /app/node_modules ./node_modules
 COPY --from=base /app/package*.json ./
 COPY --from=build /app/.next ./.next
+COPY --from=build /app/public ./public
 
 CMD ["npm", "run", "start"]
