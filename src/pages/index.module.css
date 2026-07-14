@@ -1,23 +1,363 @@
-/**
- * CSS files with the .module.css suffix will be treated as CSS modules
- * and scoped locally.
- */
-
-.heroBanner {
-  padding: 4rem 0;
-  text-align: center;
+.pageShell {
   position: relative;
   overflow: hidden;
+  padding: 4rem 0 5rem;
+}
+
+.pageShell::before,
+.pageShell::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  pointer-events: none;
+  filter: blur(10px);
+  opacity: 0.7;
+}
+
+.pageShell::before {
+  top: 1rem;
+  right: -8rem;
+  width: 18rem;
+  height: 18rem;
+  background: radial-gradient(circle, rgba(47, 95, 155, 0.22), transparent 70%);
+}
+
+.pageShell::after {
+  bottom: 3rem;
+  left: -7rem;
+  width: 16rem;
+  height: 16rem;
+  background: radial-gradient(
+    circle,
+    rgba(197, 179, 148, 0.24),
+    transparent 70%
+  );
+}
+
+[data-theme="dark"] .pageShell::before {
+  background: radial-gradient(
+    circle,
+    rgba(125, 167, 217, 0.18),
+    transparent 70%
+  );
+}
+
+[data-theme="dark"] .pageShell::after {
+  background: radial-gradient(
+    circle,
+    rgba(197, 179, 148, 0.16),
+    transparent 70%
+  );
+}
+
+.heroSection {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+  gap: 1.5rem;
+  align-items: stretch;
+  width: min(1120px, calc(100% - 2rem));
+  margin: 0 auto;
+}
+
+.heroCopy,
+.heroPanel,
+.highlightCard,
+.stripSection {
+  border: 1px solid rgba(47, 95, 155, 0.12);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 250, 242, 0.95),
+    rgba(245, 241, 233, 0.95)
+  );
+  box-shadow: 0 24px 60px rgba(35, 44, 66, 0.08);
+  backdrop-filter: blur(12px);
+}
+
+[data-theme="dark"] .heroCopy,
+[data-theme="dark"] .heroPanel,
+[data-theme="dark"] .highlightCard,
+[data-theme="dark"] .stripSection {
+  border-color: rgba(125, 167, 217, 0.18);
+  background: linear-gradient(
+    180deg,
+    rgba(32, 39, 54, 0.96),
+    rgba(24, 30, 43, 0.96)
+  );
+  box-shadow: 0 28px 72px rgba(0, 0, 0, 0.35);
+}
+
+.heroCopy {
+  border-radius: 2rem;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 26rem;
+}
+
+.eyebrow,
+.panelLabel,
+.highlightLabel,
+.stripLabel {
+  margin: 0 0 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--ifm-color-primary);
+}
+
+.heroTitle {
+  margin: 0;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  line-height: 0.96;
+  letter-spacing: -0.05em;
+  max-width: 10ch;
+}
+
+.heroText,
+.highlightCard p,
+.stripText {
+  color: var(--ifm-color-content-secondary);
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+
+[data-theme="dark"] .heroText,
+[data-theme="dark"] .highlightCard p,
+[data-theme="dark"] .stripText {
+  color: rgba(233, 238, 247, 0.82);
+}
+
+.heroText {
+  max-width: 46rem;
+  margin: 1.25rem 0 0;
+}
+
+.ctaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin-top: 1.75rem;
+}
+
+.heroPanel {
+  border-radius: 2rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.panelLabel {
+  margin-bottom: 0;
+}
+
+.panelStatus {
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  background: rgba(47, 95, 155, 0.12);
+  color: var(--ifm-color-primary);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+[data-theme="dark"] .panelStatus {
+  background: rgba(125, 167, 217, 0.16);
+  color: var(--ifm-color-primary-lightest);
+}
+
+.pipeline {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.75rem;
+}
+
+.pipelineNode {
+  padding: 1rem 1.1rem;
+  border-radius: 1.2rem;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(47, 95, 155, 0.12);
+}
+
+[data-theme="dark"] .pipelineNode {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(125, 167, 217, 0.16);
+}
+
+.pipelineNode span {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--ifm-color-content-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+[data-theme="dark"] .pipelineNode span,
+[data-theme="dark"] .metricCard span,
+[data-theme="dark"] .eyebrow,
+[data-theme="dark"] .panelLabel,
+[data-theme="dark"] .highlightLabel,
+[data-theme="dark"] .stripLabel {
+  color: rgba(168, 204, 239, 0.86);
+}
+
+.pipelineNode strong {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 1rem;
+}
+
+.pipelineArrow {
+  justify-self: center;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(47, 95, 155, 0.09);
+  color: var(--ifm-color-primary);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+[data-theme="dark"] .pipelineArrow {
+  background: rgba(125, 167, 217, 0.12);
+  color: var(--ifm-color-primary-lightest);
+}
+
+.metricGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.metricCard {
+  padding: 1rem;
+  border-radius: 1rem;
+  background: rgba(47, 95, 155, 0.06);
+  border: 1px solid rgba(47, 95, 155, 0.12);
+}
+
+[data-theme="dark"] .metricCard {
+  background: rgba(125, 167, 217, 0.06);
+  border-color: rgba(125, 167, 217, 0.16);
+}
+
+.metricCard span {
+  display: block;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ifm-color-content-secondary);
+}
+
+.metricCard strong {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 1rem;
+}
+
+.highlightsSection {
+  position: relative;
+  z-index: 1;
+  width: min(1120px, calc(100% - 2rem));
+  margin: 1.5rem auto 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.highlightCard {
+  border-radius: 1.6rem;
+  padding: 1.4rem;
+}
+
+.highlightCard h2 {
+  margin: 0 0 0.65rem;
+  font-size: 1.2rem;
+  line-height: 1.2;
+}
+
+[data-theme="dark"] .highlightCard h2,
+[data-theme="dark"] .heroTitle {
+  color: #f6f8fb;
+}
+
+.highlightCard p {
+  margin: 0;
+}
+
+.stripSection {
+  position: relative;
+  z-index: 1;
+  width: min(1120px, calc(100% - 2rem));
+  margin: 1.5rem auto 0;
+  border-radius: 1.6rem;
+  padding: 1.3rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+[data-theme="dark"] .stripSection {
+  background: linear-gradient(
+    180deg,
+    rgba(32, 39, 54, 0.98),
+    rgba(24, 30, 43, 0.98)
+  );
+}
+
+.stripLabel {
+  margin-bottom: 0.45rem;
+}
+
+.stripText {
+  margin: 0;
+  max-width: 62rem;
 }
 
 @media screen and (max-width: 996px) {
-  .heroBanner {
-    padding: 2rem;
+  .pageShell {
+    padding: 2rem 0 3rem;
   }
-}
 
-.buttons {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  .heroSection,
+  .highlightsSection,
+  .stripSection {
+    width: min(100% - 1rem, 1120px);
+  }
+
+  .heroSection,
+  .highlightsSection,
+  .stripSection {
+    grid-template-columns: 1fr;
+  }
+
+  .heroCopy,
+  .heroPanel {
+    padding: 1.5rem;
+    border-radius: 1.5rem;
+  }
+
+  .heroTitle {
+    max-width: none;
+  }
+
+  .metricGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .stripSection {
+    display: grid;
+  }
 }
