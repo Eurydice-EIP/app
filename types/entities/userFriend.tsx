@@ -3,6 +3,6 @@ export type UserFriend = {
   username: string;
   xp: number;
   level: number;
-  avatar: string;
+  avatarPath: string;
   friendState: "PENDING" | "REQUESTED" | "CONFIRMED" | null;
 };

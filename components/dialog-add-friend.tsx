@@ -88,11 +88,9 @@ export function DialogAddFriend({
                 return (
                   <div key={user.id} className="p-2 flex gap-6 items-center rounded-lg hover:bg-muted">
                     <img
-                      src={user.avatar ?? '/default-avatar.svg'}
-                      width={32}
-                      height={32}
+                      src={user.avatarPath ? `${process.env.NEXT_PUBLIC_UPLOAD_API_URL}/${user.avatarPath}` : '/default-avatar.svg'}
                       alt={`${user.username} avatar`}
-                      className="bg-foreground rounded-full border border-solid border-white"
+                      className="w-8 h-8 bg-foreground rounded-full border border-solid border-white"
                     />
                     <p className="text-lg w-full">{user.username}</p>
                     <UserRoundPlus

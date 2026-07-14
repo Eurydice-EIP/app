@@ -169,7 +169,7 @@ export default function DashboardPage() {
           </div>
         ) : (
           <div className="flex flex-col items-center w-full">
-            <Avatar className="h-24 w-24 rounded-lg grayscale mb-2">
+            <Avatar className="h-24 w-24 rounded-lg mb-2">
               <AvatarImage src={avatarUrl} alt={user?.username} />
               <AvatarFallback>
                 {user?.username?.charAt(0).toUpperCase()}
