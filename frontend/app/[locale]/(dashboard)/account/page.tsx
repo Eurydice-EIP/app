@@ -227,14 +227,14 @@ export default function AccountPage() {
               </div>
             </>
           ) : activeTab === "friends" ? (
-            <div className="flex-1 bg-card p-6 rounded-l-2xl relative w-full h-120">
-              <div className="relative w-full h-full flex gap-10 justify-center">
+            <div className="flex bg-card p-6 rounded-l-2xl relative w-full h-245 xl:h-120">
+              <div className="relative w-full h-full flex flex-col xl:flex-row gap-10 justify-center">
                 <DialogAddFriend
-                  triggerClassName="absolute items-center m-auto"
+                  triggerClassName="top-0 right-0 xl:right-auto absolute items-center m-auto"
                   onFriendAdded={loadUser}
                 />
-                <div className="w-1/2">
-                  <div className="w-1/2 bg-secondary px-8 py-2 m-auto">
+                <div className="xl:w-1/2 h-1/2 xl:h-full">
+                  <div className="w-1/2 bg-secondary px-8 py-2 sm:ml-10 md:m-auto">
                     <h2 className="text-xl font-bold text-center">{t("friendList")}</h2>
                   </div>
                   <Card className="h-4/5 my-8">
@@ -270,8 +270,8 @@ export default function AccountPage() {
                     </CardContent>
                   </Card>
                 </div>
-                <div className="w-1/2">
-                  <div className="w-1/2 bg-secondary px-8 py-2 m-auto">
+                <div className="xl:w-1/2 h-1/2 xl:h-full">
+                  <div className="w-1/2 min-w-60 bg-secondary px-8 py-2 m-auto">
                     <h2 className="text-xl font-bold text-center">{t("friendRequests")}</h2>
                   </div>
                   <Card className="h-4/5 my-8">
