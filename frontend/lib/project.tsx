@@ -68,6 +68,21 @@ export const fetchProjectTasks = async (projectId: number) => {
   }
 };
 
+export const detachTaskFromProject = async (projectId: number, taskId: number) => {
+  try {
+    return apiFetch(`/projects/${projectId}/tasks/${taskId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching project tasks:", error);
+    throw error;
+  }
+};
+
 export const updateProject = async (project: Project) => {
   try {
     return apiFetch(`/projects/${project.id}`, {

@@ -32,6 +32,11 @@ export default function ProjectsPage() {
     const fetch = async () => {
       if (selectedProject) {
         try {
+          if (selectedProject?.id === 0) {
+            const result = await fetchTasks() as Task[];
+            setTasks(result.filter((task) => !task.projectId));
+            return;
+          }
           const result = await fetchProjectTasks(selectedProject.id || 0);
           setTasks(result as Task[]);
         } catch (err) {
@@ -47,7 +52,27 @@ export default function ProjectsPage() {
   useEffect(() => {
     const fetch = async () => {
       try {
+        let noProjRes = await fetchTasks() as Task[];
+        noProjRes = noProjRes.filter((task) => !task.projectId);
+
         const result = await fetchProjects();
+        if (noProjRes.length !== 0) {
+          result.unshift({
+            id: 0,
+            title: t("noProjTasksTitle"),
+            dueAt: new Date().toString(),
+            type: "",
+            importance: 0,
+            estimatedTime: 0,
+            status: "",
+            totalTasks: noProjRes.length,
+            completedTasks: noProjRes.filter((task) => task.status === "COMPLETED").length,
+            image: "",
+            xp: 0,
+            reward: 0,
+            tasks: noProjRes,
+          });
+        }
         setProjects(result as Project[]);
       } catch (err) {
         console.error("Failed to load projects:", err);
@@ -105,7 +130,10 @@ export default function ProjectsPage() {
                   <TaskWidget
                     tasks={tasks || []}
                     className="border rounded-md w-full h-full bg-[var(--widget-background)]"
-                    onTaskUpdate={loadTasks}
+                    onTaskUpdate={() => {
+                      loadTasks();
+                      loadProjects();
+                    }}
                   />
                 )}
                 <WeekStatsWidget

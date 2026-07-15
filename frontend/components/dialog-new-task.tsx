@@ -45,7 +45,7 @@ import { CreateTaskDTO } from "@/types/dto/create-task.dto";
 import { createTask, deleteTask, updateTask } from "@/lib/task";
 import { useTranslations } from "next-intl";
 import { Task } from "@/types/entities/task";
-import { fetchProjects } from "@/lib/project";
+import { detachTaskFromProject, fetchProjects } from "@/lib/project";
 import { Project } from "@/types/entities/project";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "./ui/textarea";
@@ -76,8 +76,32 @@ export function DialogNewTask({
   task?: Task;
   projects?: Project[];
 }) {
+  const t = useTranslations("task");
+  const p = useTranslations("projects");
+  const tCommon = useTranslations("common");
+
+  const noProj: Project = {
+    id: 0,
+    title: p("noProjTasksTitle"),
+    dueAt: "",
+    type: "",
+    importance: 0,
+    estimatedTime: 0,
+    status: "",
+    totalTasks: 0,
+    completedTasks: 0,
+    image: "",
+    xp: 0,
+    reward: 0,
+    tasks: [],
+  };
+  const modProjects = projects?.map((p) => p);
+  if (modProjects && !modProjects.find((project) => project.id === 0)) {
+    modProjects.unshift(noProj);
+  }
+
   const [open, setOpen] = useState(false);
-  const [projectList, setProjectList] = useState(projects || []);
+  const [projectList, setProjectList] = useState(modProjects || []);
   const [isLoading, setIsLoading] = useState(false);
   const [dateOpen, setDateOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>();
@@ -95,13 +119,12 @@ export function DialogNewTask({
   const [importanceError, setImportanceError] = useState(false);
   const [estimatedTimeError, setEstimatedTimeError] = useState(false);
   const [project, setProject] = useState<number | null>(null);
-  const t = useTranslations("task");
-  const tCommon = useTranslations("common");
 
   const loadProjects = async () => {
     setIsLoading(true);
     try {
       const result = await fetchProjects();
+      result.unshift(noProj);
       setProjectList(result);
     } catch (err) {
       console.error("Failed to load projects:", err);
@@ -176,7 +199,13 @@ export function DialogNewTask({
 
     try {
       setOpen(false);
+      if (!data.projectId) {
+        delete data.projectId;
+      }
       if (task) {
+        if (!task.projectId) {
+          delete task.projectId;
+        }
         const updatedTask = await updateTask({
           ...task,
           ...data,
@@ -198,6 +227,12 @@ export function DialogNewTask({
   const handleDeleteTask = async () => {
     if (task?.id) {
       await deleteTask(task.id);
+    }
+  };
+
+  const handleDetachTaskFromProj = async () => {
+    if (task?.id && project) {
+      detachTaskFromProject(project, task.id);
     }
   };
 
@@ -431,7 +466,21 @@ export function DialogNewTask({
           <DialogFooter>
             <Button
               variant="destructive"
-              onClick={handleDeleteTask}
+              onClick={() => {
+                handleDetachTaskFromProj();
+                setOpen(false);
+              }}
+              disabled={!task || !project}
+              type="button"
+            >
+              {t("detachFromProj")}
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => {
+                handleDeleteTask();
+                setOpen(false);
+              }}
               disabled={!task}
               type="button"
             >

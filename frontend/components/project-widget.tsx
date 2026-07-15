@@ -150,10 +150,12 @@ export function ProjectWidget({
                           <Clock size={14} />
                           <span>{getRemainingTime(project.dueAt)}</span>
                         </div>
-                        <DialogNewProject
-                          project={project}
-                          onProjectCreated={onProjectUpdate}
-                        />
+                        {project.id === 0 ? (<></>) : (
+                          <DialogNewProject
+                            project={project}
+                            onProjectCreated={onProjectUpdate}
+                          />
+                        )}
                       </CardFooter>
                     </div>
 

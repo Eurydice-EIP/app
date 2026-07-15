@@ -24,17 +24,48 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { fetchUser } from "@/lib/user";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { fetchTasks } from "@/lib/task";
 
 export default function DashboardPage() {
   const t = useTranslations("dashboard");
   const p = useTranslations("projects");
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [projects, setProjects] = useState<Project[] | null>(null);
-  const [tasks, setTasks] = useState<Task[] | null>(null);
+  const [projTasks, setProjTasks] = useState<Task[] | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const avatarUrl = user?.avatarPath
     ? `${process.env.NEXT_PUBLIC_UPLOAD_API_URL}/${user.avatarPath}`
     : undefined;
+
+  const loadProjects = async () => {
+    try {
+      let noProjRes = await fetchTasks() as Task[];
+      noProjRes = noProjRes.filter((task) => !task.projectId);
+
+      const result = await fetchProjects();
+      if (noProjRes.length !== 0) {
+        result.unshift({
+          id: 0,
+          title: p("noProjTasksTitle"),
+          dueAt: new Date().toString(),
+          type: "",
+          importance: 0,
+          estimatedTime: 0,
+          status: "",
+          totalTasks: noProjRes.length,
+          completedTasks: noProjRes.filter((task) => task.status === "COMPLETED").length,
+          image: "",
+          xp: 0,
+          reward: 0,
+          tasks: noProjRes,
+        });
+      }
+      setProjects(result as Project[]);
+    } catch (err) {
+      console.error("Failed to load projects:", err);
+      setProjects(null);
+    }
+  };
 
   useEffect(() => {
     const loadUser = async () => {
@@ -47,30 +78,25 @@ export default function DashboardPage() {
       }
     };
 
-    const loadProjects = async () => {
-      try {
-        const result = await fetchProjects();
-        setProjects(result as Project[]);
-      } catch (err) {
-        console.error("Failed to load projects:", err);
-        setProjects(null);
-      }
-    };
-
     loadProjects();
     loadUser();
   }, []);
 
-  useEffect(() => {
-    const loadTasks = async () => {
-      try {
-        const result = await fetchProjectTasks(selectedProject?.id ?? 0);
-        setTasks(result as Task[]);
-      } catch (err) {
-        console.error("Failed to load tasks:", err);
-        setTasks(null);
+  const loadTasks = async () => {
+    try {
+      if (selectedProject?.id === 0) {
+        const result = await fetchTasks() as Task[];
+        setProjTasks(result.filter((task) => !task.projectId));
+        return;
       }
-    };
+      const result = await fetchProjectTasks(selectedProject?.id ?? 0);
+      setProjTasks(result as Task[]);
+    } catch (err) {
+      console.error("Failed to load tasks:", err);
+      setProjTasks(null);
+    }
+  };
+  useEffect(() => {
 
     if (selectedProject) {
       loadTasks();
@@ -131,10 +157,10 @@ export default function DashboardPage() {
           <Card className="flex flex-row p-4 bg-[var(--widget-background)] mt-2">
             <Card className="mx-auto w-fit p-0">
               <CardContent className="p-0">
-                <CalendarTasksWidget tasks={tasks || []} className="w-full" />
+                <CalendarTasksWidget tasks={projTasks || []} className="w-full" />
               </CardContent>
             </Card>
-            {!tasks ? (
+            {!projTasks ? (
               <div className="flex-1 p-4">
                 <Skeleton className="h-8 w-32 mb-4" />
                 <div className="space-y-2">
@@ -145,10 +171,11 @@ export default function DashboardPage() {
               </div>
             ) : (
               <TaskWidget
-                tasks={tasks || []}
+                tasks={projTasks || []}
                 className="flex-1"
                 onTaskUpdate={() => {
-                  // loadTasks();
+                  loadTasks();
+                  loadProjects();
                   // loadUser();
                 }}
               />
@@ -183,7 +210,7 @@ export default function DashboardPage() {
             <Card className="w-full mb-4 bg-background/30">
               <CardContent className="p-3">
                 <div className="flex justify-between items-center mb-1">
-                  <span className="text-sm font-medium">Level</span>
+                  <span className="text-sm font-medium">{t("level")}</span>
                   <span className="text-lg font-bold">{user?.level || 1}</span>
                 </div>
                 <div className="flex justify-between items-center">
@@ -201,8 +228,7 @@ export default function DashboardPage() {
                   className="h-2 mt-1"
                 />
                 <p className="text-xs text-muted-foreground text-center mt-1">
-                  {user?.xp || 0} / {user.level * user.level * 100} to next
-                  level
+                  {user?.xp || 0} / {user.level * user.level * 100} {t("toNextLvl")}
                 </p>
               </CardContent>
             </Card>
@@ -210,8 +236,8 @@ export default function DashboardPage() {
             <div className="flex gap-4 w-full text-center">
               <Card className="bg-background/30 flex-1">
                 <CardContent className="p-3">
-                  <p className="text-sm text-muted-foreground">Projects</p>
-                  <p className="text-2xl font-bold">{projects?.length || 0}</p>
+                  <p className="text-sm text-muted-foreground">{t("projects")}</p>
+                  <p className="text-2xl font-bold">{!projects || projects.length === 0 ? 0 : (projects[0].id === 0 ? projects.length - 1 : projects.length)}</p>
                 </CardContent>
               </Card>
             </div>
