@@ -28,9 +28,9 @@ export function ProjectCard({ project, onClick, selected }: ProjectCardProps) {
       />
       <CardHeader>
         <CardAction>
-          <Button variant="outline" size="sm">
+          {/* <Button variant="outline" size="sm">
             <Play className="!size-4" />
-          </Button>
+          </Button> */}
         </CardAction>
         <CardTitle>{project.title}</CardTitle>
         <CardDescription className="truncate whitespace-nowrap overflow-hidden">

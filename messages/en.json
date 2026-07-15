@@ -5,14 +5,18 @@
     "actionLabel": "Go to Login page"
   },
   "dashboard": {
-    "title": "Welcome to Eurydice"
+    "title": "Welcome to Eurydice",
+    "projects": "Projects",
+    "level": "Level",
+    "toNextLvl": "to next level"
   },
   "projects": {
     "selectProject": "Select a project to see details",
     "noProjects": "No projects found.",
     "createProject": "Create a project",
     "noDescription": "No description provided.",
-    "toDo": "to do"
+    "toDo": "to do",
+    "noProjTasksTitle": "Tasks not attached to a project"
   },
   "settings": {
     "title": "Settings",
@@ -91,7 +95,8 @@
     "create": "Create task",
     "delete": "Delete task",
     "removeTask": "Remove task",
-    "rmTaskDesc": "Are you sure you want to remove this task? This action cannot be undone."
+    "rmTaskDesc": "Are you sure you want to remove this task? This action cannot be undone.",
+    "detachFromProj": "Detach from project"
   },
   "project": {
     "new": "New +",

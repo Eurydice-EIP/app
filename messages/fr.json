@@ -5,14 +5,18 @@
     "actionLabel": "Aller à la page de connexion"
   },
   "dashboard": {
-    "title": "Bienvenue sur Eurydice"
+    "title": "Bienvenue sur Eurydice",
+    "projects": "Projets",
+    "level": "Niveau",
+    "toNextLvl": "jusqu'au prochain niveau"
   },
   "projects": {
     "selectProject": "Sélectionnez un projet pour voir les détails",
     "noProjects": "Aucun projet trouvé.",
     "createProject": "Créer un projet",
     "noDescription": "Aucune description disponible.",
-    "toDo": "à faire"
+    "toDo": "à faire",
+    "noProjTasksTitle": "Tâches non-attachées à un projet"
   },
   "settings": {
     "title": "Paramètres",
@@ -91,7 +95,8 @@
     "create": "Créer la tâche",
     "delete": "Supprimer la tâche",
     "removeTask": "Supprimer la tâche",
-    "rmTaskDesc": "Souhaitez-vous vraiment supprimer cette tâche? Cette action ne peut être annulée."
+    "rmTaskDesc": "Souhaitez-vous vraiment supprimer cette tâche? Cette action ne peut être annulée.",
+    "detachFromProj": "Détacher du projet"
   },
   "project": {
     "new": "Nouveau +",
